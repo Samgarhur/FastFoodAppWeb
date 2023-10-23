@@ -4,9 +4,9 @@ const PORT=30000;
 const fs =require("fs");
 const bodyParser = require('body-parser')
 const { spawn } = require('child_process');
-const arxiuPython="proj1G7/python/main.py"
-const ubicacioArxius="proj1G7/fotografies"
-const ubicacioGrafics="proj1G7/python/grafics"
+const arxiuPython="Proyectotienda/python/main.py"
+const ubicacioArxius="Proyectotienda/fotografies"
+const ubicacioGrafics="Proyectotienda/python/grafics"
 
 
 app.use(bodyParser.urlencoded({ extended: false }))
