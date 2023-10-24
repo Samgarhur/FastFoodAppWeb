@@ -1,13 +1,15 @@
 const expres=require("express");
 const app = expres();
 const PORT=3001;
+const mysql = require('mysql2/promise');
 const fs =require("fs");
 const bodyParser = require('body-parser')
 const { spawn } = require('child_process');
+const { obtenerUsuarios } = require("./sciptRebreUsuaris.js");
 const arxiuPython="/python/main.py"
 const ubicacioArxius="/fotografies"
 const ubicacioGrafics="/python/grafics"
-require("./sciptRebreUsuaris.js")
+a=require("./sciptRebreUsuaris.js")
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -15,24 +17,35 @@ app.listen(PORT, function(){
     console.log("server running")
     }
 )
-
+const connection = mysql.createPool({
+    host: "dam.inspedralbes.cat",
+    user: "a22albcormad_botigaG7",
+    password: "botigaG7",
+    database: "a22albcormad_BotigaG7"
+});
 
 
 app.post("/usuaris", function(req, res){
-    const usuari = req.params.body;
+    const user = req.body;
 
-    autoritzacio={"autoritzacio":false}
-    usuaris=obtenerUsuarios()
-    usuariTrobat=false,
-    num=0;
-    while(usuariTrobat==false || num<=usuaris.length){
-        if(usuaris[num].usuari==usuari.nombre && usuaris[num].passwd==usuari.contraseña){
+    let usuariTrobat=false;
+    autoritzacio={"autoritzacio":false};
+    
+    usuaris= obtenerUsuarios(connection).then((usuaris) => {
+    usuaris=JSON.parse(usuaris)
+    
+    for(var i; i<usuaris.length || usuariTrobat==false; i++){
+        nom=(usuaris[1].usuario)
+        contra=(usuaris[1].passwd)
+
+        if(nom==user.usuario && contra==user.contra){
+            console.log("hola")
             usuariTrobat=true;
-            autoritzacio=true;
         }
-        num++;
     }
-    res.send(autoritzacio)
+    autoritzacio.autoritzacio=usuariTrobat;
+    res.send(autoritzacio)}) 
+   
     
 }) //donarAutoritzacio al login android
 
