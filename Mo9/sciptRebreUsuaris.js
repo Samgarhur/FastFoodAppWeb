@@ -22,6 +22,7 @@ async function obtenerUsuarios(connection) {
 async function insertComanda(connection, comandaData) {
     try {
         // INSERT
+        console.log(comandaData)
         const { id_comanda, id_usuari, data_comanda, estat } = comandaData;
         const [result] = await connection.execute(
             'INSERT INTO Comanda (id_comanda, id_usuari, data_comanda, estat) VALUES (?, ?, ?, ?)',
@@ -30,9 +31,9 @@ async function insertComanda(connection, comandaData) {
 
         // Casos Error
         if (result.affectedRows === 1) {
-            return 'Comanda insertada correctamente.';
+            return true;
         } else {
-            return 'No se pudo insertar la comanda.';
+            return false;
         }
     } catch (error) {
         console.error('Error al insertar comanda:', error.message);

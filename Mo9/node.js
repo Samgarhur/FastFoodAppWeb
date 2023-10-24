@@ -6,10 +6,10 @@ const fs =require("fs");
 const bodyParser = require('body-parser')
 const { spawn } = require('child_process');
 const { obtenerUsuarios } = require("./sciptRebreUsuaris.js");
+const { insertComanda } = require("./sciptRebreUsuaris.js");
 const arxiuPython="/python/main.py"
 const ubicacioArxius="/fotografies"
 const ubicacioGrafics="/python/grafics"
-a=require("./sciptRebreUsuaris.js")
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -50,10 +50,14 @@ app.post("/usuaris", function(req, res){
 }) //donarAutoritzacio al login android
 
 app.post("/crearComanda", function(req, res){
-    const comanda = req.params.body;
-    result={"autoritzacio":"cridar crear comanda(comanda)"}
-    json.send(result)
+    const comanda = req.body;
+    let resultat=false
+    resultat=insertComanda(connection, comanda).then((resultat)  => {
+    result={"autoritzacio": resultat}
+    res.send(result)})
 })//crear la comanda a la bbdd
+
+
 
 
 
