@@ -40,6 +40,70 @@ async function insertComanda(connection, comandaData) {
         throw error;
     }
 }
+async function obtenirProductes(connection) {
+    try {
+        const [rows, fields] = await connection.execute('SELECT id_producte , nom , descripcio , preu ,  estat FROM Producte');
+        const productosJSON = JSON.stringify(rows);
+        return productosJSON;
+    } catch (error) {
+        console.error('Error al obtenir els productes:', error.message);
+        throw error;
+    }
+}
+
+async function insertProducte(connection, producteData) {
+    try {
+        // INSERT
+        const {id_producte, nom, descripcio, preu, estat} = producteData;
+        const [result] = await connection.execute(
+            'INSERT INTO Producte (id_producte, nom, descripcio, preu, estat) VALUES (?, ?, ?, ?, ?)',
+            [id_producte, nom, descripcio, preu, estat]
+        );
+
+        // Casos d'error
+        if (result.affectedRows === 1) {
+            return 'Producte inserit correctament.';
+        } else {
+            return 'No sha pogut inserir el producte.';
+        }
+    } catch (error) {
+        console.error('Error al inserir el producte:', error.message);
+        throw error;
+    }
+}
+
+/* 
+//Constant del producte
+const producteData = {
+    id_producte: 3,
+    nom: "Patatas",
+    descripcio: "Patatas deluxe",
+    preu: 4.50,
+    estat: true
+};
+
+//Inserir el producte
+insertProducte(connection, producteData)
+    .then(resultado => {
+        console.log(resultado);
+    })
+    .catch(error => {
+        console.error('Error:', error.message);
+    });
+*/
+
+/*
+//Fer select de productes
+obtenirProductes(connection)
+    .then(productosJSON => {
+        console.log('Productos:', productosJSON);
+        connection.end();
+    })
+    .catch(error => {
+        console.error('Error:', error.message);
+    });
+*/
+
 
 // Exemple us
 /*const comandaData = {
