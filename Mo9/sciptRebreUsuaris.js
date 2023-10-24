@@ -19,6 +19,17 @@ async function obtenerUsuarios(connection) {
     }
 }
 
+async function obtenerComandas(connection) {
+    try {
+        const [rows, fields] = await connection.execute('SELECT id_comanda, id_usuari, data_comanda, estat FROM Comanda');
+        const comandasJSON = JSON.stringify(rows);
+        return comandasJSON;
+    } catch (error) {
+        console.error('Error al obtener comandas:', error.message);
+        throw error;
+    }
+}
+
 async function insertComanda(connection, comandaData) {
     try {
         // INSERT
@@ -92,19 +103,6 @@ insertProducte(connection, producteData)
     });
 */
 
-/*
-//Fer select de productes
-obtenirProductes(connection)
-    .then(productosJSON => {
-        console.log('Productos:', productosJSON);
-        connection.end();
-    })
-    .catch(error => {
-        console.error('Error:', error.message);
-    });
-*/
-
-
 // Exemple us
 /*const comandaData = {
     id_comanda:1,
@@ -116,6 +114,25 @@ obtenirProductes(connection)
 insertComanda(connection, comandaData)
     .then(resultado => {
         console.log(resultado);
+    })
+    .catch(error => {
+        console.error('Error:', error.message);
+    });
+
+
+//Fer select de productes
+obtenirProductes(connection)
+    .then(productosJSON => {
+        console.log('Productos:', productosJSON);
+        connection.end();
+    })
+    .catch(error => {
+        console.error('Error:', error.message);
+    });
+
+obtenerComandas(connection)
+    .then(comandasJSON => {
+        console.log('Comandas:', comandasJSON);
     })
     .catch(error => {
         console.error('Error:', error.message);
