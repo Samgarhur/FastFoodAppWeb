@@ -1,13 +1,13 @@
 const expres=require("express");
 const app = expres();
-const PORT=3000;
+const PORT=3001;
 const fs =require("fs");
 const bodyParser = require('body-parser')
 const { spawn } = require('child_process');
 const arxiuPython="/python/main.py"
 const ubicacioArxius="/fotografies"
 const ubicacioGrafics="/python/grafics"
-require("./sciptRebreUsuaris.js")
+a=require("./sciptRebreUsuaris.js")
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -19,12 +19,14 @@ app.listen(PORT, function(){
 
 
 app.post("/usuaris", function(req, res){
-    const usuari = req.params.body;
+    const usuari = req.body;
 
     autoritzacio={"autoritzacio":false}
-    usuaris=obtenerUsuarios()
+    usuaris=  a.obtenerUsuarios()
+    setTimeout(function(){console.log("Executo tasca temporitzada!");},3000);
+
     usuariTrobat=false,
-    num=0;
+    num=0
     while(usuariTrobat==false || num<=usuaris.length){
         if(usuaris[num].usuari==usuari.nombre && usuaris[num].passwd==usuari.contraseña){
             usuariTrobat=true;
