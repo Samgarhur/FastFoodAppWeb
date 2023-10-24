@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-
+module.exports = {obtenerUsuarios, insertComanda}; 
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",

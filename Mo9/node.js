@@ -1,6 +1,7 @@
 const expres=require("express");
 const app = expres();
 const PORT=3001;
+const mysql = require('mysql2/promise');
 const fs =require("fs");
 const bodyParser = require('body-parser')
 const { spawn } = require('child_process');
@@ -16,7 +17,12 @@ app.listen(PORT, function(){
     console.log("server running")
     }
 )
-
+const connection = mysql.createPool({
+    host: "dam.inspedralbes.cat",
+    user: "a22albcormad_botigaG7",
+    password: "botigaG7",
+    database: "a22albcormad_BotigaG7"
+});
 
 
 app.post("/usuaris", function(req, res){
@@ -25,7 +31,7 @@ app.post("/usuaris", function(req, res){
     let usuariTrobat=false;
     autoritzacio={"autoritzacio":false};
     
-    usuaris= obtenerUsuarios().then((usuaris) => {
+    usuaris= obtenerUsuarios(connection).then((usuaris) => {
     usuaris=JSON.parse(usuaris)
     
     for(var i; i<usuaris.length || usuariTrobat==false; i++){
