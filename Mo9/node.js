@@ -21,7 +21,6 @@ app.listen(PORT, function(){
 
 app.post("/usuaris", function(req, res){
     const user = req.body;
-    console.log(user)
 
     let usuariTrobat=false;
     autoritzacio={"autoritzacio":false};
@@ -29,22 +28,16 @@ app.post("/usuaris", function(req, res){
     usuaris= obtenerUsuarios().then((usuaris) => {
     usuaris=JSON.parse(usuaris)
     
-    
     for(var i; i<usuaris.length || usuariTrobat==false; i++){
         nom=(usuaris[1].usuario)
         contra=(usuaris[1].passwd)
-        console.log(typeof nom)
-        console.log(typeof user.usuario)
-        console.log(typeof user.contra)
-        console.log(typeof contra)
+
         if(nom==user.usuario && contra==user.contra){
             console.log("hola")
             usuariTrobat=true;
         }
     }
-    console.log(usuariTrobat)
     autoritzacio.autoritzacio=usuariTrobat;
-    console.log(autoritzacio)
     res.send(autoritzacio)}) 
    
     
