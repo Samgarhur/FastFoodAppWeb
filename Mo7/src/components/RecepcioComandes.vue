@@ -39,7 +39,10 @@ export default {
       estatComandas(id, this.estatComandas)
     },
 
-  }
+  }, 
+  created() {
+    getComandas();
+  },
 }
 </script>
   
