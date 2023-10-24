@@ -7,7 +7,7 @@ const { spawn } = require('child_process');
 const arxiuPython="/python/main.py"
 const ubicacioArxius="/fotografies"
 const ubicacioGrafics="/python/grafics"
-const mo6=require("/M06/sciptRebreUsuaris.js")
+require("./sciptRebreUsuaris.js")
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -22,7 +22,7 @@ app.post("/usuaris", function(req, res){
     const usuari = req.params.body;
 
     autoritzacio={"autoritzacio":false}
-    usuaris=mo6.ObtenerUsuarios()
+    usuaris=obtenerUsuarios()
     usuariTrobat=false,
     num=0;
     while(usuariTrobat==false || num<=usuaris.length){
