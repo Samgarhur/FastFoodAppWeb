@@ -4,6 +4,7 @@ const PORT=3001;
 const fs =require("fs");
 const bodyParser = require('body-parser')
 const { spawn } = require('child_process');
+const { obtenerUsuarios } = require("./sciptRebreUsuaris.js");
 const arxiuPython="/python/main.py"
 const ubicacioArxius="/fotografies"
 const ubicacioGrafics="/python/grafics"
@@ -19,22 +20,33 @@ app.listen(PORT, function(){
 
 
 app.post("/usuaris", function(req, res){
-    const usuari = req.body;
+    const user = req.body;
+    console.log(user)
 
-    autoritzacio={"autoritzacio":false}
-    usuaris=  a.obtenerUsuarios()
-    setTimeout(function(){console.log("Executo tasca temporitzada!");},3000);
-
-    usuariTrobat=false,
-    num=0
-    while(usuariTrobat==false || num<=usuaris.length){
-        if(usuaris[num].usuari==usuari.nombre && usuaris[num].passwd==usuari.contraseña){
+    let usuariTrobat=false;
+    autoritzacio={"autoritzacio":false};
+    
+    usuaris= obtenerUsuarios().then((usuaris) => {
+    usuaris=JSON.parse(usuaris)
+    
+    
+    for(var i; i<usuaris.length || usuariTrobat==false; i++){
+        nom=(usuaris[1].usuario)
+        contra=(usuaris[1].passwd)
+        console.log(typeof nom)
+        console.log(typeof user.usuario)
+        console.log(typeof user.contra)
+        console.log(typeof contra)
+        if(nom==user.usuario && contra==user.contra){
+            console.log("hola")
             usuariTrobat=true;
-            autoritzacio=true;
         }
-        num++;
     }
-    res.send(autoritzacio)
+    console.log(usuariTrobat)
+    autoritzacio.autoritzacio=usuariTrobat;
+    console.log(autoritzacio)
+    res.send(autoritzacio)}) 
+   
     
 }) //donarAutoritzacio al login android
 

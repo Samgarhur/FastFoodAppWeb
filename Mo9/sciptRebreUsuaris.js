@@ -23,13 +23,5 @@ async function obtenerUsuarios() {
 }
 
 
-obtenerUsuarios()
-    .then(usuariosJSON => {
-        console.log('Usuaris:', usuariosJSON);
-    })
-    .catch(error => {
-        console.error('Error:', error.message);
-    });
-
 
 module.exports = {obtenerUsuarios}; 
