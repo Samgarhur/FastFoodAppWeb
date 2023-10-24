@@ -1,12 +1,16 @@
 const mysql = require('mysql2/promise');
 module.exports = {obtenerUsuarios, insertComanda}; 
-// Connexio a la base de dades
+
+// Connexió a la BD
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
     user: "a22albcormad_botigaG7",
     password: "botigaG7",
     database: "a22albcormad_BotigaG7"
 });
+
+
+/*-------------------Usuaris------------------*/
 
 async function obtenerUsuarios(connection) {
     try {
@@ -19,9 +23,11 @@ async function obtenerUsuarios(connection) {
     }
 }
 
-async function obtenerComandas(connection) {
+/*-------------------Comandes------------------*/
+
+async function getComandes(connection) {
     try {
-        const [rows, fields] = await connection.execute('SELECT id_comanda, id_usuari, data_comanda, estat FROM Comanda');
+        const [rows, fields] = await connection.execute('SELECT * FROM Comanda');
         const comandasJSON = JSON.stringify(rows);
         return comandasJSON;
     } catch (error) {
@@ -51,9 +57,12 @@ async function insertComanda(connection, comandaData) {
         throw error;
     }
 }
-async function obtenirProductes(connection) {
+
+/*-------------------Productes------------------*/
+
+async function getProductes(connection) {
     try {
-        const [rows, fields] = await connection.execute('SELECT id_producte , nom , descripcio , preu ,  estat FROM Producte');
+        const [rows, fields] = await connection.execute('SELECT * FROM Producte');
         const productosJSON = JSON.stringify(rows);
         return productosJSON;
     } catch (error) {
@@ -82,6 +91,9 @@ async function insertProducte(connection, producteData) {
         throw error;
     }
 }
+
+
+/*-------------------Proves------------------*/
 
 /* 
 //Constant del producte
@@ -121,7 +133,7 @@ insertComanda(connection, comandaData)
 
 
 //Fer select de productes
-obtenirProductes(connection)
+getProductes(connection)
     .then(productosJSON => {
         console.log('Productos:', productosJSON);
         connection.end();
@@ -130,7 +142,8 @@ obtenirProductes(connection)
         console.error('Error:', error.message);
     });
 
-obtenerComandas(connection)
+//Select comandes
+getComandes(connection)
     .then(comandasJSON => {
         console.log('Comandas:', comandasJSON);
     })
