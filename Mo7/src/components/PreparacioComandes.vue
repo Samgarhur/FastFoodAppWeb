@@ -27,7 +27,7 @@
   
 <script>
 
-import { comandaFinalitzada } from './communicationsManager';
+import { comandaFinalitzada,getComandasAceptadas} from './communicationsManager';
 export default {
   name: 'PreparacioComandes',
   data() {
@@ -109,6 +109,9 @@ export default {
 
   },
   created() {
+    //Coge las comandas que han sido aceptadas del servidor
+    getComandasAceptadas()
+
     // Ordena las comandas por el tiempo en que entran
     this.comandes.sort((a, b) => b.temps - a.temps);
   },
