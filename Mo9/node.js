@@ -1,6 +1,6 @@
 const expres=require("express");
 const app = expres();
-const PORT=30000;
+const PORT=3000;
 const fs =require("fs");
 const bodyParser = require('body-parser')
 const { spawn } = require('child_process');
@@ -16,15 +16,15 @@ app.listen(PORT, function(){
     }
 )
 
-app.get("/usuaris", function(req, res){
+app.post("/usuaris", function(req, res){
     const usuari = req.params.user;
     const contra = req.params.password;
-    autoritzacio=false
+    autoritzacio={"autoritzacio":false}
     usuaris="insertar aqui crida a sql"
     usuariTrobat=false
     num=0;
     while(usuariTrobat==false || num<=usuaris.length){
-        if(usuaris[num].usuari==usuari && usuaris[num].passw==contra){
+        if(usuaris[num].usuari==usuari && usuaris[num].passwd==contra){
             usuariTrobat=true;
             autoritzacio=true;
         }
@@ -33,6 +33,13 @@ app.get("/usuaris", function(req, res){
     res.send(autoritzacio)
 }) //donarAutoritzacio al login android
 
+app.post("/crearComanda", function(req, res){
+    const comanda = req.params.body;
+    result={"autoritzacio":"cridar crear comanda(comanda)"}
+    json.send(result)
+})//crear la comanda a la bbdd
 
-//movil a node-> enviar usuari, demanar productes i enviar comanda
-//vue a node -> demanar i enviar productes i comandes
+
+
+//movil - node-> enviar usuari, demanar productes i enviar comanda
+//vue - node -> demanar i enviar productes i comandes
