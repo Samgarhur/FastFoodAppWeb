@@ -4,10 +4,10 @@ const PORT=3001;
 const fs =require("fs");
 const bodyParser = require('body-parser')
 const { spawn } = require('child_process');
-const arxiuPython="Proyectotienda/python/main.py"
-const ubicacioArxius="Proyectotienda/fotografies"
-const ubicacioGrafics="Proyectotienda/python/grafics"
-const mo6= ("Proyectotienda/M06/sciptRebreUsuaris.js")
+const arxiuPython="/python/main.py"
+const ubicacioArxius="/fotografies"
+const ubicacioGrafics="/python/grafics"
+require("./sciptRebreUsuaris.js")
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -22,7 +22,7 @@ app.post("/usuaris", function(req, res){
     const usuari = req.params.body;
 
     autoritzacio={"autoritzacio":false}
-    usuaris=ObtenerUsuarios()
+    usuaris=obtenerUsuarios()
     usuariTrobat=false,
     num=0;
     while(usuariTrobat==false || num<=usuaris.length){
