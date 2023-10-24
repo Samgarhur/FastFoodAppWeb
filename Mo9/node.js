@@ -16,15 +16,17 @@ app.listen(PORT, function(){
     }
 )
 
+
+
 app.post("/usuaris", function(req, res){
-    const usuari = req.params.user;
-    const contra = req.params.password;
+    const usuari = req.params.body;
+
     autoritzacio={"autoritzacio":false}
     usuaris="insertar aqui crida a sql"
     usuariTrobat=false
     num=0;
     while(usuariTrobat==false || num<=usuaris.length){
-        if(usuaris[num].usuari==usuari && usuaris[num].passwd==contra){
+        if(usuaris[num].usuari==usuari.nombre && usuaris[num].passwd==usuari.contraseña){
             usuariTrobat=true;
             autoritzacio=true;
         }
@@ -38,6 +40,8 @@ app.post("/crearComanda", function(req, res){
     result={"autoritzacio":"cridar crear comanda(comanda)"}
     json.send(result)
 })//crear la comanda a la bbdd
+
+
 
 
 
