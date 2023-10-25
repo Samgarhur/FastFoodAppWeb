@@ -5,7 +5,7 @@ const mysql = require('mysql2/promise');
 const fs =require("fs");
 const bodyParser = require('body-parser')
 const { spawn } = require('child_process');
-const { obtenerUsuarios } = require("./scriptBD.js");
+const { getUsuarisLogin } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const arxiuPython="/python/main.py"
 const ubicacioArxius="/fotografies"
@@ -31,7 +31,7 @@ app.post("/usuaris", function(req, res){
     let usuariTrobat=false;
     autoritzacio={"autoritzacio":false};
     
-    usuaris= obtenerUsuarios(connection).then((usuaris) => {
+    usuaris= getUsuarisLogin(connection).then((usuaris) => {
     usuaris=JSON.parse(usuaris)
     
     for(var i; i<usuaris.length || usuariTrobat==false; i++){

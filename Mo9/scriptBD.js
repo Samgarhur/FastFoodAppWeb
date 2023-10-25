@@ -1,7 +1,6 @@
 const mysql = require('mysql2/promise');
-module.exports = {obtenerUsuarios, insertComanda}; 
-
-// Connexió a la BD
+module.exports = {getUsuarisLogin, insertComanda};
+// Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
     user: "a22albcormad_botigaG7",
@@ -10,9 +9,7 @@ const connection = mysql.createPool({
 });
 
 
-/*-------------------Usuaris------------------*/
-
-async function obtenerUsuarios(connection) {
+async function getUsuarisLogin(connection) {
     try {
         const [rows, fields] = await connection.execute('SELECT id_usuari, usuario, passwd FROM Usuari');
         const usuariosJSON = JSON.stringify(rows);
@@ -23,7 +20,9 @@ async function obtenerUsuarios(connection) {
     }
 }
 
+
 /*-------------------Comandes------------------*/
+
 
 async function getComandes(connection) {
     try {
@@ -36,6 +35,7 @@ async function getComandes(connection) {
     }
 }
 
+
 async function insertComanda(connection, comandaData) {
     try {
         // INSERT
@@ -45,6 +45,7 @@ async function insertComanda(connection, comandaData) {
             'INSERT INTO Comanda (id_comanda, id_usuari, data_comanda, estat) VALUES (?, ?, ?, ?)',
             [id_comanda, id_usuari, data_comanda, estat]
         );
+
 
         // Casos Error
         if (result.affectedRows === 1) {
@@ -58,7 +59,29 @@ async function insertComanda(connection, comandaData) {
     }
 }
 
+
+async function marcarComandaFinalizada(connection) {
+}
+
+
+async function marcarComandaRecogida(connection) {
+}
+
+
+async function getComandaFinalizada(connection) {
+}
+
+
+async function getComandaAceptada(connection) {
+}
+
+
+async function updateEstatComanda(connection) {
+}
+
+
 /*-------------------Productes------------------*/
+
 
 async function getProductes(connection) {
     try {
@@ -71,6 +94,7 @@ async function getProductes(connection) {
     }
 }
 
+
 async function insertProducte(connection, producteData) {
     try {
         // INSERT
@@ -79,6 +103,7 @@ async function insertProducte(connection, producteData) {
             'INSERT INTO Producte (id_producte, nom, descripcio, preu, estat) VALUES (?, ?, ?, ?, ?)',
             [id_producte, nom, descripcio, preu, estat]
         );
+
 
         // Casos d'error
         if (result.affectedRows === 1) {
@@ -93,9 +118,24 @@ async function insertProducte(connection, producteData) {
 }
 
 
+async function deleteProducte(connection) {
+}
+
+
+async function addProducte(connection) {
+}
+
+
+async function updateProducte(connection) {
+}
+
+
+
+
 /*-------------------Proves------------------*/
 
-/* 
+
+/*
 //Constant del producte
 const producteData = {
     id_producte: 3,
@@ -104,6 +144,7 @@ const producteData = {
     preu: 4.50,
     estat: true
 };
+
 
 //Inserir el producte
 insertProducte(connection, producteData)
@@ -115,6 +156,7 @@ insertProducte(connection, producteData)
     });
 */
 
+
 // Exemple us
 /*const comandaData = {
     id_comanda:1,
@@ -123,6 +165,7 @@ insertProducte(connection, producteData)
     estat: true
 };
 
+
 insertComanda(connection, comandaData)
     .then(resultado => {
         console.log(resultado);
@@ -130,6 +173,8 @@ insertComanda(connection, comandaData)
     .catch(error => {
         console.error('Error:', error.message);
     });
+
+
 
 
 //Fer select de productes
@@ -142,6 +187,7 @@ getProductes(connection)
         console.error('Error:', error.message);
     });
 
+
 //Select comandes
 getComandes(connection)
     .then(comandasJSON => {
@@ -150,6 +196,8 @@ getComandes(connection)
     .catch(error => {
         console.error('Error:', error.message);
     });
+
+
 
 
 obtenerUsuarios(connection)
