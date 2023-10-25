@@ -6,7 +6,7 @@
           <v-card-title>Comanda numero {{ comanda.id }}</v-card-title>
           <v-card-title>Temps: {{ comanda.temps }} minuts</v-card-title>
           <v-card-subtitle>{{ comanda.info }}</v-card-subtitle>
-          <v-card-actions>
+          <v-card-actions>            
             <v-btn @click="veureDetalls(comanda.id)">Veure Detalls</v-btn>
             <v-btn @click="marcarComandaFinalitzada(comanda.id)">Marcar com a Finalitzada</v-btn><br>
           </v-card-actions>

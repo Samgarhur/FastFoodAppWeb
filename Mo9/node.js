@@ -1,5 +1,6 @@
-const expres=require("express");
-const app = expres();
+const express=require("express");
+const app = express();
+const cors = require("cors");
 const PORT=3001;
 const mysql = require('mysql2/promise');
 const fs =require("fs");
@@ -13,6 +14,10 @@ const arxiuPython="/python/main.py"
 const ubicacioArxius="/fotografies"
 const ubicacioGrafics="/python/grafics"
 //const io = require('socket.io')(server);
+
+/*Accept all request*/
+app.use(cors());
+app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
