@@ -5,11 +5,14 @@ const mysql = require('mysql2/promise');
 const fs =require("fs");
 const bodyParser = require('body-parser')
 const { spawn } = require('child_process');
-const { getUsuarisLogin } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
+/*const { getProductes } = require("./scriptBD.js");
+const { getComandes } = require("./scriptBD.js");*/
 const arxiuPython="/python/main.py"
 const ubicacioArxius="/fotografies"
 const ubicacioGrafics="/python/grafics"
+//const io = require('socket.io')(server);
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -58,6 +61,31 @@ app.post("/crearComanda", function(req, res){
 })//crear la comanda a la bbdd
 
 
+app.get("/getComandes", async function(req, res){
+    try {
+        const comandes = await getComandes(connection); 
+        const comandesJson = JSON.parse(comandes);
+        
+        res.json(comandesJson);
+    } catch (error) {
+        console.error('Error al obtener las comandas:', error.message);
+        res.status(500).send('Error al obtener datos de comandas.');
+    }
+
+
+
+
+});
+/*const interval = 5000; // Interval de temps en milisegundos (5 segons)
+
+setInterval(async () => {
+    try {
+        const ComandesJSON = await getComandes(connection); 
+        io.emit('comandes', ComandesJSON); // Envia les comandes
+    } catch (error) {
+        console.error('Error al obtener les comandes:', error.message);
+    }
+}, interval);*/
 
 
 
