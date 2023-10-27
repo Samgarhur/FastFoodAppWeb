@@ -1,51 +1,32 @@
 <template>
-    <v-container>
-      <v-btn @click="mostrarRecepcioComandes">Recepció de Comandes</v-btn>
-      <v-btn @click="mostrarPreparacioComandes">Preparació de Comandes</v-btn>
-      <v-btn @click="mostrarResumComandes">Resum de Comandes</v-btn>  
-  
-      <RecepcioComandes v-if="mostrarRecepcio" />
-      <PreparacioComandes v-if="mostrarPreparacio" />
-      <ResumComandes v-if="mostrarResum" />   
-    </v-container>
+    <div class="container">
+      <h1 class="title">Administració Botiga</h1>
+      <div class="buttons">
+        <v-btn @click="$router.push('/GestioComandes')">Gestió de comandes</v-btn><br>
+        <v-btn @click="$router.push('/gestioProductes')">Gestió de Productes</v-btn>
+      </div>
+    </div>
   </template>
   
-  <script>
-  import RecepcioComandes from './RecepcioComandes.vue';
-  import PreparacioComandes from './PreparacioComandes.vue';
-  import ResumComandes from './ResumComandes.vue'; 
-  
-  export default {
-    name: 'PaginaPrincipal',
-    components: {
-      RecepcioComandes,
-      PreparacioComandes,
-      ResumComandes   
-    },
-    data() {
-      return {
-        mostrarRecepcio: false,
-        mostrarPreparacio: false,
-        mostrarResum: false     
-      };
-    },
-    methods: {
-      mostrarRecepcioComandes() {
-        this.mostrarRecepcio = true;
-        this.mostrarPreparacio = false;
-        this.mostrarResum = false;       
-      },
-      mostrarPreparacioComandes() {
-        this.mostrarRecepcio = false;
-        this.mostrarPreparacio = true;
-        this.mostrarResum = false;        
-      },
-      mostrarResumComandes() {
-        this.mostrarRecepcio = false;
-        this.mostrarPreparacio = false;
-        this.mostrarResum = true;        
-      }      
-    }
+  <style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    padding-top: 100px;
+    align-items: center;
+    height: 100vh;
   }
-  </script>
   
+  .title {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+  }
+  
+  .buttons {
+    display: flex;
+    flex-direction: column;
+  }
+  .button {
+    margin-bottom: 1rem;
+  }
+  </style>
