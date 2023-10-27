@@ -51,7 +51,6 @@ app.post("/usuaris", function(req, res){
 
 app.post("/crearComanda", function(req, res){
     const comanda = req.body;
-    let resultat=false
     resultat=insertComanda(connection, comanda).then((resultat)  => {
     result={"autoritzacio": resultat}
     res.send(result)})
