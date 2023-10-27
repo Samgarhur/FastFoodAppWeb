@@ -25,7 +25,15 @@ export async function estatComandas(id,estat) {
   return info;
 }
 
+//Funcion para enviar la comanda que este finalizada
 export async function comandaFinalitzada(id,finalitzada) {
+  const response = await fetch(`http://localhost:3001/${id},${finalitzada}`);
+  const info = await response.json();
+  return info;
+}
+
+//Funcion para enviar al servidor la comanda que este recogida
+export async function comandaRecogida(id) {
   const response = await fetch(`http://localhost:3001/${id},${finalitzada}`);
   const info = await response.json();
   return info;

@@ -4,8 +4,17 @@
       <v-card-title>{{ comanda.id }}</v-card-title>
       <v-card-subtitle>{{ comanda.info }}</v-card-subtitle>
       <v-card-actions>
-        <v-btn @click="acceptarComanda(comanda.id)">Acceptar</v-btn>
-        <v-btn @click="rebutjarComanda(comanda.id)">Rebutjar</v-btn>
+        <v-snackbar  @click="acceptarComanda(comanda.id)" :timeout="2000">
+          <template v-slot:activator="{ props }">
+            <v-btn class="ma-2" v-bind="props">Aceptar</v-btn>
+          </template>Comanda aceptada
+        </v-snackbar>
+        <v-snackbar  @click="rebutjarComanda(comanda.id)" :timeout="2000">
+          <template v-slot:activator="{ props }">
+            <v-btn class="ma-2" v-bind="props">Rebutjar</v-btn>
+          </template>Comanda rebutjada
+        </v-snackbar>   
+        
       </v-card-actions>
     </v-card>
   </v-container>
@@ -39,8 +48,9 @@ export default {
       estatComandas(id, this.estatComandas)
     },
 
-  }, 
+  },
   created() {
+    //Coge todas las comandas del servidor
     getComandas();
   },
 }
