@@ -9,11 +9,13 @@ const fs =require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo,getComandesProductes } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo,getComandesProductes, insertProducte } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies");
 const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
 const arxiuPython = path.join(__dirname, "..", "python/main.py");
+const axios = require('axios');
+
 
 //const io = require('socket.io')(server);
 
@@ -36,7 +38,7 @@ const connection = mysql.createPool({
     database: "a22albcormad_BotigaG7"
 });
 
-//------------cosses android--------------
+//------------cosses android----------------//
 app.post("/usuaris", function(req, res){
     const user = req.body;
 
@@ -74,6 +76,21 @@ app.post("/crearComanda", function(req, res){
 })//crear la comanda a la bbdd
 
 
+app.post("/agregarProducte", function(req, res){
+    nouProducte=req.body
+    novaFoto=nouProducte.foto
+    //separar la foto al seu directori
+    id=numFiles(ubicacioArxius).then((id)=>{
+    descargarImagen(novaFoto, ubicacioArxius+"/"+id+".jpeg")
+  .then(() => 
+    //console.log('Imagen descargada con éxito')
+    insertProducte(connection,nouProducte)
+  )})
+  .catch(console.error);
+    
+
+})//agregar productes a la bbdd desde vue
+
 /*app.get("/getComandes", async function(req, res){
     try {
         const comandes = await getComandes(connection); 
@@ -86,7 +103,7 @@ app.post("/crearComanda", function(req, res){
     }
 });//*/
 
-
+//----------------General-------------------------//
 app.get("/getProductos", function(req, res){
     result=getProductes(connection).then((result)=>{
     console.log(result)
@@ -99,8 +116,6 @@ app.get("/getProductos", function(req, res){
     console.log(result)
     res.json(result)})
 })//Passar productes amb la seva foto a android
-
-
 app.get("/getComandes", async function(req, res){
     try {
         const comandes = await getComandesProductes(connection); 
@@ -129,18 +144,31 @@ io.on('connection', (socket) => {
   });
 
 
-/*const interval = 5000; // Interval de temps en milisegundos (5 segons)
 
-setInterval(async () => {
+//-----------funcions auxiliars-------------------//
+async function numFiles(path){
     try {
-        const ComandesJSON = await getComandes(connection); 
-        io.emit('comandes', ComandesJSON); // Envia les comandes
-    } catch (error) {
-        console.error('Error al obtener les comandes:', error.message);
-    }
-}, interval);*/
-
-
+        const archivos =  fs.readdirSync(path);
+        return(archivos.length);
+      } catch (error) {
+        console.log(error);
+      }
+}
+async function descargarImagen(url, rutaImagen) {
+    const respuesta = await axios({
+      url,
+      method: 'GET',
+      responseType: 'stream'
+    });
+  
+    const escritor = fs.createWriteStream(rutaImagen);
+    respuesta.data.pipe(escritor);
+  
+    return new Promise((resolver, rechazar) => {
+      escritor.on('finish', resolver);
+      escritor.on('error', rechazar);
+    });
+}
 function base64_encode(file) {
     // read binary data
     var bitmap = fs.readFileSync(file);
@@ -149,6 +177,8 @@ function base64_encode(file) {
 }//funcio auxilar per codificar fotos
 
 
+
+//-------------py-----------------//
 function comensarPython(){
 
 }
