@@ -3,8 +3,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/gestiocomandes',
+    path: '/',
     component: () => import('@/components/PaginaPrincipal.vue'),
+  },
+  {
+    path: '/gestiocomandes',
+    component: () => import('@/components/GestioComandes.vue'),
   },
   {
     path: '/gestioproductes',
