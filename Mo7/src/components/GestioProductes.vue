@@ -14,8 +14,7 @@
   </template>
   
   <script>
-  export default {
-    name: 'GestioProductes',
+  export default {    
     data() {
       return {
         productes: [] // Aquí hauries de carregar els productes des de la base de dades o API
