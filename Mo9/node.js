@@ -7,11 +7,12 @@ const fs =require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes, getProductes } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
-const arxiuPython="/python/main.py"
 const ubicacioArxius = path.join(__dirname, "..", "fotografies");
-const ubicacioGrafics="/python/grafics"
+const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
+const arxiuPython = path.join(__dirname, "..", "python/main.py");
+
 //const io = require('socket.io')(server);
 
 /*Accept all request*/
@@ -22,8 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.listen(PORT, function(){
     console.log("server running")
-    }
-)
+})
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
     user: "a22albcormad_botigaG7",
@@ -52,9 +52,17 @@ app.post("/usuaris", function(req, res){
     }
     autoritzacio.autoritzacio=usuariTrobat;
     res.json(autoritzacio)}) 
-   
-    
 }) //donarAutoritzacio al login android
+
+app.post("/dadesUsuari", function(req, res){
+    const nomUsuari=req.body
+    result=getUsuariInfo(connection, nomUsuari.usuario).then((result)=>{
+    console.log(result)
+    result=JSON.parse(result)
+    console.log(result)
+    res.json(result)})
+})
+
 
 app.post("/crearComanda", function(req, res){
     const comanda = req.body;
@@ -64,7 +72,7 @@ app.post("/crearComanda", function(req, res){
 })//crear la comanda a la bbdd
 
 
-app.get("/getComandes", async function(req, res){
+/*app.get("/getComandes", async function(req, res){
     try {
         const comandes = await getComandes(connection); 
         const comandesJson = JSON.parse(comandes);
@@ -74,7 +82,8 @@ app.get("/getComandes", async function(req, res){
         console.error('Error al obtener las comandas:', error.message);
         res.status(500).send('Error al obtener datos de comandas.');
     }
-});//
+});//*/
+
 
 app.get("/getProductos", function(req, res){
     result=getProductes(connection).then((result)=>{
@@ -87,8 +96,20 @@ app.get("/getProductos", function(req, res){
     
     console.log(result)
     res.json(result)})
-})
+})//Passar productes amb la seva foto a android
 
+
+app.get("/getComandes", async function(req, res){
+    try {
+        const comandes = await getComandesProductes(connection); 
+        const comandesJson = JSON.parse(comandes);
+        
+        res.json(comandesJson);
+    } catch (error) {
+        console.error('Error al obtener las comandas:', error.message);
+        res.status(500).send('Error al obtener datos de comandas.');
+    }
+});
 
 
 /*const interval = 5000; // Interval de temps en milisegundos (5 segons)
@@ -108,7 +129,15 @@ function base64_encode(file) {
     var bitmap = fs.readFileSync(file);
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
+}//funcio auxilar per codificar fotos
+
+
+function comensarPython(){
+
 }
+comensarPython()
+
+
 
 
 //movil - node-> enviar usuari, demanar productes i enviar comanda
