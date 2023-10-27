@@ -66,7 +66,7 @@ app.post("/crearComanda", function(req, res){
 })//crear la comanda a la bbdd
 
 
-app.get("/getComandes", async function(req, res){
+/*app.get("/getComandes", async function(req, res){
     try {
         const comandes = await getComandes(connection); 
         const comandesJson = JSON.parse(comandes);
@@ -76,11 +76,21 @@ app.get("/getComandes", async function(req, res){
         console.error('Error al obtener las comandas:', error.message);
         res.status(500).send('Error al obtener datos de comandas.');
     }
+});*/
 
-
-
-
+app.get("/getComandes", async function(req, res){
+    try {
+        const comandes = await getComandesProductes(connection); 
+        const comandesJson = JSON.parse(comandes);
+        
+        res.json(comandesJson);
+    } catch (error) {
+        console.error('Error al obtener las comandas:', error.message);
+        res.status(500).send('Error al obtener datos de comandas.');
+    }
 });
+
+
 /*const interval = 5000; // Interval de temps en milisegundos (5 segons)
 
 setInterval(async () => {

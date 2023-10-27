@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes};
+module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -26,11 +26,51 @@ async function getUsuarisLogin(connection) {
 
 async function getComandes(connection) {
     try {
-        const [rows, fields] = await connection.execute('SELECT * FROM Comanda');
+        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE  ');
         const comandasJSON = JSON.stringify(rows);
         return comandasJSON;
     } catch (error) {
         console.error('Error al obtener comandas:', error.message);
+        throw error;
+    }
+}
+
+async function getComandesProductes(connection) {
+    try {
+        const queryString = `
+            SELECT C.id_comanda, P.nom AS nombre_producto, CP.quantitat
+            FROM Comanda_Producte CP
+            JOIN Comanda C ON CP.id_comanda = C.id_comanda
+            JOIN Producte P ON CP.id_producte = P.id_producte
+            WHERE C.estat IS NULL AND C.finalitzada = 0 AND C.recollida = 0;
+        `;
+        
+        const [rows, fields] = await connection.execute(queryString);
+
+        // Organizar los resultados por id_comanda
+        const comandesOrganizados = rows.reduce((result, row) => {
+            const { id_comanda, nombre_producto, quantitat } = row;
+
+            if (!result[id_comanda]) {
+                result[id_comanda] = {
+                    id_comanda,
+                    productos: [],
+                };
+            }
+
+            result[id_comanda].productos.push({
+                nombre_producto,
+                quantitat,
+            });
+
+            return result;
+        }, {});
+
+        // Convertir a JSON
+        const comandesJSON = JSON.stringify(Object.values(comandesOrganizados));
+        return comandesJSON;
+    } catch (error) {
+        console.error('Error al obtener comandes:', error.message);
         throw error;
     }
 }
