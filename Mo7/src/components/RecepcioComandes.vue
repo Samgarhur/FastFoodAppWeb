@@ -1,8 +1,11 @@
 <template>
   <v-container>
     <v-card v-for="comanda in comandes" :key="comanda.id">
-      <v-card-title>{{ comanda.id_comanda }}</v-card-title>
-      <v-card-subtitle>{{ comanda.info }}</v-card-subtitle>
+      <v-card-title>Comanda numero {{ comanda.id_comanda }}</v-card-title>
+      <v-card-subtitle v-for="producte in comanda.productos">
+        {{ producte.nombre_producto }} X
+        {{ producte.quantitat }}
+      </v-card-subtitle>
 
       <v-card-actions>
         <v-dialog v-model="dialog" max-width="300">
@@ -40,7 +43,7 @@
     </v-card>
   </v-container>
   <v-snackbar v-model="snackbar" :timeout="2000">
-    {{ snackbarMessage }} 
+    {{ snackbarMessage }}
   </v-snackbar>
 </template>
   
