@@ -48,9 +48,9 @@ app.post("/usuaris", function(req, res){
     usuaris= getUsuarisLogin(connection).then((usuaris) => {
     usuaris=JSON.parse(usuaris)
     
-    for(var i; i<usuaris.length || usuariTrobat==false; i++){
-        nom=(usuaris[1].usuario)
-        contra=(usuaris[1].passwd)
+    for(var i=0; i<usuaris.length || usuariTrobat==false; i++){
+        nom=(usuaris[i].usuario)
+        contra=(usuaris[i].passwd)
 
         if(nom==user.usuario && contra==user.contra){
             console.log("hola")
