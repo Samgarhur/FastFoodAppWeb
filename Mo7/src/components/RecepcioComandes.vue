@@ -57,21 +57,21 @@ export default {
       comandes: [], // Aquí hauries de carregar les comandes des de la base de dades o API
       dialog: false, // Controla la visibilidad del diálogo de aceptación
       rechazarDialog: false, // Controla la visibilidad del diálogo de rechazo
-      estatComandas: null,
+      estatComandas: "",
       snackbar: false, // Controla la visibilidad del Snackbar
       snackbarMessage: '', // Mensaje del Snackbar
     };
   },
   methods: {
     acceptarComanda(id) {
-      this.estatComandas = true;
+      this.estatComandas = "aceptada";
       estatComanda(id, this.estatComandas)
       this.dialog = false; // Cierra el diálogo después de la confirmación
       this.snackbarMessage = 'Comanda aceptada';
       this.snackbar = true; // Muestra el Snackbar
     },
     rebutjarComanda(id) {
-      this.estatComandas = false;
+      this.estatComandas = "rebutjada";
       estatComanda(id, this.estatComandas)
       this.rechazarDialog = false; // Cierra el diálogo de rechazo después de la confirmación
       this.snackbarMessage = 'Comanda rechazada';
