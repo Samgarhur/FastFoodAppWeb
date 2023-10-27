@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-const socket = io();
+const socket = io('http://localhost:3001');
 
 //Funcion para coger todas las comandas
 export async function getComandas() {
@@ -20,6 +20,15 @@ export async function getComandasFinalizadas() {
   const response = await fetch(`http://localhost:3001`);
   const peliculas = await response.json();
   return peliculas.Search;
+}
+
+// Función para enviar al servidor que la comanda está aceptada o rechazada para socket
+export function estatComanda(id, estat) {
+  return new Promise((resolve, reject) => {
+    socket.emit('comandaAceptada', { id, estat }, (info) => {
+      resolve(info);
+    });
+  });
 }
 
 //Funcion para enviar al server que la comanda esta aceptada o rechazada

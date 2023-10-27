@@ -54,14 +54,7 @@ export default {
   name: 'RecepcioComandes',
   data() {
     return {
-      comandes: [{
-        id: 1,
-        info: "PATATAS, ANVORGESA,COLACOCA"
-      },
-      {
-        id: 2,
-        info: "PATATAS, AMBORGUSA,FANTA"
-      }], // Aquí hauries de carregar les comandes des de la base de dades o API
+      comandes: [], // Aquí hauries de carregar les comandes des de la base de dades o API
       dialog: false, // Controla la visibilidad del diálogo de aceptación
       rechazarDialog: false, // Controla la visibilidad del diálogo de rechazo
       estatComandas: null,
