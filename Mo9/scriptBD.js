@@ -191,10 +191,10 @@ async function getNumProductes(connection) {
 async function insertProducte(connection, producteData) {
     try {
         // INSERT
-        const {id_producte, nom, descripcio, preu, estat} = producteData;
+        const { nom, descripcio, preu, estat} = producteData;
         const [result] = await connection.execute(
-            'INSERT INTO Producte (id_producte, nom, descripcio, preu, estat) VALUES (?, ?, ?, ?, ?)',
-            [id_producte, nom, descripcio, preu, estat]
+            'INSERT INTO Producte ( nom, descripcio, preu, estat) VALUES ( ?, ?, ?, ?)',
+            [ nom, descripcio, preu, estat]
         );
 
 

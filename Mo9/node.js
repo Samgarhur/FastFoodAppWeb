@@ -81,9 +81,14 @@ app.post("/agregarProducte", function(req, res){
     novaFoto=nouProducte.foto
     //separar la foto al seu directori
     id=getNumProductes(connection).then((id)=>{
-    descargarImagen(novaFoto, ubicacioArxius+"/"+id+".jpeg")
+        id=JSON.parse(id)
+        let data = id;
+        let clave = Object.keys(data)[0];
+        let valor = data[clave];
+        console.log(valor)
+    descargarImagen(novaFoto, ubicacioArxius+"/"+valor+1+".jpeg")
   .then(() => 
-    //console.log('Imagen descargada con éxito')
+    //console.log('Imagen descargada con éxito')d
     insertProducte(connection,nouProducte)
   )})
   .catch(console.error);
@@ -181,7 +186,7 @@ function base64_encode(file) {
 function comensarPython(){
 
 }
-comensarPython()
+//comensarPython()
 
 
 
