@@ -109,25 +109,59 @@ async function insertComanda(connection, comandaData) {
 }
 
 
-async function marcarComandaFinalizada(connection) {
+async function marcarComandaFinalizada(connection, id_comanda) {
+    try {
+        const [rows, fields] = await connection.execute('UPDATE Comanda SET Finalitzada = true WHERE id_comanda = ?', [id_comanda]);
+        return rows.affectedRows;
+    } catch (error) {
+        console.error('Error al finalitzar la comanda:', error.message);
+        throw error;
+    }
 }
-
-
-async function marcarComandaRecogida(connection) {
-}
-
 
 async function getComandaFinalizada(connection) {
+    try {
+        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE Finalitzada = true');
+        const comandasJSON = JSON.stringify(rows);
+        return comandasJSON;
+    } catch (error) {
+        console.error('Error al obtenir les comandes finalitzades:', error.message);
+        throw error;
+    }
 }
 
 
 async function getComandaAceptada(connection) {
+    try {
+        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE estat = true AND Finalitzada = false');
+        const comandasJSON = JSON.stringify(rows);
+        return comandasJSON;
+    } catch (error) {
+        console.error('Error al obtenir les comandes aceptades:', error.message);
+        throw error;
+    }
 }
 
-
-async function updateEstatComanda(connection) {
+async function updateEstatComanda(connection, id_comanda, estat) {
+    try {
+        const [rows, fields] = await connection.execute('UPDATE Comanda SET estat = ? WHERE id_comanda = ?', [estat, id_comanda]);
+        return rows.affectedRows;
+    } catch (error) {
+        console.error('Error al actualizar el estat de la comanda:', error.message);
+        throw error;
+    }
 }
 
+//Comanda Recollida Falta modificar
+async function marcarComandaRecollida(connection, id_comanda) {
+    try {
+        const [rows, fields] = await connection.execute('UPDATE Comanda SET estat = true WHERE id_comanda = ?', [id_comanda]);
+        return rows.affectedRows;
+    } catch (error) {
+        console.error('Error al marcar la comanda como recogida:', error.message);
+        throw error;
+    }
+}
 
 /*-------------------Productes------------------*/
 
@@ -167,16 +201,49 @@ async function insertProducte(connection, producteData) {
 }
 
 
-async function deleteProducte(connection) {
-}
+async function deleteProducte(connection, id_producte) {
+    try {
+        const [result] = await connection.execute(
+            'DELETE FROM Producte WHERE id_producte = ?',
+            [id_producte]
+        );
 
 
-async function addProducte(connection) {
+        if (result.affectedRows === 1) {
+            return 'Poducte eliminat';
+        } else {
+            return 'No es pot eliminar';
+        }
+    } catch (error) {
+        console.error('Error al eliminar el producte:', error.message);
+        throw error;
+    }
 }
 
 
 async function updateProducte(connection) {
 }
+
+
+async function updateEstatProducte(connection, id_producte, setEstat) {
+    try {
+        const [result] = await connection.execute(
+            // 'UPDATE Producte SET estat = ? WHERE id_producte = ?',
+            [setEstat, id_producte]
+        );
+
+
+        if (result.affectedRows === 1) {
+            return 'Estat Actualitzat.';
+        } else {
+            return 'No es pot Actualitzar el estat.';
+        }
+    } catch (error) {
+        console.error('Error al actualizar el estat del producte:', error.message);
+        throw error;
+    }
+}
+
 
 
 
