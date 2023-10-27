@@ -2,10 +2,10 @@ import { io } from "socket.io-client";
 const socket = io();
 
 //Funcion para coger todas las comandas
-export async function getComandas(vue) {
+export async function getComandas() {
   const response = await fetch(`http://localhost:3001/getComandes`);
   const comandas = await response.json();
-  vue.comandes=comandas;
+  return comandas;
 }
 
 //Funcion para coger todas las aceptadas
@@ -22,8 +22,8 @@ export async function getComandasFinalizadas() {
   return peliculas.Search;
 }
 
-//Funcion para enviar al server que la comanda esta aceptada
-export async function comandaAceptada(id) {
+//Funcion para enviar al server que la comanda esta aceptada o rechazada
+export async function estatComanda(id,estat) {
   socket.emit('comandaAceptada',id)
   const response = await fetch(`http://localhost:3001/${id},${estat}`);
   const info = await response.json();

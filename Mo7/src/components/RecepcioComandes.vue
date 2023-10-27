@@ -1,13 +1,13 @@
 <template>
   <v-container>
     <v-card v-for="comanda in comandes" :key="comanda.id">
-      <v-card-title>{{ comanda.id_comanda}}</v-card-title>
+      <v-card-title>{{ comanda.id_comanda }}</v-card-title>
       <v-card-subtitle>{{ comanda.info }}</v-card-subtitle>
 
       <v-card-actions>
         <v-dialog v-model="dialog" max-width="300">
           <template v-slot:activator="{ on }">
-            <v-btn class="ma-2"  @click="dialog = true">Aceptar</v-btn>
+            <v-btn class="ma-2" @click="dialog = true">Aceptar</v-btn>
           </template>
           <v-card>
             <v-card-title>Confirmación</v-card-title>
@@ -39,11 +39,14 @@
       </v-card-actions>
     </v-card>
   </v-container>
+  <v-snackbar v-model="snackbar" :timeout="2000">
+    {{ snackbarMessage }} 
+  </v-snackbar>
 </template>
   
 <script>
 
-import { getComandas, comandaAceptada } from './communicationsManager';
+import { getComandas, estatComanda } from './communicationsManager';
 export default {
   name: 'RecepcioComandes',
   data() {
@@ -58,25 +61,32 @@ export default {
       }], // Aquí hauries de carregar les comandes des de la base de dades o API
       dialog: false, // Controla la visibilidad del diálogo de aceptación
       rechazarDialog: false, // Controla la visibilidad del diálogo de rechazo
-      estatComandas: null
+      estatComandas: null,
+      snackbar: false, // Controla la visibilidad del Snackbar
+      snackbarMessage: '', // Mensaje del Snackbar
     };
   },
   methods: {
     acceptarComanda(id) {
       this.estatComandas = true;
-      comandaAceptada(id)
+      estatComanda(id, this.estatComandas)
       this.dialog = false; // Cierra el diálogo después de la confirmación
+      this.snackbarMessage = 'Comanda aceptada';
+      this.snackbar = true; // Muestra el Snackbar
     },
     rebutjarComanda(id) {
       this.estatComandas = false;
-      estatComandas(id)
+      estatComanda(id, this.estatComandas)
       this.rechazarDialog = false; // Cierra el diálogo de rechazo después de la confirmación
+      this.snackbarMessage = 'Comanda rechazada';
+      this.snackbar = true; // Muestra el Snackbar
     },
 
   },
   created() {
-    //Coge todas las comandas del servidor
-    getComandas(this);
+    getComandas().then(response => {
+      this.comandes = response;
+    });
   },
 }
 </script>
