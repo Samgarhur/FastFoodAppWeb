@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes};
+module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes, getUsuariInfo};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -20,7 +20,16 @@ async function getUsuarisLogin(connection) {
     }
 }
 
-
+async function getUsuariInfo(connection, user) {
+    try {
+        const [rows, fields] = await connection.execute('SELECT * FROM Usuari WHERE usuario='+"'"+user+"'");
+        const usuariosJSON = JSON.stringify(rows);
+        return usuariosJSON;
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error.message);
+        throw error;
+    }
+}
 /*-------------------Comandes------------------*/
 
 
