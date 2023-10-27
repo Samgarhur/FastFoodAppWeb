@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes, getUsuariInfo, insertProducte};
+module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes, getUsuariInfo, insertProducte, deleteProducte, getNumProductes};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -177,6 +177,16 @@ async function getProductes(connection) {
     }
 }
 
+async function getNumProductes(connection) {
+    try {
+        const [rows, fields] = await connection.execute('SELECT MAX(id_producte) FROM Producte  ');
+        const productosJSON = JSON.stringify(rows);
+        return productosJSON;
+    } catch (error) {
+        console.error('Error al obtenir els productes:', error.message);
+        throw error;
+    }
+}
 
 async function insertProducte(connection, producteData) {
     try {
@@ -190,9 +200,9 @@ async function insertProducte(connection, producteData) {
 
         // Casos d'error
         if (result.affectedRows === 1) {
-            return 'Producte inserit correctament.';
+            return true;
         } else {
-            return 'No sha pogut inserir el producte.';
+            return false;
         }
     } catch (error) {
         console.error('Error al inserir el producte:', error.message);

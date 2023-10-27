@@ -9,7 +9,7 @@ const fs =require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo,getComandesProductes, insertProducte } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo,getComandesProductes, insertProducte, deleteProducte, getNumProductes } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies");
 const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
@@ -75,12 +75,12 @@ app.post("/crearComanda", function(req, res){
     res.send(result)})
 })//crear la comanda a la bbdd
 
-
+//----------------cosses vue----------------------//
 app.post("/agregarProducte", function(req, res){
     nouProducte=req.body
     novaFoto=nouProducte.foto
     //separar la foto al seu directori
-    id=numFiles(ubicacioArxius).then((id)=>{
+    id=getNumProductes(connection).then((id)=>{
     descargarImagen(novaFoto, ubicacioArxius+"/"+id+".jpeg")
   .then(() => 
     //console.log('Imagen descargada con éxito')
@@ -90,25 +90,20 @@ app.post("/agregarProducte", function(req, res){
     
 
 })//agregar productes a la bbdd desde vue
+app.post("/eliminarProducte", function(req, res){
+    prod=req.body
+    deleteProducte(connection, prod.id)
+    fs.unlink(ubicacioArxius+"/"+prod.id+".jpeg")
+})
 
-/*app.get("/getComandes", async function(req, res){
-    try {
-        const comandes = await getComandes(connection); 
-        const comandesJson = JSON.parse(comandes);
-        
-        res.json(comandesJson);
-    } catch (error) {
-        console.error('Error al obtener las comandas:', error.message);
-        res.status(500).send('Error al obtener datos de comandas.');
-    }
-});//*/
+
 
 //----------------General-------------------------//
 app.get("/getProductos", function(req, res){
     result=getProductes(connection).then((result)=>{
     console.log(result)
     result=JSON.parse(result)
-    for(var i=0; i<result.length; i++){
+    for(var i=1; i<result.length+1; i++){
         let fotografia=ubicacioArxius+"/"+i+".jpeg"
         result[i].foto=base64_encode(fotografia)
     }
@@ -146,14 +141,7 @@ io.on('connection', (socket) => {
 
 
 //-----------funcions auxiliars-------------------//
-async function numFiles(path){
-    try {
-        const archivos =  fs.readdirSync(path);
-        return(archivos.length);
-      } catch (error) {
-        console.log(error);
-      }
-}
+
 async function descargarImagen(url, rutaImagen) {
     const respuesta = await axios({
       url,
@@ -176,6 +164,17 @@ function base64_encode(file) {
     return new Buffer(bitmap).toString('base64');
 }//funcio auxilar per codificar fotos
 
+/*app.get("/getComandes", async function(req, res){
+    try {
+        const comandes = await getComandes(connection); 
+        const comandesJson = JSON.parse(comandes);
+        
+        res.json(comandesJson);
+    } catch (error) {
+        console.error('Error al obtener las comandas:', error.message);
+        res.status(500).send('Error al obtener datos de comandas.');
+    }
+});//*/
 
 
 //-------------py-----------------//
