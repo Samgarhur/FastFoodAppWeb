@@ -5,13 +5,12 @@ const PORT=3001;
 const mysql = require('mysql2/promise');
 const fs =require("fs");
 const bodyParser = require('body-parser')
+const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes, getProductes } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
-/*const { getProductes } = require("./scriptBD.js");
-const { getComandes } = require("./scriptBD.js");*/
 const arxiuPython="/python/main.py"
-const ubicacioArxius="/fotografies"
+const ubicacioArxius = path.join(__dirname, "..", "fotografies");
 const ubicacioGrafics="/python/grafics"
 //const io = require('socket.io')(server);
 
@@ -52,7 +51,7 @@ app.post("/usuaris", function(req, res){
         }
     }
     autoritzacio.autoritzacio=usuariTrobat;
-    res.send(autoritzacio)}) 
+    res.json(autoritzacio)}) 
    
     
 }) //donarAutoritzacio al login android
@@ -75,11 +74,23 @@ app.get("/getComandes", async function(req, res){
         console.error('Error al obtener las comandas:', error.message);
         res.status(500).send('Error al obtener datos de comandas.');
     }
+});//
+
+app.get("/getProductos", function(req, res){
+    result=getProductes(connection).then((result)=>{
+    console.log(result)
+    result=JSON.parse(result)
+    for(var i=0; i<result.length; i++){
+        let fotografia=ubicacioArxius+"/"+i+".jpeg"
+        result[i].foto=base64_encode(fotografia)
+    }
+    
+    console.log(result)
+    res.json(result)})
+})
 
 
 
-
-});
 /*const interval = 5000; // Interval de temps en milisegundos (5 segons)
 
 setInterval(async () => {
@@ -92,8 +103,15 @@ setInterval(async () => {
 }, interval);*/
 
 
-
+function base64_encode(file) {
+    // read binary data
+    var bitmap = fs.readFileSync(file);
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+}
 
 
 //movil - node-> enviar usuari, demanar productes i enviar comanda
 //vue - node -> demanar i enviar productes i comandes
+
+// https://stackoverflow.com/questions/23979842/convert-base64-string-to-image obtener imagenes en android
