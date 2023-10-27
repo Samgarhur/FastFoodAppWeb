@@ -15,7 +15,7 @@
           <v-card>
             <v-card-title>Confirmación</v-card-title>
             <v-card-text>
-              ¿Estás seguro de que deseas aceptar esta comanda?
+              ¿Estás segur de que vols aceptar aquesta comanda?
             </v-card-text>
             <v-card-actions>
               <v-btn @click="acceptarComanda(comanda.id)">Sí</v-btn>
@@ -31,7 +31,7 @@
           <v-card>
             <v-card-title>Confirmación</v-card-title>
             <v-card-text>
-              ¿Estás seguro de que deseas rechazar esta comanda?
+              ¿Estás segur de que vols rebutjar aquesta comanda?
             </v-card-text>
             <v-card-actions>
               <v-btn @click="rebutjarComanda(comanda.id)">Sí</v-btn>
@@ -49,7 +49,7 @@
   
 <script>
 
-import { getComandas, estatComanda } from './communicationsManager';
+import { getComandas } from './communicationsManager';
 export default {
   name: 'RecepcioComandes',
   data() {
@@ -65,16 +65,16 @@ export default {
   methods: {
     acceptarComanda(id) {
       this.estatComandas = "aceptada";
-      estatComanda(id, this.estatComandas)
+      //estatComanda(id, this.estatComandas)
       this.dialog = false; // Cierra el diálogo después de la confirmación
       this.snackbarMessage = 'Comanda aceptada';
       this.snackbar = true; // Muestra el Snackbar
     },
     rebutjarComanda(id) {
       this.estatComandas = "rebutjada";
-      estatComanda(id, this.estatComandas)
+      //estatComanda(id, this.estatComandas)
       this.rechazarDialog = false; // Cierra el diálogo de rechazo después de la confirmación
-      this.snackbarMessage = 'Comanda rechazada';
+      this.snackbarMessage = 'Comanda rebutjada';
       this.snackbar = true; // Muestra el Snackbar
     },
 

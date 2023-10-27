@@ -1,5 +1,5 @@
-import { io } from "socket.io-client";
-const socket = io('http://localhost:3001');
+//import { io } from "socket.io-client";
+//const socket = io('http://localhost:3001');
 
 //Funcion para coger todas las comandas
 export async function getComandas() {
@@ -22,6 +22,7 @@ export async function getComandasFinalizadas() {
   return peliculas.Search;
 }
 
+/*
 // Función para enviar al servidor que la comanda está aceptada o rechazada para socket
 export function estatComanda(id, estat) {
   return new Promise((resolve, reject) => {
@@ -29,11 +30,10 @@ export function estatComanda(id, estat) {
       resolve(info);
     });
   });
-}
+}*/
 
 /*Funcion para enviar al server que la comanda esta aceptada o rechazada
-export async function estatComanda(id,estat) {
-  socket.emit('comandaAceptada',id)
+export async function estatComanda(id,estat) {  
   const response = await fetch(`http://localhost:3001/${id},${estat}`);
   const info = await response.json();
   return info;
@@ -47,18 +47,17 @@ export async function comandaFinalitzada(id,finalitzada) {
 }
 
 //Funcion para enviar al servidor la comanda que este recogida
-export async function comandaRecogida(id) {
-  const response = await fetch(`http://localhost:3001/${id},${finalitzada}`);
+export async function comandaRecogida(id,recollida) {
+  const response = await fetch(`http://localhost:3001/${id},${recollida}`);
   const info = await response.json();
   return info;
 }
 
 
-export async function getProductes() {
-  console.log(vueObject) 
-  const response = await fetch('http://localhost:3001/');
-  const preguntas = await response.json();
-  vueObject.preguntes = preguntas.preguntas;
+export async function getProductos() { 
+  const response = await fetch('http://localhost:3001/getProductos');
+  const productos = await response.json();
+  return productos
 }
 
 

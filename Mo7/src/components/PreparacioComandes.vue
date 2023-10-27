@@ -1,14 +1,30 @@
 <template>
   <v-container>
     <v-row justify="center">
-      <v-col v-for="comanda in comandes" :key="comanda.id"  cols="3">
+      <v-col v-for="comanda in comandes" :key="comanda.id" cols="3">
         <v-card :class="posarColorComandes(comanda.temps)">
           <v-card-title>Comanda numero {{ comanda.id }}</v-card-title>
           <v-card-title>Temps: {{ comanda.temps }} minuts</v-card-title>
           <v-card-subtitle>{{ comanda.info }}</v-card-subtitle>
-          <v-card-actions>            
+
+
+          <v-card-actions>
             <v-btn @click="veureDetalls(comanda.id)">Veure Detalls</v-btn>
-            <v-btn @click="marcarComandaFinalitzada(comanda.id)">Marcar com a Finalitzada</v-btn><br>
+            <v-dialog v-model="dialog" max-width="300">
+              <template v-slot:activator="{ on }">
+                <v-btn class="ma-2" @click="dialog = true">Finalitzar comanda</v-btn>
+              </template>
+              <v-card>
+                <v-card-title>Confirmación</v-card-title>
+                <v-card-text>
+                  ¿Estás segur de que la comanda esta finalitzada?
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn @click=" marcarComandaFinalitzada(comanda.id)">Sí</v-btn>
+                  <v-btn @click="dialog = false">No</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-card-actions>
           <v-expand-transition>
             <v-card v-if="mostrarDetalls && comandaSeleccionada == comanda.id" class="v-card--reveal"
@@ -27,6 +43,9 @@
       </v-col>
     </v-row>
   </v-container>
+  <v-snackbar v-model="snackbar" :timeout="2000">
+    {{ snackbarMessage }}
+  </v-snackbar>
 </template>
   
 <script>
@@ -38,7 +57,7 @@ export default {
     return {
       mostrarDetalls: false,
       comandaSeleccionada: null,
-      finalitzada: false,
+      finalitzada: "",
       comandes: [{
         id: 1,
         info: "PATATAS, ANVORGESA,COLACOCA",
@@ -78,7 +97,11 @@ export default {
         id: 8,
         info: "PATATAS, AMBORGUSA,FANTA",
         temps: "32"
-      }]
+      }],
+      dialog: false, // Controla la visibilidad del diálogo de aceptación
+      rechazarDialog: false, // Controla la visibilidad del diálogo de rechazo
+      snackbar: false, // Controla la visibilidad del Snackbar
+      snackbarMessage: '', // Mensaje del Snackbar
     };
   },
   methods: {
@@ -87,15 +110,12 @@ export default {
       this.comandaSeleccionada = id;
     },
     marcarComandaFinalitzada(id) {
-      // Lògica per marcar la comanda com a finalitzada
-      var opcion = confirm("Estas seguro de que la comanda " + id + " esta finalizada?");
-      if (opcion == true) {
-        this.finalitzada = true;
-        comandaFinalitzada(id, this.finalitzada);
-
-      } else {
-
-      }
+      // Lògica per marcar la comanda com a finalitzada     
+      this.finalitzada = "finalitzada";
+      comandaFinalitzada(id, this.finalitzada);
+      this.dialog = false; // Cierra el diálogo después de la confirmación
+      this.snackbarMessage = 'Comanda finalitzada';
+      this.snackbar = true;
 
     },
     //Funcion para cambiar el color de los pedidos en funcion del tiempo
