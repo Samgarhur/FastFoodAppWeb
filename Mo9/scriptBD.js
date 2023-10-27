@@ -42,7 +42,7 @@ async function getComandesProductes(connection) {
             FROM Comanda_Producte CP
             JOIN Comanda C ON CP.id_comanda = C.id_comanda
             JOIN Producte P ON CP.id_producte = P.id_producte
-            WHERE C.estat IS NULL AND C.finalitzada = 0 AND C.recollida = 0;
+            WHERE C.estat = "Rebut";
         `;
         
         const [rows, fields] = await connection.execute(queryString);

@@ -6,6 +6,7 @@
     <v-card v-for="producte in productes" :key="producte.id">
       <v-card-title>{{ producte.nom }}</v-card-title>
       <v-card-subtitle>{{ producte.descripcio }}</v-card-subtitle>
+      <v-card-subtitle>{{ producte.preu }}</v-card-subtitle>
       <v-card-actions>
         <v-btn @click="editarProducte(producte)">Editar</v-btn>
         <v-btn @click="eliminarProducte(producte)">Eliminar</v-btn>
@@ -17,6 +18,7 @@
 </template>
   
 <script>
+import { getProductes, deleteProducte,addProducte,updateProducte } from './communicationsManager';
 export default {
   data() {
     return {
@@ -36,7 +38,12 @@ export default {
     afegirProducte() {
       // Lògica per afegir un nou producte
     }
-  }
+  }, 
+  created() {
+    getProductes().then(response => {
+      this.productes = response;
+    });
+  },
 }
 </script>
   

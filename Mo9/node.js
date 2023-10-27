@@ -1,4 +1,6 @@
 const express=require("express");
+const http = require('http');
+const socketIo = require('socket.io');
 const app = express();
 const cors = require("cors");
 const PORT=3001;
@@ -14,6 +16,9 @@ const arxiuPython="/python/main.py"
 const ubicacioArxius="/fotografies"
 const ubicacioGrafics="/python/grafics"
 //const io = require('socket.io')(server);
+
+const server = http.createServer(app);
+const io = socketIo(server);
 
 /*Accept all request*/
 app.use(cors());
@@ -89,6 +94,22 @@ app.get("/getComandes", async function(req, res){
         res.status(500).send('Error al obtener datos de comandas.');
     }
 });
+
+// Manejar la conexión de sockets
+io.on('connection', (socket) => {
+    console.log('Usuario conectado');
+  
+    // Escuchar la solicitud de comanda aceptada
+    socket.on('comandaAceptada', ({ id, estat }, callback) => {
+      // Aquí puedes procesar la información (id y estat) como desees
+      // Por ejemplo, guardar el estado de la comanda en tu fuente de datos
+      // y luego enviar una respuesta al cliente
+      const info = procesarComanda(id, estat); // Esto debería devolver la información necesaria
+      callback(info);
+    });
+  
+    // Resto de la lógica de tu aplicación...
+  });
 
 
 /*const interval = 5000; // Interval de temps en milisegundos (5 segons)

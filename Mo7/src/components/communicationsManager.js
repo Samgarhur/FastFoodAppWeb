@@ -31,13 +31,13 @@ export function estatComanda(id, estat) {
   });
 }
 
-//Funcion para enviar al server que la comanda esta aceptada o rechazada
+/*Funcion para enviar al server que la comanda esta aceptada o rechazada
 export async function estatComanda(id,estat) {
   socket.emit('comandaAceptada',id)
   const response = await fetch(`http://localhost:3001/${id},${estat}`);
   const info = await response.json();
   return info;
-}
+}*/
 
 //Funcion para enviar la comanda que este finalizada
 export async function comandaFinalitzada(id,finalitzada) {
