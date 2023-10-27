@@ -31,7 +31,7 @@ const connection = mysql.createPool({
     database: "a22albcormad_BotigaG7"
 });
 
-
+//------------cosses android--------------
 app.post("/usuaris", function(req, res){
     const user = req.body;
 
@@ -53,7 +53,6 @@ app.post("/usuaris", function(req, res){
     autoritzacio.autoritzacio=usuariTrobat;
     res.json(autoritzacio)}) 
 }) //donarAutoritzacio al login android
-
 app.post("/dadesUsuari", function(req, res){
     const nomUsuari=req.body
     result=getUsuariInfo(connection, nomUsuari.usuario).then((result)=>{
@@ -61,9 +60,7 @@ app.post("/dadesUsuari", function(req, res){
     result=JSON.parse(result)
     console.log(result)
     res.json(result)})
-})
-
-
+})//pasar dades del usuari a android
 app.post("/crearComanda", function(req, res){
     const comanda = req.body;
     resultat=insertComanda(connection, comanda).then((resultat)  => {
@@ -103,7 +100,6 @@ app.get("/getComandes", async function(req, res){
     try {
         const comandes = await getComandesProductes(connection); 
         const comandesJson = JSON.parse(comandes);
-        
         res.json(comandesJson);
     } catch (error) {
         console.error('Error al obtener las comandas:', error.message);
