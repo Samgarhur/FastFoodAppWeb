@@ -62,6 +62,7 @@ app.post("/usuaris", function(req, res){
 }) //donarAutoritzacio al login android
 app.post("/dadesUsuari", function(req, res){
     const nomUsuari=req.body
+    console.log(nomUsuari);
     result=getUsuariInfo(connection, nomUsuari.usuario).then((result)=>{
     console.log(result)
     result=JSON.parse(result)
