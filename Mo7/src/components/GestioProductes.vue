@@ -25,6 +25,7 @@
       <v-card-title>{{ producte.nom }}</v-card-title>
       <v-card-subtitle>Descripcio: {{ producte.descripcio }}</v-card-subtitle>
       <v-card-subtitle>Preu: {{ producte.preu }}</v-card-subtitle>
+      <v-img :src=producte.foto height="200px" cover></v-img>
       <v-card-actions>
         <v-btn @click="editarProducte(producte.id)">Editar</v-btn>
         <v-btn @click="eliminarProducte(producte.id)">Eliminar</v-btn>
@@ -38,13 +39,20 @@
 </template>
   
 <script>
-import { getProductos, deleteProducte, addProducte, updateProducte } from './communicationsManager';
+import { getProductos, deleteProducte, addProducte, updateProducte,updateEstatProducte} from './communicationsManager';
 export default {
   data() {
     return {
       verMenuAfegir: false,
       productes: [], // Aquí hauries de carregar els productes des de la base de dades o API
       nouProducte: {
+        nom: "",
+        descripcio: "",
+        preu: 0,
+        estat: 1,
+        foto: ""
+      },
+      producteEditat: {
         nom: "",
         descripcio: "",
         preu: 0,
@@ -62,7 +70,7 @@ export default {
       // Lògica per editar el producte
     },
     eliminarProducte(producte) {
-      // Lògica per eliminar el producte
+      deleteProducte(producte);
     },
     activarDesactivarProducte(producte) {
       // Lògica per activar o desactivar el producte
