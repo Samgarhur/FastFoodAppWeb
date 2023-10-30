@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes, getUsuariInfo, insertProducte, deleteProducte, getNumProductes};
+module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes, getUsuariInfo, insertProducte, deleteProducte, getNumProductes, updateProducte};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -243,6 +243,7 @@ async function deleteProducte(connection, id_producte) {
     }
 }
 
+//Update Productes (prova)
 async function updateProducte(connection, id_producte, producteData) {
     try {
         const { nom, descripcio, preu, estat, foto } = producteData;

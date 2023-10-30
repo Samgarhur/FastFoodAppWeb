@@ -9,7 +9,7 @@ const fs =require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo,getComandesProductes, insertProducte, deleteProducte, getNumProductes } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo,getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies");
 const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
@@ -105,8 +105,27 @@ app.delete("/eliminarProducte/:id", function(req, res){
     fs.unlink(ubicacioArxius+"/"+prod+".jpeg")
 })
 
-
-
+//Modificar Produtes Bdd (Falta revisar)
+app.put("/modificarProducte/:id", function(req, res){
+    const producteModificat=req.body
+    const producteId = req.params.id
+    novaFoto=nouProducte.foto
+    console.log(nouProducte)
+    //separar la foto al seu directori
+    id=getNumProductes(connection).then((id)=>{
+        console.log(id, "1")
+        id=JSON.parse(id)
+        //console.log(id[0].MAX(id_producte), "2")
+        let obj = id[0];
+        let valor = obj['MAX(id_producte)'];
+        numProd=valor+1
+    descargarImagen(novaFoto, ubicacioArxius+"/"+numProd+".jpeg")
+  .then(() => 
+    //console.log('Imagen descargada con éxito')d
+    updateProducte(connection,producteId, producteModificat)
+  )})
+  .catch(console.error);
+})
 //----------------General-------------------------//
 app.get("/getProductos", function(req, res){
     result=getProductes(connection).then((result)=>{
