@@ -41,25 +41,25 @@ const connection = mysql.createPool({
 //------------cosses android----------------//
 app.post("/usuaris", function(req, res){
     const user = req.body;
-
+    console.log(user)
+    console.log(user.usuario)
+    console.log(user.passwd)
     let usuariTrobat=false;
     autoritzacio={"autoritzacio":false};
     
     usuaris= getUsuarisLogin(connection).then((usuaris) => {
     usuaris=JSON.parse(usuaris)
-    
+    console.log(usuaris[0].usuario)
     for(var i=0; i<usuaris.length || usuariTrobat==false; i++){
-        nom=(usuaris[i].usuario)
-        contra=(usuaris[i].passwd)
-
-        if(nom==user.usuario && contra==user.contra){
+        if(usuaris[i].usuario==user.usuario && usuaris[i].contra==user.contra){
             console.log("hola")
             usuariTrobat=true;
         }
     }
     autoritzacio.autoritzacio=usuariTrobat;
     res.json(autoritzacio)}) 
-}) //donarAutoritzacio al login android
+})
+ //donarAutoritzacio al login android
 app.post("/dadesUsuari", function(req, res){
     const nomUsuari=req.body
     console.log(nomUsuari);
