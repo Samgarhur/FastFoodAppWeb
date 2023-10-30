@@ -80,14 +80,16 @@ app.post("/crearComanda", function(req, res){
 app.post("/agregarProducte", function(req, res){
     nouProducte=req.body
     novaFoto=nouProducte.foto
+    console.log(nouProducte)
     //separar la foto al seu directori
     id=getNumProductes(connection).then((id)=>{
+        console.log(id, "1")
         id=JSON.parse(id)
-        let data = id;
-        let clave = Object.keys(data)[0];
-        let valor = data[clave];
-        console.log(valor)
-    descargarImagen(novaFoto, ubicacioArxius+"/"+valor+1+".jpeg")
+        //console.log(id[0].MAX(id_producte), "2")
+        let obj = id[0];
+        let valor = obj['MAX(id_producte)'];
+        numProd=valor+1
+    descargarImagen(novaFoto, ubicacioArxius+"/"+numProd+".jpeg")
   .then(() => 
     //console.log('Imagen descargada con éxito')d
     insertProducte(connection,nouProducte)
@@ -151,6 +153,7 @@ io.on('connection', (socket) => {
 //-----------funcions auxiliars-------------------//
 
 async function descargarImagen(url, rutaImagen) {
+    console.log("descarregant imatge")
     const respuesta = await axios({
       url,
       method: 'GET',

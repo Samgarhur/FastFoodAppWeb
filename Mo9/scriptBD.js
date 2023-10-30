@@ -189,12 +189,25 @@ async function getNumProductes(connection) {
 }
 
 async function insertProducte(connection, producteData) {
-    try {
+    try {    
+
         // INSERT
-        const { nom, descripcio, preu, estat} = producteData;
+        let {idProd, nom, descripcio, preu, estat, foto} = producteData;
+        id=getNumProductes(connection).then(async (id)=>{
+            id=JSON.parse(id)
+            let obj = id[0];
+            let valor = obj['MAX(id_producte)'];
+            idProd=valor+1
+            foto=null;
+            console.log(idProd)
+            console.log(foto)
+            console.log(nom)
+            console.log(preu)
+            console.log(estat)
+            console.log(descripcio)
         const [result] = await connection.execute(
-            'INSERT INTO Producte ( nom, descripcio, preu, estat) VALUES ( ?, ?, ?, ?)',
-            [ nom, descripcio, preu, estat]
+            'INSERT INTO Producte ( id_producte, nom, descripcio, preu, estat, foto) VALUES ( ?, ?, ?, ?, ?, ?)',
+            [ idProd, nom, descripcio, preu, estat, foto]
         );
 
 
@@ -203,7 +216,7 @@ async function insertProducte(connection, producteData) {
             return true;
         } else {
             return false;
-        }
+        }})
     } catch (error) {
         console.error('Error al inserir el producte:', error.message);
         throw error;
