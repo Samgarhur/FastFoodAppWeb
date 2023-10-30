@@ -21,15 +21,15 @@
     </v-dialog>
   </v-container>
   <v-container>
-    <v-card v-for="producte in productes" :key="producte.id">
+    <v-card v-for="producte in productes">
       <v-card-title>{{ producte.nom }}</v-card-title>
       <v-card-subtitle>Descripcio: {{ producte.descripcio }}</v-card-subtitle>
-      <v-card-subtitle>Preu: {{ producte.preu }}</v-card-subtitle>
-      <v-img :src=producte.foto height="200px" cover></v-img>
+      <v-card-subtitle>Preu: {{ producte.preu }}</v-card-subtitle>      
+      <v-img :src="decodeBase64Image(producte.foto)" height="150" width="150" cover></v-img>
       <v-card-actions>
-        <v-btn @click="editarProducte(producte.id)">Editar</v-btn>
-        <v-btn @click="eliminarProducte(producte.id)">Eliminar</v-btn>
-        <v-btn @click="activarDesactivarProducte(producte.id)">{{ producte.estat ? 'Desactivar' : 'Activar' }}</v-btn>
+        <v-btn @click="editarProducte(producte.id_producte)">Editar</v-btn>
+        <v-btn @click="eliminarProducte(producte.id_producte)">Eliminar</v-btn>
+        <v-btn @click="activarDesactivarProducte(producte.id_producte)">{{ producte.estat ? 'Desactivar' : 'Activar' }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -39,7 +39,7 @@
 </template>
   
 <script>
-import { getProductos, deleteProducte, addProducte, updateProducte,updateEstatProducte} from './communicationsManager';
+import { getProductos, deleteProducte, addProducte, updateProducte, updateEstatProducte } from './communicationsManager';
 export default {
   data() {
     return {
@@ -62,7 +62,7 @@ export default {
       dialog: false, // Controla la visibilidad del diálogo de aceptación
       rechazarDialog: false, // Controla la visibilidad del diálogo de rechazo
       snackbar: false, // Controla la visibilidad del Snackbar
-      snackbarMessage: '', // Mensaje del Snackbar
+      snackbarMessage: '', // Mensaje del Snackbar      
     };
   },
   methods: {
@@ -81,10 +81,20 @@ export default {
     },
     afegirProducte() {
       addProducte(this.nouProducte)
-      this.dialog=false;
+      this.dialog = false;
       this.snackbarMessage = 'Producte Afegit';
       this.snackbar = true;
-      
+
+    },
+    //Funcion para codificar las imagenes del servidor de base64 a una url
+    decodeBase64Image(base64String) {
+      const binaryString = atob(base64String);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { type: "image/jpeg" }); // Ajusta el tipo MIME según tu imagen
+      return URL.createObjectURL(blob);
     }
   },
   created() {

@@ -62,7 +62,8 @@ export async function getProductos() {
 
 //Funcion para borrar los productos
 export async function deleteProducte(id) {
-  const response = await fetch(`http://localhost:3001/${id}`,
+  console.log("eliminar producte: " + id)
+  const response = await fetch(`http://localhost:3001/eliminarProducte/${id}`,
     { method: 'DELETE' });
   console.log(response);
 

@@ -97,11 +97,12 @@ app.post("/agregarProducte", function(req, res){
   .catch(console.error);
     
 
-})//agregar productes a la bbdd desde vue
-app.post("/eliminarProducte", function(req, res){
-    prod=req.body
-    deleteProducte(connection, prod.id)
-    fs.unlink(ubicacioArxius+"/"+prod.id+".jpeg")
+})
+//Eliminar productes a la bbdd desde vue
+app.delete("/eliminarProducte/:id", function(req, res){
+    const prod=req.params.id
+    deleteProducte(connection, prod)
+    fs.unlink(ubicacioArxius+"/"+prod+".jpeg")
 })
 
 
