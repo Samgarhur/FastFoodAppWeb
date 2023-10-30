@@ -278,7 +278,7 @@ async function updateProducte(connection, id_producte, producteData) {
 
         const [result] = await connection.execute(
             'UPDATE Producte SET id_producte = ?, nom = ?, descripcio = ?, preu = ?, estat = ?, foto = ? WHERE id_producte = ?',
-            [idProd, nom, descripcio, preu, estat, foto, id_producte]
+            [idProd, nom, descripcio, preu, estat, foto]
         );
 
         if (result.affectedRows === 1) {
