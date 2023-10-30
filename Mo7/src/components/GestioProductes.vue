@@ -43,7 +43,6 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-btn @click="eliminarProducte(producte.id_producte)">Eliminar</v-btn>
         <v-btn @click="activarDesactivarProducte(producte.id_producte)">{{ producte.estat ? 'Desactivar' : 'Activar'
         }}</v-btn>
       </v-card-actions>
@@ -87,9 +86,12 @@ export default {
       // Lògica per editar el producte
     },
     eliminarProducte(producte) {
-      deleteProducte(producte).then(
-        response => getProductos()
-      );
+      deleteProducte(producte).then(response => {
+        // Actualiza la lista de productos después de eliminar
+        getProductos().then(response => {
+          this.productes = response;
+        });
+      });
       this.dialogEliminarProducte = false;
       this.snackbarMessage = 'Producte eliminat';
       this.snackbar = true;
@@ -103,11 +105,12 @@ export default {
 
     },
     afegirProducte() {
-      addProducte(this.nouProducte).then(
-        response => getProductos().then(response => {
+      addProducte(this.nouProducte).then(response => {
+        // Actualiza la lista de productos después de agregar
+        getProductos().then(response => {
           this.productes = response;
-        })
-      );
+        });
+      });
       this.dialogCrearProducte = false;
       this.snackbarMessage = 'Producte Afegit';
       this.snackbar = true;
