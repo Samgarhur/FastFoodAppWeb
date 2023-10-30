@@ -40,32 +40,32 @@ export async function estatComanda(id,estat) {
 }*/
 
 //Funcion para enviar la comanda que este finalizada
-export async function comandaFinalitzada(id,finalitzada) {
+export async function comandaFinalitzada(id, finalitzada) {
   const response = await fetch(`http://localhost:3001/${id},${finalitzada}`);
   const info = await response.json();
   return info;
 }
 
 //Funcion para enviar al servidor la comanda que este recogida
-export async function comandaRecogida(id,recollida) {
+export async function comandaRecogida(id, recollida) {
   const response = await fetch(`http://localhost:3001/${id},${recollida}`);
   const info = await response.json();
   return info;
 }
 
-
-export async function getProductos() { 
+//Funcion para coger los productos del servidor
+export async function getProductos() {
   const response = await fetch('http://localhost:3001/getProductos');
   const productos = await response.json();
   return productos
 }
 
-
+//Funcion para borrar los productos
 export async function deleteProducte(id) {
   const response = await fetch(`http://localhost:3001/${id}`,
     { method: 'DELETE' });
-  console.log(response);  
-  
+  console.log(response);
+
 }
 
 export async function addProducte(dadesProducte) {
@@ -78,12 +78,12 @@ export async function addProducte(dadesProducte) {
 
       body: JSON.stringify(dadesProducte),
       mode: "cors"
-    },);    
+    },);
 
 }
 
 export async function updateProducte(dadesProductemodificar, id) {
-  console.log("datos recibidos: "+dadesProductemodificar)
+  console.log("datos recibidos: " + dadesProductemodificar)
   const response = await fetch(`http://localhost:3001/${id}`,
     {
       method: 'PUT', headers: {
@@ -91,7 +91,20 @@ export async function updateProducte(dadesProductemodificar, id) {
       },
       body: JSON.stringify(dadesProductemodificar),
       mode: "cors"
-    },);   
+    },);
+
+}
+
+export async function updateEstatProducte(id,estat) {
+  console.log("datos recibidos: " + dadesProductemodificar)
+  const response = await fetch(`http://localhost:3001/${id},${estat}`,
+    {
+      method: 'PUT', headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dadesProductemodificar),
+      mode: "cors"
+    },);
 
 }
 
