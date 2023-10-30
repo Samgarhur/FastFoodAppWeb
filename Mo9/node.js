@@ -109,8 +109,10 @@ app.get("/getProductos", function(req, res){
     result=getProductes(connection).then((result)=>{
     console.log(result)
     result=JSON.parse(result)
-    for(var i=1; i<result.length+1; i++){
-        let fotografia=ubicacioArxius+"/"+i+".jpeg"
+    console.log(result)
+    for(var i=0; i<result.length; i++){
+        numFoto=i+1
+        let fotografia=ubicacioArxius+"/"+numFoto+".jpeg"
         result[i].foto=base64_encode(fotografia)
     }
     
