@@ -70,8 +70,8 @@ export async function deleteProducte(id) {
 }
 
 export async function addProducte(dadesProducte) {
-  console.log("datos recibidos: " + dadesProducte)
-  const response = await fetch(`http://localhost:3001/`,
+  console.log(dadesProducte)
+  const response = await fetch(`http://localhost:3001/agregarProducte`,
     {
       method: 'POST', headers: {
         'Content-Type': 'application/json',

@@ -110,16 +110,15 @@ app.delete("/eliminarProducte/:id", function(req, res){
 //----------------General-------------------------//
 app.get("/getProductos", function(req, res){
     result=getProductes(connection).then((result)=>{
-    console.log(result)
+    //console.log(result)
     result=JSON.parse(result)
-    console.log(result)
+    //console.log(result)
     for(var i=0; i<result.length; i++){
         numFoto=i+1
         let fotografia=ubicacioArxius+"/"+numFoto+".jpeg"
-        result[i].foto=base64_encode(fotografia)
-    }
+        result[i].foto=base64_encode(fotografia)    }
     
-    console.log(result)
+    //console.log(result)
     res.json(result)})
 })//Passar productes amb la seva foto a android
 app.get("/getComandes", async function(req, res){
