@@ -58,8 +58,7 @@ app.post("/usuaris", function(req, res){
     }
     autoritzacio.autoritzacio=usuariTrobat;
     res.json(autoritzacio)}) 
-})
- //donarAutoritzacio al login android
+})//donarAutoritzacio al login android
 app.post("/dadesUsuari", function(req, res){
     const nomUsuari=req.body
     console.log(nomUsuari);
@@ -97,15 +96,12 @@ app.post("/agregarProducte", function(req, res){
   .catch(console.error);
     
 
-})
-//Eliminar productes a la bbdd desde vue
+})//agregar producte a la bbdd 
 app.delete("/eliminarProducte/:id", function(req, res){
     const prod=req.params.id
     deleteProducte(connection, prod)
     fs.unlink(ubicacioArxius+"/"+prod+".jpeg")
-})
-
-//Modificar Produtes Bdd (Falta revisar)
+})//Eliminar productes a la bbdd 
 app.put("/modificarProducte/:id", function(req, res){
     const producteModificat=req.body
     const producteId = req.params.id
@@ -125,7 +121,9 @@ app.put("/modificarProducte/:id", function(req, res){
     updateProducte(connection,producteId, producteModificat)
   )})
   .catch(console.error);
-})
+})//modificar un producte de la bbdd
+
+
 //----------------General-------------------------//
 app.get("/getProductos", function(req, res){
     result=getProductes(connection).then((result)=>{
@@ -139,7 +137,7 @@ app.get("/getProductos", function(req, res){
     
     //console.log(result)
     res.json(result)})
-})//Passar productes amb la seva foto a android
+})//Passar productes amb la seva foto codificada
 app.get("/getComandes", async function(req, res){
     try {
         const comandes = await getComandesProductes(connection); 
@@ -150,8 +148,6 @@ app.get("/getComandes", async function(req, res){
         res.status(500).send('Error al obtener datos de comandas.');
     }
 });
-
-// Manejar la conexión de sockets
 io.on('connection', (socket) => {
     console.log('Usuario conectado');
   
@@ -165,9 +161,7 @@ io.on('connection', (socket) => {
     });
   
     // Resto de la lógica de tu aplicación...
-  });
-
-
+})// Manejar la conexión de sockets
 
 //-----------funcions auxiliars-------------------//
 
@@ -186,7 +180,7 @@ async function descargarImagen(url, rutaImagen) {
       escritor.on('finish', resolver);
       escritor.on('error', rechazar);
     });
-}
+}//descarregar la foto desde la url amb axios
 function base64_encode(file) {
     // read binary data
     var bitmap = fs.readFileSync(file);
@@ -211,7 +205,7 @@ function base64_encode(file) {
 function comensarPython(){
 
 }
-//comensarPython()
+//començarPython()
 
 
 
@@ -219,4 +213,3 @@ function comensarPython(){
 //movil - node-> enviar usuari, demanar productes i enviar comanda
 //vue - node -> demanar i enviar productes i comandes
 
-// https://stackoverflow.com/questions/23979842/convert-base64-string-to-image obtener imagenes en android

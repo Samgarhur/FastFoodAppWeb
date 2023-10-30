@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes, getUsuariInfo, insertProducte, deleteProducte, getNumProductes, updateProducte};
+module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes, getUsuariInfo, insertProducte, deleteProducte, getNumProductes};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -199,12 +199,7 @@ async function insertProducte(connection, producteData) {
             let valor = obj['MAX(id_producte)'];
             idProd=valor+1
             foto=null;
-            console.log(idProd)
-            console.log(foto)
-            console.log(nom)
-            console.log(preu)
-            console.log(estat)
-            console.log(descripcio)
+          
         const [result] = await connection.execute(
             'INSERT INTO Producte ( id_producte, nom, descripcio, preu, estat, foto) VALUES ( ?, ?, ?, ?, ?, ?)',
             [ idProd, nom, descripcio, preu, estat, foto]
@@ -245,7 +240,7 @@ async function deleteProducte(connection, id_producte) {
 
 //Update Productes (prova)
 async function updateProducte(connection, id_producte, producteData) {
-    try {
+try {
         const { nom, descripcio, preu, estat, foto } = producteData;
 
 
