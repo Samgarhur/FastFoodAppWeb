@@ -62,15 +62,15 @@ export async function getProductos() {
 
 //Funcion para borrar los productos
 export async function deleteProducte(id) {
-  console.log("eliminar producte: " + id)
+  //console.log("eliminar producte: " + id)
   const response = await fetch(`http://localhost:3001/eliminarProducte/${id}`,
     { method: 'DELETE' });
   console.log(response);
 
 }
-
+//Funcion para agregar productos
 export async function addProducte(dadesProducte) {
-  console.log(dadesProducte)
+  //console.log(dadesProducte)
   const response = await fetch(`http://localhost:3001/agregarProducte`,
     {
       method: 'POST', headers: {
@@ -82,12 +82,13 @@ export async function addProducte(dadesProducte) {
     },);
 
 }
-
+//Funcion para modificar productos
 export async function updateProducte(dadesProductemodificar, id) {
   console.log("datos recibidos: " + dadesProductemodificar)
-  const response = await fetch(`http://localhost:3001/${id}`,
+  const response = await fetch(`http://localhost:3001/modificarProducte/${id}`,
     {
-      method: 'PUT', headers: {
+      method: 'PUT', 
+      headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(dadesProductemodificar),
@@ -97,7 +98,7 @@ export async function updateProducte(dadesProductemodificar, id) {
 }
 
 export async function updateEstatProducte(id,estat) {
-  console.log("datos recibidos: " + dadesProductemodificar)
+  //console.log("datos recibidos: " + dadesProductemodificar)
   const response = await fetch(`http://localhost:3001/${id},${estat}`,
     {
       method: 'PUT', headers: {

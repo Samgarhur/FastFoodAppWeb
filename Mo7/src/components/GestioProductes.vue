@@ -8,10 +8,10 @@
       <v-card>
         <v-card-title>Confirmación</v-card-title>
         <v-card-text>
-          <v-text-field v-model="nouProducte.nom" label="Nom del producte"></v-text-field>
-          <v-text-field v-model="nouProducte.descripcio" label="Descripcio del producte"></v-text-field>
-          <v-text-field v-model="nouProducte.preu" label="preu del producte"></v-text-field>
-          <v-text-field v-model="nouProducte.foto" label="Posa la URL de la imatge del producte" required></v-text-field>
+          <v-text-field v-model="nouProducte.nom" label="Nom producte"></v-text-field>
+          <v-text-field v-model="nouProducte.descripcio" label="Descripcio"></v-text-field>
+          <v-text-field v-model="nouProducte.preu" label=""></v-text-field>
+          <v-text-field v-model="nouProducte.foto" label="" required></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn @click="afegirProducte">Agegir producte</v-btn>
@@ -27,7 +27,26 @@
       <v-card-subtitle>Preu: {{ producte.preu }}</v-card-subtitle>
       <v-img :src="decodeBase64Image(producte.foto)" height="150" width="150" cover></v-img>
       <v-card-actions>
-        <v-btn @click="editarProducte(producte.id_producte)">Editar</v-btn>
+        <v-dialog v-model="dialogEditarProducte" max-width="300">
+          <template v-slot:activator="{ on }">
+            <v-btn class="ma-2" @click="this.dialogEditarProducte = true;agafarDadesProducte(producte)">Editar
+              producte</v-btn>
+          </template>
+          <v-card>
+            <v-card-title>Confirmación</v-card-title>
+            <v-card-text>
+              <v-text-field v-model="producteEditat.nom" label="Nom del producte"></v-text-field>
+              <v-text-field v-model="producteEditat.descripcio" label="Descripcio del producte"></v-text-field>
+              <v-text-field v-model="producteEditat.preu" label="Preu del producte"></v-text-field>
+              <v-text-field v-model="producteEditat.foto" label="Posa la URL de la imatge del producte"
+                required></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn @click="editarProducte(producte.id_producte)">Modificar producte</v-btn>
+              <v-btn @click="dialogEditarProducte = false">Cancelar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-dialog v-model="dialogEliminarProducte" max-width="300">
           <template v-slot:activator="{ on }">
             <v-btn class="ma-2" @click="dialogEliminarProducte = true">Eliminar</v-btn>
@@ -76,14 +95,29 @@ export default {
       },
       dialogCrearProducte: false, // Controla la visibilidad del diálogo de crear producto
       dialogEliminarProducte: false, // Controla la visibilidad del diálogo de eliminar producto
+      dialogEditarProducte: false, // Controla la visibilidad del diálogo de editar producto
       rechazarDialog: false, // Controla la visibilidad del diálogo de rechazo
       snackbar: false, // Controla la visibilidad del Snackbar
       snackbarMessage: '', // Mensaje del Snackbar      
     };
   },
   methods: {
-    editarProducte(producte) {
+    editarProducte(id) {
       // Lògica per editar el producte
+      updateProducte(id, this.producteEditat).then(response => {
+        // Actualiza la lista de productos después de editarlo
+        getProductos().then(response => {
+          this.productes = response;
+        });
+      });
+
+      this.dialogEditarProducte = false;
+    },
+    agafarDadesProducte(producte) {      
+      this.producteEditat.nom = producte.nom;
+      this.producteEditat.descripcio = producte.descripcio;
+      this.producteEditat.preu = producte.preu;
+      
     },
     eliminarProducte(producte) {
       deleteProducte(producte).then(response => {
@@ -125,6 +159,7 @@ export default {
         bytes[i] = binaryString.charCodeAt(i);
       }
       const blob = new Blob([bytes], { type: "image/jpeg" }); // Ajusta el tipo MIME según tu imagen
+      this.producteEditat.foto=URL.createObjectURL(blob)
       return URL.createObjectURL(blob);
     }
   },

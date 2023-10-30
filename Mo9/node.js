@@ -79,7 +79,7 @@ app.post("/crearComanda", function(req, res){
 app.post("/agregarProducte", function(req, res){
     nouProducte=req.body
     novaFoto=nouProducte.foto
-    console.log(nouProducte)
+    //console.log(nouProducte)
     //separar la foto al seu directori
     id=getNumProductes(connection).then((id)=>{
         console.log(id, "1")
@@ -102,10 +102,12 @@ app.delete("/eliminarProducte/:id", function(req, res){
     deleteProducte(connection, prod)
     fs.unlink(ubicacioArxius+"/"+prod+".jpeg")
 })//Eliminar productes a la bbdd 
-app.put("/modificarProducte/:id", function(req, res){
+app.put("/modificarProducte/:id", function(req, res){    
+    console.log("Entra en modificar producte");
     const producteModificat=req.body
     const producteId = req.params.id
-    novaFoto=nouProducte.foto
+    console.log(producteModificat)
+    /*novaFoto=nouProducte.foto
     console.log(nouProducte)
     //separar la foto al seu directori
     id=getNumProductes(connection).then((id)=>{
@@ -117,10 +119,16 @@ app.put("/modificarProducte/:id", function(req, res){
         numProd=valor+1
     descargarImagen(novaFoto, ubicacioArxius+"/"+numProd+".jpeg")
   .then(() => 
-    //console.log('Imagen descargada con éxito')d
-    updateProducte(connection,producteId, producteModificat)
-  )})
-  .catch(console.error);
+    //console.log('Imagen descargada con éxito')d*/
+    updateProducte(connection,producteId, producteModificat).then(result => {
+        // Operación exitosa, envía una respuesta 200 OK
+        res.status(200).json({ message: "Producte actualitzat amb èxit" });
+      })
+      .catch(error => {
+        // Error en la operación, envía una respuesta de error con código 500 u otro código apropiado
+        res.status(500).json({ message: "Error al actualitzar el producte" });
+      });
+    
 })//modificar un producte de la bbdd
 
 
