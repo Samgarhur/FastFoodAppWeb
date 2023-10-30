@@ -243,9 +243,54 @@ async function deleteProducte(connection, id_producte) {
     }
 }
 
+async function updateProducte(connection, id_producte, producteData) {
+    try {
+        const { nom, descripcio, preu, estat, foto } = producteData;
 
-async function updateProducte(connection) {
+
+        const [result] = await connection.execute(
+            'UPDATE Producte SET nom = ?, descripcio = ?, preu = ?, estat = ?, foto = ? WHERE id_producte = ?',
+            [nom, descripcio, preu, estat, foto, id_producte]
+        );
+
+        if (result.affectedRows === 1) {
+            return 'Producte actualitzat';
+        } else {
+            return 'No es pot actualitzar el producte';
+        }
+    } catch (error) {
+        console.error('Error al actualitzar el producte:', error.message);
+        throw error;
+    }
 }
+
+
+/*async function updateProducte(connection, id_producte, producteData) {
+    try {
+        const { nom, descripcio, preu, estat, foto } = producteData;
+
+        const idProd = await getNumProductes(connection).then((id) => {
+            id = JSON.parse(id);
+            let obj = id[0];
+            let valor = obj['MAX(id_producte)'];
+            return valor + 1;
+        });
+
+        const [result] = await connection.execute(
+            'UPDATE Producte SET id_producte = ?, nom = ?, descripcio = ?, preu = ?, estat = ?, foto = ? WHERE id_producte = ?',
+            [idProd, nom, descripcio, preu, estat, foto, id_producte]
+        );
+
+        if (result.affectedRows === 1) {
+            return 'Producte actualitzat';
+        } else {
+            return 'No es pot actualitzar el producte';
+        }
+    } catch (error) {
+        console.error('Error al actualitzar el producte:', error.message);
+        throw error;
+    }
+}*/
 
 
 async function updateEstatProducte(connection, id_producte, setEstat) {
