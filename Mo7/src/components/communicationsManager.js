@@ -83,8 +83,9 @@ export async function addProducte(dadesProducte) {
 
 }
 //Funcion para modificar productos
-export async function updateProducte(dadesProductemodificar, id) {
-  console.log("datos recibidos: " + dadesProductemodificar)
+export async function updateProducte(id,dadesProductemodificar) {
+  console.log(dadesProductemodificar)
+  console.log(id)
   const response = await fetch(`http://localhost:3001/modificarProducte/${id}`,
     {
       method: 'PUT', 
