@@ -10,8 +10,8 @@
         <v-card-text>
           <v-text-field v-model="nouProducte.nom" label="Nom producte"></v-text-field>
           <v-text-field v-model="nouProducte.descripcio" label="Descripcio"></v-text-field>
-          <v-text-field v-model="nouProducte.preu" label=""></v-text-field>
-          <v-text-field v-model="nouProducte.foto" label="" required></v-text-field>
+          <v-text-field v-model="nouProducte.preu" label="Preu"></v-text-field>
+          <v-text-field v-model="nouProducte.foto" label="Imatge del producte" required></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn @click="afegirProducte">Agegir producte</v-btn>
@@ -28,23 +28,25 @@
       <v-img :src="decodeBase64Image(producte.foto)" height="150" width="150" cover></v-img>
       <v-card-actions>
         <v-dialog v-model="dialogEditarProducte" max-width="300">
-      <template v-slot:activator="{ on }">
-        <v-btn class="ma-2" @click="openEditDialog(producte)">Editar producte</v-btn>
-      </template>
-      <v-card>
-        <v-card-title>Confirmación</v-card-title>
-        <v-card-text>
-          <v-text-field v-model="producteEditat.nom" label="Nom del producte"></v-text-field>
-          <v-text-field v-model="producteEditat.descripcio" label="Descripcio del producte"></v-text-field>
-          <v-text-field v-model="producteEditat.preu" label="Preu del producte"></v-text-field>
-          <v-text-field v-model="producteEditat.foto" label="Posa la URL de la imatge del producte" required></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn @click="editarProducte()">Modificar producte</v-btn>
-          <v-btn @click="dialogEditarProducte = false">Cancelar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+          <template v-slot:activator="{ on }">
+            <v-btn class="ma-2" @click="openEditDialog(producte)">Editar producte</v-btn>
+          </template>
+          <v-card>
+            <v-card-title>Confirmación</v-card-title>
+            <v-card-text>
+              <v-text-field v-model="producteEditat.nom" label="Nom del producte"></v-text-field>
+              <v-text-field v-model="producteEditat.descripcio" label="Descripcio del producte"></v-text-field>
+              <v-text-field v-model="producteEditat.preu" label="Preu del producte"></v-text-field>
+              <v-text-field v-model="producteEditat.foto" label="Posa la URL de la imatge del producte"
+                required></v-text-field>
+              <v-switch v-model="producteEditat.modificarFoto" :class="{ 'correcte': producteEditat.modificarFoto }" label="Vols modificar la imatge?"></v-switch>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn @click="editarProducte()">Modificar producte</v-btn>
+              <v-btn @click="dialogEditarProducte = false">Cancelar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-dialog v-model="dialogEliminarProducte" max-width="300">
           <template v-slot:activator="{ on }">
             <v-btn class="ma-2" @click="dialogEliminarProducte = true">Eliminar</v-btn>
@@ -59,9 +61,8 @@
               <v-btn @click="dialogEliminarProducte = false">No</v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog>
-        <v-btn @click="activarDesactivarProducte(producte.id_producte)">{{ producte.estat ? 'Desactivar' : 'Activar'
-        }}</v-btn>
+        </v-dialog> 
+        <v-btn @click="activarDesactivarProducte(producte.id_producte)">{{ producte.estat ? 'Desactivar' :'Activar'}}</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -89,7 +90,8 @@ export default {
         descripcio: "",
         preu: 0,
         estat: 1,
-        foto: ""
+        foto: "",
+        modificarFoto:false
       },
       dialogCrearProducte: false, // Controla la visibilidad del diálogo de crear producto
       dialogEliminarProducte: false, // Controla la visibilidad del diálogo de eliminar producto
@@ -113,12 +115,13 @@ export default {
           this.productes = response;
         });
       });
+      this.dialogEditarProducte = false;
     },
-    agafarDadesProducte(producte) {      
+    agafarDadesProducte(producte) {
       this.producteEditat.nom = producte.nom;
       this.producteEditat.descripcio = producte.descripcio;
       this.producteEditat.preu = producte.preu;
-      
+
     },
     eliminarProducte(producte) {
       deleteProducte(producte).then(response => {
@@ -160,7 +163,7 @@ export default {
         bytes[i] = binaryString.charCodeAt(i);
       }
       const blob = new Blob([bytes], { type: "image/jpeg" }); // Ajusta el tipo MIME según tu imagen
-      this.producteEditat.foto=URL.createObjectURL(blob)
+      this.producteEditat.foto = URL.createObjectURL(blob)
       return URL.createObjectURL(blob);
     }
   },
@@ -172,5 +175,11 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+/*Para cambiar el color del boton para selecionar si cambiar imagen o no*/
+.correcte {  
+  color: green; 
+}
+
+</style>
   
