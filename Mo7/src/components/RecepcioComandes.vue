@@ -18,7 +18,7 @@
               ¿Estás segur de que vols aceptar aquesta comanda?
             </v-card-text>
             <v-card-actions>
-              <v-btn @click="acceptarComanda(comanda.id)">Sí</v-btn>
+              <v-btn @click="acceptarComanda(comanda.id_comanda)">Sí</v-btn>
               <v-btn @click="dialog = false">No</v-btn>
             </v-card-actions>
           </v-card>
@@ -34,7 +34,7 @@
               ¿Estás segur de que vols rebutjar aquesta comanda?
             </v-card-text>
             <v-card-actions>
-              <v-btn @click="rebutjarComanda(comanda.id)">Sí</v-btn>
+              <v-btn @click="rebutjarComanda(comanda.id_comanda)">Sí</v-btn>
               <v-btn @click="rechazarDialog = false">No</v-btn>
             </v-card-actions>
           </v-card>
@@ -66,7 +66,7 @@ export default {
   methods: {
     acceptarComanda(id) {
       this.estatComandas = "aceptada";
-      socket.emit("comandaAceptada", this.estatComandas);
+      socket.emit("comandaAceptada",id, this.estatComandas);
       this.dialog = false; // Cierra el diálogo después de la confirmación
       this.snackbarMessage = 'Comanda aceptada';
       this.snackbar = true; // Muestra el Snackbar

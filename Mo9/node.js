@@ -190,20 +190,23 @@ app.get("/getComandes", async function (req, res) {
 });
 
 //-----------Conexion con socket-----------------------------------------------------//
-server.listen(3013, () => {
-    console.log('Server Socket running at http://localhost:3013');
+server.listen(3002, () => {
+    console.log('Server Socket running at http://localhost:3002');
   });
 
 io.on('connection', (socket) => {
     console.log('Usuario conectado');
 
     // Escuchar la solicitud de comanda aceptada
-    socket.on('comandaAceptada', ({ id, estat }, callback) => {
+    socket.on('comandaAceptada', (id, estat) => {        
+        console.log('comanda aceptada numero : '+id)
+        console.log('estado : '+estat)
         // Aquí puedes procesar la información (id y estat) como desees
         // Por ejemplo, guardar el estado de la comanda en tu fuente de datos
         // y luego enviar una respuesta al cliente
-        const info = updateEstatComanda(id, estat); // Esto debería devolver la información necesaria
-        callback(info);
+
+        updateEstatComanda(connection,id, estat); // Llama a la funcion para cambiar el estado en la BD a aceptada       
+      
     });
 
     // Resto de la lógica de tu aplicación...

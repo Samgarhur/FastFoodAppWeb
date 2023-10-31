@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 
 export const state = reactive({
   connected: false,
+  mensajeLabs:""
 });
 
 // "undefined" means the URL will be computed from the `window.location` object
@@ -19,7 +20,6 @@ socket.on("disconnect", () => {
   state.connected = false;
 });
 
-socket.on('comandaAceptada', (estat) => {
-
+socket.on('comandaAceptada', (estat) => {   
   
 });
