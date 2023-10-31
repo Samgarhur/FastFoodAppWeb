@@ -153,7 +153,15 @@ app.get("/getProductos", function (req, res) {
         for (var i = 0; i < result.length; i++) {
             numFoto = i + 1
             let fotografia = ubicacioArxius + "/" + numFoto + ".jpeg"
-            result[i].foto = base64_encode(fotografia)
+            fs.access(fotografia, fs.constants.F_OK, (err) => {
+                if (err) {
+                    fitxer=false
+                } else {
+                    fitxer=true
+                }
+            })
+            if(fitxer)
+                result[i].foto = base64_encode(fotografia)
         }
 
         //console.log(result)
