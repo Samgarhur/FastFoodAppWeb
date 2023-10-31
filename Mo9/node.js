@@ -1,15 +1,15 @@
-const express=require("express");
+const express = require("express");
 const http = require('http');
 const socketIo = require('socket.io');
 const app = express();
 const cors = require("cors");
-const PORT=3001;
+const PORT = 3001;
 const mysql = require('mysql2/promise');
-const fs =require("fs");
+const fs = require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo,getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies");
 const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
@@ -35,7 +35,7 @@ app.use(session({
 }))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-app.listen(PORT, function(){
+app.listen(PORT, function () {
     console.log("server running")
 })
 const connection = mysql.createPool({
@@ -46,78 +46,83 @@ const connection = mysql.createPool({
 });
 
 //------------cosses android----------------//
-app.post("/usuaris", function(req, res){
+app.post("/usuaris", function (req, res) {
     const user = req.body;
     console.log(user)
     console.log(user.usuario)
     console.log(user.passwd)
-    let usuariTrobat=false;
-    autoritzacio={"autoritzacio":false};
-    
-    usuaris= getUsuarisLogin(connection).then((usuaris) => {
-    usuaris=JSON.parse(usuaris)
-    console.log(usuaris[0].usuario)
-    for(var i=0; i<usuaris.length || usuariTrobat==false; i++){
-        if(usuaris[i].usuario==user.usuario && usuaris[i].contra==user.contra){
-            console.log("hola")
-            usuariTrobat=true;
+    let usuariTrobat = false;
+    autoritzacio = { "autoritzacio": false };
+
+    usuaris = getUsuarisLogin(connection).then((usuaris) => {
+        usuaris = JSON.parse(usuaris)
+        console.log(usuaris[0].usuario)
+        for (var i = 0; i < usuaris.length || usuariTrobat == false; i++) {
+            if (usuaris[i].usuario == user.usuario && usuaris[i].contra == user.contra) {
+                console.log("hola")
+                usuariTrobat = true;
+            }
         }
-    }
-    autoritzacio.autoritzacio=usuariTrobat;
-    res.json(autoritzacio)}) 
+        autoritzacio.autoritzacio = usuariTrobat;
+        res.json(autoritzacio)
+    })
 })//donarAutoritzacio al login android
-app.post("/dadesUsuari", function(req, res){
-    const nomUsuari=req.body
+app.post("/dadesUsuari", function (req, res) {
+    const nomUsuari = req.body
     console.log(nomUsuari);
-    result=getUsuariInfo(connection, nomUsuari.usuario).then((result)=>{
-    console.log(result)
-    result=JSON.parse(result)
-    console.log(result)
-    res.json(result)})
+    result = getUsuariInfo(connection, nomUsuari.usuario).then((result) => {
+        console.log(result)
+        result = JSON.parse(result)
+        console.log(result)
+        res.json(result)
+    })
 })//pasar dades del usuari a android
-app.post("/crearComanda", function(req, res){
+app.post("/crearComanda", function (req, res) {
     const comanda = req.body;
-    resultat=insertComanda(connection, comanda).then((resultat)  => {
-    result={"autoritzacio": resultat}
-    res.send(result)})
+    resultat = insertComanda(connection, comanda).then((resultat) => {
+        result = { "autoritzacio": resultat }
+        res.send(result)
+    })
 })//crear la comanda a la bbdd
 
 //----------------cosses vue----------------------//
-app.post("/agregarProducte", function(req, res){
-    nouProducte=req.body
-    novaFoto=nouProducte.foto
-    console.log(nouProducte)
+app.post("/agregarProducte", function (req, res) {
+    nouProducte = req.body
+    novaFoto = nouProducte.foto
+    //console.log(nouProducte)
     //separar la foto al seu directori
-    id=getNumProductes(connection).then((id)=>{
+    id = getNumProductes(connection).then((id) => {
         console.log(id, "1")
-        id=JSON.parse(id)
+        id = JSON.parse(id)
         //console.log(id[0].MAX(id_producte), "2")
         let obj = id[0];
         let valor = obj['MAX(id_producte)'];
-        numProd=valor+1
-    descargarImagen(novaFoto, ubicacioArxius+"/"+numProd+".jpeg")
-  .then(() => 
-    //console.log('Imagen descargada con éxito')d
-    insertProducte(connection,nouProducte)
-  )})
-  .catch(console.error);
-    
+        numProd = valor + 1
+        descargarImagen(novaFoto, ubicacioArxius + "/" + numProd + ".jpeg")
+            .then(() =>
+                //console.log('Imagen descargada con éxito')d
+                insertProducte(connection, nouProducte)
+            )
+    })
+        .catch(console.error);
+
 
 })//agregar producte a la bbdd 
-app.delete("/eliminarProducte/:id", function(req, res){
-    const prod=req.params.id
+app.delete("/eliminarProducte/:id", function (req, res) {
+    const prod = req.params.id
     deleteProducte(connection, prod)
-    fs.unlink(ubicacioArxius+"/"+prod+".jpeg")
+    fs.unlink(ubicacioArxius + "/" + prod + ".jpeg")
 })//Eliminar productes a la bbdd 
-app.put("/modificarProducte/:id", function(req, res){
-    const producteModificat=req.body
+app.put("/modificarProducte/:id", function (req, res) {
+    console.log("Entra en modificar producte");
+    const producteModificat = req.body
     const producteId = req.params.id
-    novaFoto=nouProducte.foto
-    console.log(nouProducte)
+    //console.log(producteModificat)
+    novaFoto = producteModificat.foto   
     //separar la foto al seu directori
-    id=getNumProductes(connection).then((id)=>{
+    id = getNumProductes(connection).then((id) => {
         console.log(id, "1")
-        id=JSON.parse(id)
+        id = JSON.parse(id)
         //console.log(id[0].MAX(id_producte), "2")
         let obj = id[0];
         let valor = obj['MAX(id_producte)'];
@@ -138,22 +143,24 @@ app.put("/modificarProducte/:id", function(req, res){
 
 
 //----------------General-------------------------//
-app.get("/getProductos", function(req, res){
-    result=getProductes(connection).then((result)=>{
-    //console.log(result)
-    result=JSON.parse(result)
-    //console.log(result)
-    for(var i=0; i<result.length; i++){
-        numFoto=i+1
-        let fotografia=ubicacioArxius+"/"+numFoto+".jpeg"
-        result[i].foto=base64_encode(fotografia)    }
-    
-    //console.log(result)
-    res.json(result)})
+app.get("/getProductos", function (req, res) {
+    result = getProductes(connection).then((result) => {
+        //console.log(result)
+        result = JSON.parse(result)
+        //console.log(result)
+        for (var i = 0; i < result.length; i++) {
+            numFoto = i + 1
+            let fotografia = ubicacioArxius + "/" + numFoto + ".jpeg"
+            result[i].foto = base64_encode(fotografia)
+        }
+
+        //console.log(result)
+        res.json(result)
+    })
 })//Passar productes amb la seva foto codificada
-app.get("/getComandes", async function(req, res){
+app.get("/getComandes", async function (req, res) {
     try {
-        const comandes = await getComandesProductes(connection); 
+        const comandes = await getComandesProductes(connection);
         const comandesJson = JSON.parse(comandes);
         res.json(comandesJson);
     } catch (error) {
@@ -163,16 +170,16 @@ app.get("/getComandes", async function(req, res){
 });
 io.on('connection', (socket) => {
     console.log('Usuario conectado');
-  
+
     // Escuchar la solicitud de comanda aceptada
     socket.on('comandaAceptada', ({ id, estat }, callback) => {
-      // Aquí puedes procesar la información (id y estat) como desees
-      // Por ejemplo, guardar el estado de la comanda en tu fuente de datos
-      // y luego enviar una respuesta al cliente
-      const info = procesarComanda(id, estat); // Esto debería devolver la información necesaria
-      callback(info);
+        // Aquí puedes procesar la información (id y estat) como desees
+        // Por ejemplo, guardar el estado de la comanda en tu fuente de datos
+        // y luego enviar una respuesta al cliente
+        const info = procesarComanda(id, estat); // Esto debería devolver la información necesaria
+        callback(info);
     });
-  
+
     // Resto de la lógica de tu aplicación...
 })// Manejar la conexión de sockets
 
@@ -181,17 +188,17 @@ io.on('connection', (socket) => {
 async function descargarImagen(url, rutaImagen) {
     console.log("descarregant imatge")
     const respuesta = await axios({
-      url,
-      method: 'GET',
-      responseType: 'stream'
+        url,
+        method: 'GET',
+        responseType: 'stream'
     });
-  
+
     const escritor = fs.createWriteStream(rutaImagen);
     respuesta.data.pipe(escritor);
-  
+
     return new Promise((resolver, rechazar) => {
-      escritor.on('finish', resolver);
-      escritor.on('error', rechazar);
+        escritor.on('finish', resolver);
+        escritor.on('error', rechazar);
     });
 }//descarregar la foto desde la url amb axios
 function base64_encode(file) {
@@ -215,7 +222,7 @@ function base64_encode(file) {
 
 
 //-------------py-----------------//
-function comensarPython(){
+function comensarPython() {
 
 }
 //començarPython()
