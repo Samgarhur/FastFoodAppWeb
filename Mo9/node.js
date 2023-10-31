@@ -9,7 +9,7 @@ const fs = require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte,updateEstatComanda } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies");
 const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
@@ -22,7 +22,12 @@ var session = require('express-session')
 //const io = require('socket.io')(server);
 
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = new Server(server,{
+    cors: {
+      origin: '*', // Replace with the actual origin of your client application
+      methods: ['GET', 'POST'],
+    }
+  });
 
 /*Accept all request*/
 app.use(cors());
@@ -182,6 +187,12 @@ app.get("/getComandes", async function (req, res) {
         res.status(500).send('Error al obtener datos de comandas.');
     }
 });
+
+//-----------Conexion con socket-----------------------------------------------------//
+server.listen(3013, () => {
+    console.log('Server running at http://localhost:3013');
+  });
+
 io.on('connection', (socket) => {
     console.log('Usuario conectado');
 
@@ -190,7 +201,7 @@ io.on('connection', (socket) => {
         // Aquí puedes procesar la información (id y estat) como desees
         // Por ejemplo, guardar el estado de la comanda en tu fuente de datos
         // y luego enviar una respuesta al cliente
-        const info = procesarComanda(id, estat); // Esto debería devolver la información necesaria
+        const info = updateEstatComanda(id, estat); // Esto debería devolver la información necesaria
         callback(info);
     });
 

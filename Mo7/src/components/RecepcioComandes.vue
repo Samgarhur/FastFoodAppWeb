@@ -50,6 +50,7 @@
 <script>
 
 import { getComandas } from './communicationsManager';
+import { socket ,state } from './socket';
 export default {
   name: 'RecepcioComandes',
   data() {
@@ -65,7 +66,7 @@ export default {
   methods: {
     acceptarComanda(id) {
       this.estatComandas = "aceptada";
-      //estatComanda(id, this.estatComandas)
+      socket.emit("comandaAceptada", this.estatComandas);
       this.dialog = false; // Cierra el diálogo después de la confirmación
       this.snackbarMessage = 'Comanda aceptada';
       this.snackbar = true; // Muestra el Snackbar

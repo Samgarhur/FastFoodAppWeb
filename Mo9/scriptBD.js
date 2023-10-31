@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes, getUsuariInfo, insertProducte, deleteProducte, getNumProductes,updateProducte};
+module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes, getUsuariInfo, insertProducte, deleteProducte, getNumProductes,updateProducte,updateEstatComanda};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -152,16 +152,6 @@ async function updateEstatComanda(connection, id_comanda, estat) {
     }
 }
 
-//Comanda Recollida Falta modificar
-async function marcarComandaRecollida(connection, id_comanda) {
-    try {
-        const [rows, fields] = await connection.execute('UPDATE Comanda SET estat = true WHERE id_comanda = ?', [id_comanda]);
-        return rows.affectedRows;
-    } catch (error) {
-        console.error('Error al marcar la comanda como recogida:', error.message);
-        throw error;
-    }
-}
 
 /*-------------------Productes------------------*/
 
