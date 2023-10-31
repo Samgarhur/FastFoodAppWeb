@@ -1,6 +1,5 @@
 const express = require("express");
 const http = require('http');
-const socketIo = require('socket.io');
 const app = express();
 const cors = require("cors");
 const PORT = 3001;
@@ -21,7 +20,9 @@ var session = require('express-session')
 
 //const io = require('socket.io')(server);
 
-const server = http.createServer(app);
+const { createServer } = require('http');
+const { Server } = require('socket.io');
+const server = createServer(app);
 const io = new Server(server,{
     cors: {
       origin: '*', // Replace with the actual origin of your client application
@@ -190,7 +191,7 @@ app.get("/getComandes", async function (req, res) {
 
 //-----------Conexion con socket-----------------------------------------------------//
 server.listen(3013, () => {
-    console.log('Server running at http://localhost:3013');
+    console.log('Server Socket running at http://localhost:3013');
   });
 
 io.on('connection', (socket) => {
