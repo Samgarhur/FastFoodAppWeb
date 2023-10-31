@@ -15,6 +15,8 @@ const ubicacioArxius = path.join(__dirname, "..", "fotografies");
 const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
 const arxiuPython = path.join(__dirname, "..", "python/main.py");
 const axios = require('axios');
+var session = require('express-session')
+
 
 
 //const io = require('socket.io')(server);
@@ -25,7 +27,12 @@ const io = socketIo(server);
 /*Accept all request*/
 app.use(cors());
 app.use(express.json());
-
+app.use(session({
+    secret: 'keyboardcat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+}))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.listen(PORT, function(){
@@ -115,11 +122,17 @@ app.put("/modificarProducte/:id", function(req, res){
         let obj = id[0];
         let valor = obj['MAX(id_producte)'];
         numProd=valor+1
-    descargarImagen(novaFoto, ubicacioArxius+"/"+numProd+".jpeg")
-  .then(() => 
-    //console.log('Imagen descargada con éxito')d
-    updateProducte(connection,producteId, producteModificat)
-  )})
+        if (producteModificat.modificarFoto){ 
+            fs.unlink(ubicacioArxius+"/"+prod+".jpeg")
+            descargarImagen(novaFoto, ubicacioArxius+"/"+producteId+".jpeg")
+            .then(() => 
+            //console.log('Imagen descargada con éxito')d
+            updateProducte(connection,producteId, producteModificat)
+            )
+        }
+        else
+            updateProducte(connection,producteId, producteModificat)
+    })
   .catch(console.error);
 })//modificar un producte de la bbdd
 
