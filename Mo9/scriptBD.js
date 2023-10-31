@@ -243,7 +243,7 @@ async function updateProducte(connection, id_producte, producteData) {
 try {
         let { nom, descripcio, preu, estat, foto } = producteData;
 
-
+        foto=null;
         const [result] = await connection.execute(
             'UPDATE Producte SET nom = ?, descripcio = ?, preu = ?, estat = ?, foto = ? WHERE id_producte = ?',
             [nom, descripcio, preu, estat, foto, id_producte]
