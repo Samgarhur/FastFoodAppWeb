@@ -28,25 +28,23 @@
       <v-img :src="decodeBase64Image(producte.foto)" height="150" width="150" cover></v-img>
       <v-card-actions>
         <v-dialog v-model="dialogEditarProducte" max-width="300">
-          <template v-slot:activator="{ on }">
-            <v-btn class="ma-2" @click="this.dialogEditarProducte = true;agafarDadesProducte(producte)">Editar
-              producte</v-btn>
-          </template>
-          <v-card>
-            <v-card-title>Confirmación</v-card-title>
-            <v-card-text>
-              <v-text-field v-model="producteEditat.nom" label="Nom del producte"></v-text-field>
-              <v-text-field v-model="producteEditat.descripcio" label="Descripcio del producte"></v-text-field>
-              <v-text-field v-model="producteEditat.preu" label="Preu del producte"></v-text-field>
-              <v-text-field v-model="producteEditat.foto" label="Posa la URL de la imatge del producte"
-                required></v-text-field>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn @click="editarProducte(producte.id_producte)">Modificar producte</v-btn>
-              <v-btn @click="dialogEditarProducte = false">Cancelar</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+      <template v-slot:activator="{ on }">
+        <v-btn class="ma-2" @click="openEditDialog(producte)">Editar producte</v-btn>
+      </template>
+      <v-card>
+        <v-card-title>Confirmación</v-card-title>
+        <v-card-text>
+          <v-text-field v-model="producteEditat.nom" label="Nom del producte"></v-text-field>
+          <v-text-field v-model="producteEditat.descripcio" label="Descripcio del producte"></v-text-field>
+          <v-text-field v-model="producteEditat.preu" label="Preu del producte"></v-text-field>
+          <v-text-field v-model="producteEditat.foto" label="Posa la URL de la imatge del producte" required></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="editarProducte()">Modificar producte</v-btn>
+          <v-btn @click="dialogEditarProducte = false">Cancelar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
         <v-dialog v-model="dialogEliminarProducte" max-width="300">
           <template v-slot:activator="{ on }">
             <v-btn class="ma-2" @click="dialogEliminarProducte = true">Eliminar</v-btn>
@@ -102,7 +100,12 @@ export default {
     };
   },
   methods: {
-    editarProducte(id) {
+    openEditDialog(producte) {
+      this.producteEditat = { ...producte };
+      this.dialogEditarProducte = true;
+    },
+    editarProducte() {
+      const id = this.producteEditat.id_producte;
       // Lògica per editar el producte
       updateProducte(id, this.producteEditat).then(response => {
         // Actualiza la lista de productos después de editarlo
@@ -110,8 +113,6 @@ export default {
           this.productes = response;
         });
       });
-
-      this.dialogEditarProducte = false;
     },
     agafarDadesProducte(producte) {      
       this.producteEditat.nom = producte.nom;
