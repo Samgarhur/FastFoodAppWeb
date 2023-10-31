@@ -61,6 +61,8 @@ app.post("/usuaris", function (req, res) {
             if (usuaris[i].usuario == user.usuario && usuaris[i].contra == user.contra) {
                 console.log("hola")
                 usuariTrobat = true;
+                req.session.nombre = user.usuario;
+                req.session.passwd = user.passwd;
             }
         }
         autoritzacio.autoritzacio = usuariTrobat;
@@ -68,9 +70,9 @@ app.post("/usuaris", function (req, res) {
     })
 })//donarAutoritzacio al login android
 app.post("/dadesUsuari", function (req, res) {
-    const nomUsuari = req.body
+    console.log(req.session.nombre)
     console.log(nomUsuari);
-    result = getUsuariInfo(connection, nomUsuari.usuario).then((result) => {
+    result = getUsuariInfo(connection, req.session.nombre).then((result) => {
         console.log(result)
         result = JSON.parse(result)
         console.log(result)
@@ -207,7 +209,6 @@ function base64_encode(file) {
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
 }//funcio auxilar per codificar fotos
-
 /*app.get("/getComandes", async function(req, res){
     try {
         const comandes = await getComandes(connection); 
