@@ -150,8 +150,10 @@ app.get("/getProductos", function (req, res) {
         //console.log(result)
         result = JSON.parse(result)
         //console.log(result)
+        let j=0
         for (var i = 0; i < result.length; i++) {
             numFoto = i + 1
+            let fitxer
             let fotografia = ubicacioArxius + "/" + numFoto + ".jpeg"
             fs.access(fotografia, fs.constants.F_OK, (err) => {
                 if (err) {
@@ -161,7 +163,9 @@ app.get("/getProductos", function (req, res) {
                 }
             })
             if(fitxer)
-                result[i].foto = base64_encode(fotografia)
+                result[i-j].foto = base64_encode(fotografia)
+            else
+                j++
         }
 
         //console.log(result)
