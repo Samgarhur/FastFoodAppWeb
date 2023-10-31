@@ -3,8 +3,8 @@
     <v-card v-for="comanda in comandes" :key="comanda.id">
       <v-card-title>Comanda numero {{ comanda.id_comanda }}</v-card-title>
       <v-card-subtitle v-for="producte in comanda.productos">
-        {{ producte.nombre_producto }} X
-        {{ producte.quantitat }}
+        {{ producte.nombre_producto }} ,
+        Quantitat: {{ producte.quantitat }}
       </v-card-subtitle>
 
       <v-card-actions>

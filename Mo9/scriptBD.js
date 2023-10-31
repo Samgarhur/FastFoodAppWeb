@@ -51,7 +51,7 @@ async function getComandesProductes(connection) {
             FROM Comanda_Producte CP
             JOIN Comanda C ON CP.id_comanda = C.id_comanda
             JOIN Producte P ON CP.id_producte = P.id_producte
-            WHERE C.estat = "Rebut";
+            WHERE C.estat = "rebut";
         `;
         
         const [rows, fields] = await connection.execute(queryString);

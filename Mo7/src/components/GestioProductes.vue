@@ -14,7 +14,7 @@
           <v-text-field v-model="nouProducte.foto" label="Imatge del producte" required></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="afegirProducte">Agegir producte</v-btn>
+          <v-btn @click="afegirProducte">Afegir producte</v-btn>
           <v-btn @click="dialogCrearProducte = false">Cancelar</v-btn>
         </v-card-actions>
       </v-card>
@@ -116,13 +116,7 @@ export default {
         });
       });
       this.dialogEditarProducte = false;
-    },
-    agafarDadesProducte(producte) {
-      this.producteEditat.nom = producte.nom;
-      this.producteEditat.descripcio = producte.descripcio;
-      this.producteEditat.preu = producte.preu;
-
-    },
+    },   
     eliminarProducte(producte) {
       deleteProducte(producte).then(response => {
         // Actualiza la lista de productos después de eliminar
