@@ -85,10 +85,23 @@ app.get("/dadesUsuari", function (req, res) {
 })//pasar dades del usuari a android
 app.post("/crearComanda", function (req, res) {
     const comanda = req.body;
-    resultat = insertComanda(connection, comanda).then((resultat) => {
-        result = { "autoritzacio": resultat }
-        res.send(result)
-    })
+        var idComanda=getNumComanda(connection).then(()=>{
+            idComanda=JSON.parse(idComanda)
+            let obj = idComanda[0];
+            let valor = obj['MAX(id_comanda)'];
+            idComanda = valor + 1
+            comanda.id_comanda=idComanda
+
+        var infoUsuari = getUsuariInfo(connection, usuariLog).then((result) => {
+            infoUsuari = JSON.parse(infoUsuari)
+            comanda.id_usuari=infoUsuari.id_usuari
+
+        var resultat = insertComanda(connection, comanda).then((resultat) => {
+            resultat = { "autoritzacio": resultat }
+            res.send(resultat)
+        })
+        })
+        })
 })//crear la comanda a la bbdd
 
 //----------------cosses vue----------------------//
