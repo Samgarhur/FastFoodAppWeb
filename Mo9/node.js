@@ -14,6 +14,8 @@ const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
 const arxiuPython = path.join(__dirname, "..", "python/main.py");
 const axios = require('axios');
 var session = require('express-session')
+let esPot = false
+
 var usuariLog
 
 //const io = require('socket.io')(server);
@@ -115,10 +117,10 @@ app.post("/crearComanda", function (req, res) {
             res.send(resultat)
         })
         })
-        })
+    })
 })//crear la comanda a la bbdd
 
-//----------------cosses vue----------------------//
+//----------------cosses vue------------------------------------------------------------------------//
 app.post("/agregarProducte", function (req, res) {
     nouProducte = req.body
     novaFoto = nouProducte.foto
@@ -146,6 +148,7 @@ app.delete("/eliminarProducte/:id", function (req, res) {
     deleteProducte(connection, prod)
     fs.unlinkSync(ubicacioArxius + "/" + prod + ".jpeg")
 })//Eliminar productes a la bbdd 
+
 app.put("/modificarProducte/:id", function (req, res) {
     console.log("Entra en modificar producte");
     const producteModificat = req.body
@@ -174,22 +177,30 @@ app.put("/modificarProducte/:id", function (req, res) {
         .catch(console.error);
 })//modificar un producte de la bbdd
 
+app.put("/updateEstatProducte/:id", function (req, res) {
+    //console.log("Entra en update estat del producte");
+    const estatProducte = req.body.estat
+    const producteId = req.params.id
+    updateEstatProducte(connection, producteId, estatProducte)
 
-//----------------General-------------------------//
+})
+
+
+//----------------General-----------------------------------------------------------------//
 app.get("/getProductos", function (req, res) {
     result = getProductes(connection).then((result) => {
         result = JSON.parse(result)
-        fitxers=comprobarExistencia(ubicacioArxius).then((fitxers)=>{
+        fitxers = comprobarExistencia(ubicacioArxius).then((fitxers) => {
 
-        for (var i = 0; i < result.length; i++) {
-            console.log(i)
-            console.log(fitxers[i])
-            result[i].foto = base64_encode(ubicacioArxius+fitxers[i])
-        }
-        res.json(result)
+            for (var i = 0; i < result.length; i++) {
+                console.log(i)
+                console.log(fitxers[i])
+                result[i].foto = base64_encode(ubicacioArxius + fitxers[i])
+            }
+            res.json(result)
         })
         //console.log(result)
-        
+
     })
 })//Passar productes amb la seva foto codificada
 app.get("/getComandes", async function (req, res) {
@@ -210,7 +221,7 @@ server.listen(3002, () => {
 
 io.on('connection', (socket) => {
     console.log('Usuario conectado');
-
+    //Para solicitar todas las comandas por socket
     socket.on('solicitarComandasIniciales', async () => {
 
         const comandes = await getComandesProductes(connection);
@@ -220,6 +231,22 @@ io.on('connection', (socket) => {
 
 
     });
+
+    //Para solicitar todas los productos por socket
+    socket.on('solicitarProductosIniciales', async () => {
+        const result = await getProductes(connection);
+        const productesJson = JSON.parse(result);
+
+        const fitxers = await comprobarExistencia(ubicacioArxius);
+        for (let i = 0; i < productesJson.length; i++) {
+            const foto = base64_encode(ubicacioArxius + fitxers[i]);
+            productesJson[i].foto = foto;
+        }
+
+        socket.emit('getProductes', JSON.stringify(productesJson));
+    });
+
+
 
     // Escuchar la solicitud de comanda aceptada
     socket.on('comandaAceptada', (id, estat) => {
@@ -263,21 +290,22 @@ async function descargarImagen(url, rutaImagen,) {
         escritor.on('error', rechazar);
     });
 }//descarregar la foto desde la url amb axios
-async function comprobarExistencia(fotografia){
+async function comprobarExistencia(fotografia) {
     console.log("hola")
     return new Promise((resolve, reject) => {
-      fs.readdir(fotografia, function (err, archivos) {
-        console.log("hola2")
-        if (err) {
-            console.log('Error al leer el directorio');
-        } else {
-            console.log(archivos)
-            resolve(archivos);
-        }
+        fs.readdir(fotografia, function (err, archivos) {
+            console.log("hola2")
+            if (err) {
+                console.log('Error al leer el directorio');
+            } else {
+                console.log(archivos)
+                resolve(archivos);
+            }
 
+        })
     })
-})
-}//llegir el directori de fotografies 
+}
+//llegir el directori de fotografies 
 function base64_encode(file) {
     // read binary data
     var bitmap = fs.readFileSync(file);

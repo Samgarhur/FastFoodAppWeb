@@ -1,7 +1,9 @@
 <template>
-  <button class="my-button-class" onclick="window.location.href = '/';"><img src="./901844-200.png"
-      alt="icono Pag Principal" width="50" height="55"></button> <v-container>
-    <v-dialog v-model="dialogCrearProducte" max-width="300">
+  <button class="my-button-class" onclick="window.location.href = '/';">
+    <img src="./home.png" alt="icono Pag Principal" width="40" height="45">
+  </button>
+  <v-container>
+    <v-dialog v-model="dialogCrearProducte" max-width="380">
       <template v-slot:activator="{ on }">
         <v-btn class="ma-2" @click="dialogCrearProducte = true">Afegir producte</v-btn>
       </template>
@@ -14,8 +16,8 @@
           <v-text-field v-model="nouProducte.foto" label="Imatge del producte" required></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="afegirProducte">Afegir producte</v-btn>
-          <v-btn @click="dialogCrearProducte = false">Cancelar</v-btn>
+          <v-btn class="custom-button" @click="afegirProducte">Afegir producte</v-btn>
+          <v-btn class="custom-button" @click="dialogCrearProducte = false">Cancelar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -29,7 +31,7 @@
       <v-card-actions>
         <v-dialog v-model="dialogEditarProducte" max-width="300">
           <template v-slot:activator="{ on }">
-            <v-btn class="ma-2" @click="openEditDialog(producte)">Editar producte</v-btn>
+            <v-btn class="custom-button" @click="openEditDialog(producte)">Editar producte</v-btn>
           </template>
           <v-card>
             <v-card-title>Confirmación</v-card-title>
@@ -39,17 +41,18 @@
               <v-text-field v-model="producteEditat.preu" label="Preu del producte"></v-text-field>
               <v-text-field v-model="producteEditat.foto" label="Posa la URL de la imatge del producte"
                 required></v-text-field>
-              <v-switch v-model="producteEditat.modificarFoto" :class="{ 'correcte': producteEditat.modificarFoto }" label="Vols modificar la imatge?"></v-switch>
+              <v-switch v-model="producteEditat.modificarFoto" :class="{ 'correcte': producteEditat.modificarFoto }"
+                label="Vols modificar la imatge?"></v-switch>
             </v-card-text>
             <v-card-actions>
-              <v-btn @click="editarProducte()">Modificar producte</v-btn>
-              <v-btn @click="dialogEditarProducte = false">Cancelar</v-btn>
+              <v-btn class="custom-button" @click="editarProducte()">Modificar producte</v-btn>
+              <v-btn class="custom-button" @click="dialogEditarProducte = false">Cancelar</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
         <v-dialog v-model="dialogEliminarProducte" max-width="300">
           <template v-slot:activator="{ on }">
-            <v-btn class="ma-2" @click="dialogEliminarProducte = true">Eliminar</v-btn>
+            <v-btn class="custom-button" @click="dialogEliminarProducte = true">Eliminar</v-btn>
           </template>
           <v-card>
             <v-card-title>Confirmación</v-card-title>
@@ -57,12 +60,13 @@
               ¿Estás segur de que vols eliminar el producte?
             </v-card-text>
             <v-card-actions>
-              <v-btn @click="eliminarProducte(producte.id_producte)">Sí</v-btn>
-              <v-btn @click="dialogEliminarProducte = false">No</v-btn>
+              <v-btn class="custom-button" @click="eliminarProducte(producte.id_producte)">Sí</v-btn>
+              <v-btn class="custom-button" @click="dialogEliminarProducte = false">No</v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog> 
-        <v-btn @click="activarDesactivarProducte(producte.id_producte)">{{ producte.estat ? 'Desactivar' :'Activar'}}</v-btn>
+        </v-dialog>
+        <v-btn @click="activarDesactivarProducte(producte.id_producte, producte.estat)">{{ producte.estat ? 'Desactivar'
+          : 'Activar' }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -73,6 +77,7 @@
   
 <script>
 import { getProductos, deleteProducte, addProducte, updateProducte, updateEstatProducte } from './communicationsManager';
+import { socket, state } from './socket';
 export default {
   data() {
     return {
@@ -91,7 +96,7 @@ export default {
         preu: 0,
         estat: 1,
         foto: "",
-        modificarFoto:false
+        modificarFoto: false
       },
       dialogCrearProducte: false, // Controla la visibilidad del diálogo de crear producto
       dialogEliminarProducte: false, // Controla la visibilidad del diálogo de eliminar producto
@@ -116,7 +121,7 @@ export default {
         });
       });
       this.dialogEditarProducte = false;
-    },   
+    },
     eliminarProducte(producte) {
       deleteProducte(producte).then(response => {
         // Actualiza la lista de productos después de eliminar
@@ -129,8 +134,17 @@ export default {
       this.snackbar = true;
 
     },
-    activarDesactivarProducte(producte) {
-      // Lògica per activar o desactivar el producte
+    activarDesactivarProducte(id, estat) {
+      const nuevoEstat = !estat; // Cambia el estado al contrario de el que estaba
+      console.log(nuevoEstat)
+
+      updateEstatProducte(id, nuevoEstat).then(response => {
+        // Actualiza la lista de productos después cambiarle el estado
+        getProductos().then(response => {
+          this.productes = response;
+        });
+      });
+
     },
     menuAfegirProducte() {
       this.verMenuAfegir = true;
@@ -157,23 +171,80 @@ export default {
         bytes[i] = binaryString.charCodeAt(i);
       }
       const blob = new Blob([bytes], { type: "image/jpeg" }); // Ajusta el tipo MIME según tu imagen
-      this.producteEditat.foto = URL.createObjectURL(blob)
+      this.producteEditat.foto = URL.createObjectURL(blob);
       return URL.createObjectURL(blob);
     }
   },
   created() {
-    getProductos().then(response => {
-      this.productes = response;
+
+    socket.on('getProductes', (productos) => {
+      const productosJson = JSON.parse(productos);
+      this.productes = productosJson;
+
     });
+    // Solicitar productos iniciales
+    socket.emit('solicitarProductosIniciales');
+
+    /*getProductos().then(response => {
+      this.productes = response;
+    });*/
   },
 }
 </script>
 
 <style>
-/*Para cambiar el color del boton para selecionar si cambiar imagen o no*/
-.correcte {  
-  color: green; 
+.my-button-class {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  height: 55px;
+  background-color: #66B3FF;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
 }
 
-</style>
-  
+.my-button-class img {
+  width: 50px;
+  height: 55px;
+}
+
+.my-button-class:hover {
+  background-color: #0056b3;
+}
+
+.custom-button,
+.smaller-button {
+  margin-right: 1rem;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  background-color: #66B3FF;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.custom-button:last-child,
+.smaller-button:last-child {
+  margin-right: 0;
+}
+
+.custom-button:hover,
+.smaller-button:hover {
+  background-color: #0056b3;
+}
+
+/*Para cambiar el color del boton para selecionar si cambiar imagen o no*/
+.correcte {
+  color: green;
+}</style>
