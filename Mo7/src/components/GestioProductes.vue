@@ -191,7 +191,6 @@ export default {
   },
 }
 </script>
-
 <style>
 .my-button-class {
   position: absolute;
