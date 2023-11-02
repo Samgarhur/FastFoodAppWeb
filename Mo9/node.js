@@ -164,10 +164,9 @@ app.put("/modificarProducte/:id", function (req, res) {
 })//modificar un producte de la bbdd
 
 app.put("/updateEstatProducte/:id", function (req, res) {
-    console.log("Entra en update estat del producte");
-    const estatProducte = req.body
-    const producteId = req.params.id
-    //console.log(producteModificat)
+    //console.log("Entra en update estat del producte");
+    const estatProducte = req.body.estat
+    const producteId = req.params.id   
     updateEstatProducte(connection, producteId, estatProducte)
 
 })
