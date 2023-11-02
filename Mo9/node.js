@@ -15,8 +15,12 @@ const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
 const arxiuPython = path.join(__dirname, "..", "python/main.py");
 const axios = require('axios');
 var session = require('express-session')
+<<<<<<< HEAD
 let esPot = false
 
+=======
+var usuariLog
+>>>>>>> c45bf5ea3d66105fb7df3e3e9b65e93b17ba86c6
 
 //const io = require('socket.io')(server);
 
@@ -68,29 +72,41 @@ app.post("/usuaris", function (req, res) {
                 console.log("hola")
                 usuariTrobat = true;
                 req.session.nombre = user.usuario;
-                req.session.passwd = user.passwd;
+                usuariLog=req.session.nombre
             }
         }
         autoritzacio.autoritzacio = usuariTrobat;
         res.json(autoritzacio)
     })
 })//donarAutoritzacio al login android
-app.post("/dadesUsuari", function (req, res) {
-    console.log(req.session.nombre)
-    console.log(nomUsuari);
-    result = getUsuariInfo(connection, req.session.nombre).then((result) => {
-        console.log(result)
+app.get("/dadesUsuari", function (req, res) {
+    console.log(usuariLog)
+    result = getUsuariInfo(connection, usuariLog).then((result) => {
+        //console.log(result)
         result = JSON.parse(result)
-        console.log(result)
+        //console.log(result)
         res.json(result)
     })
 })//pasar dades del usuari a android
 app.post("/crearComanda", function (req, res) {
     const comanda = req.body;
-    resultat = insertComanda(connection, comanda).then((resultat) => {
-        result = { "autoritzacio": resultat }
-        res.send(result)
-    })
+        var idComanda=getNumComanda(connection).then(()=>{
+            idComanda=JSON.parse(idComanda)
+            let obj = idComanda[0];
+            let valor = obj['MAX(id_comanda)'];
+            idComanda = valor + 1
+            comanda.id_comanda=idComanda
+
+        var infoUsuari = getUsuariInfo(connection, usuariLog).then((result) => {
+            infoUsuari = JSON.parse(infoUsuari)
+            comanda.id_usuari=infoUsuari.id_usuari
+
+        var resultat = insertComanda(connection, comanda).then((resultat) => {
+            resultat = { "autoritzacio": resultat }
+            res.send(resultat)
+        })
+        })
+        })
 })//crear la comanda a la bbdd
 
 //----------------cosses vue----------------------//
@@ -262,7 +278,12 @@ async function comprobarExistencia(fotografia) {
 
         })
     })
+<<<<<<< HEAD
 }
+=======
+})
+}//llegir el directori de fotografies 
+>>>>>>> c45bf5ea3d66105fb7df3e3e9b65e93b17ba86c6
 function base64_encode(file) {
     // read binary data
     var bitmap = fs.readFileSync(file);

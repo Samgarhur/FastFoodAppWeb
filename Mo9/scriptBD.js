@@ -83,7 +83,16 @@ async function getComandesProductes(connection) {
         throw error;
     }
 }
-
+async function getNumComanda(connection) {
+    try {
+        const [rows, fields] = await connection.execute('SELECT MAX(id_comanda) FROM Comanda  ');
+        const productosJSON = JSON.stringify(rows);
+        return productosJSON;
+    } catch (error) {
+        console.error('Error al obtenir les comandes:', error.message);
+        throw error;
+    }
+}
 
 async function insertComanda(connection, comandaData) {
     try {
