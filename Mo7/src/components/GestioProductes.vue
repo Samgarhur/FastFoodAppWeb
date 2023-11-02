@@ -39,8 +39,10 @@
               <v-text-field v-model="producteEditat.nom" label="Nom del producte"></v-text-field>
               <v-text-field v-model="producteEditat.descripcio" label="Descripcio del producte"></v-text-field>
               <v-text-field v-model="producteEditat.preu" label="Preu del producte"></v-text-field>
-              <v-text-field v-model="producteEditat.foto" label="Posa la URL de la imatge del producte" required></v-text-field>
-              <v-switch v-model="producteEditat.modificarFoto" :class="{ 'correcte': producteEditat.modificarFoto }" label="Vols modificar la imatge?"></v-switch>
+              <v-text-field v-model="producteEditat.foto" label="Posa la URL de la imatge del producte"
+                required></v-text-field>
+              <v-switch v-model="producteEditat.modificarFoto" :class="{ 'correcte': producteEditat.modificarFoto }"
+                label="Vols modificar la imatge?"></v-switch>
             </v-card-text>
             <v-card-actions>
               <v-btn class="custom-button" @click="editarProducte()">Modificar producte</v-btn>
@@ -62,8 +64,9 @@
               <v-btn class="custom-button" @click="dialogEliminarProducte = false">No</v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog> 
-        <v-btn @click="activarDesactivarProducte(producte.id_producte, producte.estat)">{{ producte.estat ? 'Desactivar' :'Activar'}}</v-btn>
+        </v-dialog>
+        <v-btn @click="activarDesactivarProducte(producte.id_producte, producte.estat)">{{ producte.estat ? 'Desactivar'
+          : 'Activar' }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -118,7 +121,7 @@ export default {
         });
       });
       this.dialogEditarProducte = false;
-    },   
+    },
     eliminarProducte(producte) {
       deleteProducte(producte).then(response => {
         // Actualiza la lista de productos después de eliminar
@@ -134,16 +137,14 @@ export default {
     activarDesactivarProducte(id, estat) {
       const nuevoEstat = !estat; // Cambia el estado al contrario de el que estaba
       console.log(nuevoEstat)
-<<<<<<< HEAD
-      updateEstatProducte(id,nuevoEstat).then(response => {
+
+      updateEstatProducte(id, nuevoEstat).then(response => {
         // Actualiza la lista de productos después cambiarle el estado
         getProductos().then(response => {
           this.productes = response;
         });
       });
-=======
-      updateEstatProducte(id, nuevoEstat)
->>>>>>> 70239964d5032643fb7cfdc73ac66966a93927eb
+
     },
     menuAfegirProducte() {
       this.verMenuAfegir = true;
@@ -178,12 +179,12 @@ export default {
 
     socket.on('getProductes', (productos) => {
       const productosJson = JSON.parse(productos);
-      this.productes = productosJson ;
+      this.productes = productosJson;
 
     });
     // Solicitar productos iniciales
     socket.emit('solicitarProductosIniciales');
-    
+
     /*getProductos().then(response => {
       this.productes = response;
     });*/
@@ -217,7 +218,8 @@ export default {
   background-color: #0056b3;
 }
 
-.custom-button, .smaller-button {
+.custom-button,
+.smaller-button {
   margin-right: 1rem;
   padding: 1rem 2rem;
   font-size: 1.2rem;
@@ -232,16 +234,17 @@ export default {
   transition: background-color 0.3s ease;
 }
 
-.custom-button:last-child, .smaller-button:last-child {
+.custom-button:last-child,
+.smaller-button:last-child {
   margin-right: 0;
 }
 
-.custom-button:hover, .smaller-button:hover {
+.custom-button:hover,
+.smaller-button:hover {
   background-color: #0056b3;
 }
 
 /*Para cambiar el color del boton para selecionar si cambiar imagen o no*/
-.correcte {  
-  color: green; 
-}
-</style>
+.correcte {
+  color: green;
+}</style>
