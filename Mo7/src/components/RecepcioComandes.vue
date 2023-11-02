@@ -8,9 +8,9 @@
       </v-card-subtitle>
 
       <v-card-actions>
-        <v-dialog v-model="dialog" max-width="300">
+        <v-dialog v-model="dialog[comanda.id_comanda]" max-width="300">
           <template v-slot:activator="{ on }">
-            <v-btn class="ma-2" @click="dialog = true">Aceptar</v-btn>
+            <v-btn class="ma-2" @click="dialog[comanda.id_comanda] = true">Aceptar</v-btn>
           </template>
           <v-card>
             <v-card-title>Confirmación</v-card-title>
@@ -18,15 +18,15 @@
               ¿Estás segur de que vols aceptar aquesta comanda?
             </v-card-text>
             <v-card-actions>
-              <v-btn @click="acceptarComanda(comanda.id)">Sí</v-btn>
+              <v-btn @click="acceptarComanda(comanda.id_comanda)">Sí</v-btn>
               <v-btn @click="dialog = false">No</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
 
-        <v-dialog v-model="rechazarDialog" max-width="300">
+        <v-dialog v-model="rechazarDialog[comanda.id_comanda]" max-width="300">
           <template v-slot:activator="{ on }">
-            <v-btn class="ma-2" @click="rechazarDialog = true">Rechazar</v-btn>
+            <v-btn class="ma-2" @click="rechazarDialog[comanda.id_comanda] = true">Rebutjar</v-btn>
           </template>
           <v-card>
             <v-card-title>Confirmación</v-card-title>
@@ -34,7 +34,7 @@
               ¿Estás segur de que vols rebutjar aquesta comanda?
             </v-card-text>
             <v-card-actions>
-              <v-btn @click="rebutjarComanda(comanda.id)">Sí</v-btn>
+              <v-btn @click="rebutjarComanda(comanda.id_comanda)">Sí</v-btn>
               <v-btn @click="rechazarDialog = false">No</v-btn>
             </v-card-actions>
           </v-card>
@@ -50,13 +50,14 @@
 <script>
 
 import { getComandas } from './communicationsManager';
+import { socket ,state } from './socket';
 export default {
   name: 'RecepcioComandes',
   data() {
     return {
       comandes: [], // Aquí hauries de carregar les comandes des de la base de dades o API
-      dialog: false, // Controla la visibilidad del diálogo de aceptación
-      rechazarDialog: false, // Controla la visibilidad del diálogo de rechazo
+      dialog: {}, // Controla la visibilidad del diálogo de aceptación
+      rechazarDialog: {}, // Controla la visibilidad del diálogo de rechazo
       estatComandas: "",
       snackbar: false, // Controla la visibilidad del Snackbar
       snackbarMessage: '', // Mensaje del Snackbar
@@ -64,18 +65,26 @@ export default {
   },
   methods: {
     acceptarComanda(id) {
-      this.estatComandas = "aceptada";
-      //estatComanda(id, this.estatComandas)
-      this.dialog = false; // Cierra el diálogo después de la confirmación
+      this.estatComandas = "aceptada";      
+      console.log(id)
+      socket.emit("comandaAceptada",id, this.estatComandas);
+      this.dialog[id] = false; // Cierra el diálogo después de la confirmación
       this.snackbarMessage = 'Comanda aceptada';
       this.snackbar = true; // Muestra el Snackbar
+      getComandas().then(response => {
+      this.comandes = response;
+    });
     },
     rebutjarComanda(id) {
       this.estatComandas = "rebutjada";
       //estatComanda(id, this.estatComandas)
-      this.rechazarDialog = false; // Cierra el diálogo de rechazo después de la confirmación
+      socket.emit("comandaRebutjada",id, this.estatComandas);
+      this.rechazarDialog[id] = false; // Cierra el diálogo de rechazo después de la confirmación
       this.snackbarMessage = 'Comanda rebutjada';
       this.snackbar = true; // Muestra el Snackbar
+      getComandas().then(response => {
+      this.comandes = response;
+    });
     },
 
   },

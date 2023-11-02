@@ -1,6 +1,5 @@
 const express = require("express");
 const http = require('http');
-const socketIo = require('socket.io');
 const app = express();
 const cors = require("cors");
 const PORT = 3001;
@@ -9,7 +8,7 @@ const fs = require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies/");
 const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
@@ -21,8 +20,15 @@ let esPot=false
 
 //const io = require('socket.io')(server);
 
-const server = http.createServer(app);
-const io = socketIo(server);
+const { createServer } = require('http');
+const { Server } = require('socket.io');
+const server = createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: '*', // Replace with the actual origin of your client application
+        methods: ['GET', 'POST'],
+    }
+});
 
 /*Accept all request*/
 app.use(cors());
@@ -120,7 +126,7 @@ app.put("/modificarProducte/:id", function (req, res) {
     const producteModificat = req.body
     const producteId = req.params.id
     //console.log(producteModificat)
-    novaFoto = producteModificat.foto   
+    novaFoto = producteModificat.foto
     //separar la foto al seu directori
     id = getNumProductes(connection).then((id) => {
         console.log(id, "1")
@@ -128,19 +134,19 @@ app.put("/modificarProducte/:id", function (req, res) {
         //console.log(id[0].MAX(id_producte), "2")
         let obj = id[0];
         let valor = obj['MAX(id_producte)'];
-        numProd=valor+1
-        if (producteModificat.modificarFoto){ 
-            fs.unlinkSync(ubicacioArxius+"/"+producteId+".jpeg")
-            descargarImagen(novaFoto, ubicacioArxius+"/"+producteId+".jpeg")
-            .then(() => 
-            //console.log('Imagen descargada con éxito')d
-            updateProducte(connection,producteId, producteModificat)
-            )
+        numProd = valor + 1
+        if (producteModificat.modificarFoto) {
+            fs.unlinkSync(ubicacioArxius + "/" + producteId + ".jpeg")
+            descargarImagen(novaFoto, ubicacioArxius + "/" + producteId + ".jpeg")
+                .then(() =>
+                    //console.log('Imagen descargada con éxito')d
+                    updateProducte(connection, producteId, producteModificat)
+                )
         }
         else
-            updateProducte(connection,producteId, producteModificat)
+            updateProducte(connection, producteId, producteModificat)
     })
-  .catch(console.error);
+        .catch(console.error);
 })//modificar un producte de la bbdd
 
 
@@ -171,16 +177,34 @@ app.get("/getComandes", async function (req, res) {
         res.status(500).send('Error al obtener datos de comandas.');
     }
 });
+
+//-----------Conexion con socket-----------------------------------------------------//
+server.listen(3002, () => {
+    console.log('Server Socket running at http://localhost:3002');
+});
+
 io.on('connection', (socket) => {
     console.log('Usuario conectado');
 
     // Escuchar la solicitud de comanda aceptada
-    socket.on('comandaAceptada', ({ id, estat }, callback) => {
+    socket.on('comandaAceptada', (id, estat) => {
+        console.log('comanda aceptada numero : ' + id)
+        console.log('estado : ' + estat)
         // Aquí puedes procesar la información (id y estat) como desees
         // Por ejemplo, guardar el estado de la comanda en tu fuente de datos
         // y luego enviar una respuesta al cliente
-        const info = procesarComanda(id, estat); // Esto debería devolver la información necesaria
-        callback(info);
+
+        updateEstatComanda(connection, id, estat); // Llama a la funcion para cambiar el estado en la BD a aceptada       
+
+    });
+    socket.on('comandaRebutjada', (id,estat) => {
+        console.log('comanda rebutjada numero : ' + id)
+        console.log('estado : ' + estat)
+        // Aquí puedes procesar la información (id y estat) como desees
+        // Por ejemplo, guardar el estado de la comanda en tu fuente de datos
+        // y luego enviar una respuesta al cliente
+        updateEstatComanda(connection, id, estat); // Llama a la funcion para cambiar el estado en la BD a aceptada        
+
     });
 
     // Resto de la lógica de tu aplicación...
