@@ -129,19 +129,16 @@ app.post("/agregarProducte", function (req, res) {
     novaFoto = nouProducte.foto
     //console.log(nouProducte)
     //separar la foto al seu directori
+    insertProducte(connection, nouProducte).then(() => {
     id = getNumProductes(connection).then((id) => {
         console.log(id, "1")
         id = JSON.parse(id)
         //console.log(id[0].MAX(id_producte), "2")
         let obj = id[0];
         let valor = obj['MAX(id_producte)'];
-        numProd = valor + 1
+        numProd = valor 
         descargarImagen(novaFoto, ubicacioArxius + "/" + numProd + ".jpeg")
-            .then(() =>
-                //console.log('Imagen descargada con éxito')d
-                insertProducte(connection, nouProducte)
-            )
-    })
+    })})
         .catch(console.error);
 
 
