@@ -15,8 +15,7 @@ const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
 const arxiuPython = path.join(__dirname, "..", "python/main.py");
 const axios = require('axios');
 var session = require('express-session')
-let esPot=false
-
+var usuariLog
 
 //const io = require('socket.io')(server);
 
@@ -68,20 +67,19 @@ app.post("/usuaris", function (req, res) {
                 console.log("hola")
                 usuariTrobat = true;
                 req.session.nombre = user.usuario;
-                req.session.passwd = user.passwd;
+                usuariLog=req.session.nombre
             }
         }
         autoritzacio.autoritzacio = usuariTrobat;
         res.json(autoritzacio)
     })
 })//donarAutoritzacio al login android
-app.post("/dadesUsuari", function (req, res) {
-    console.log(req.session.nombre)
-    console.log(nomUsuari);
-    result = getUsuariInfo(connection, req.session.nombre).then((result) => {
-        console.log(result)
+app.get("/dadesUsuari", function (req, res) {
+    console.log(usuariLog)
+    result = getUsuariInfo(connection, usuariLog).then((result) => {
+        //console.log(result)
         result = JSON.parse(result)
-        console.log(result)
+        //console.log(result)
         res.json(result)
     })
 })//pasar dades del usuari a android
@@ -242,7 +240,7 @@ async function comprobarExistencia(fotografia){
 
     })
 })
-}
+}//llegir el directori de fotografies 
 function base64_encode(file) {
     // read binary data
     var bitmap = fs.readFileSync(file);
