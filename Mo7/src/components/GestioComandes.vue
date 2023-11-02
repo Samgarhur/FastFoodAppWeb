@@ -61,11 +61,10 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 .page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
   background-color: #f4f4f4;
   height: 100vh;
   padding: 1rem;
@@ -99,7 +98,6 @@ export default {
   display: flex;
   justify-content: center; /* Centramos los botones horizontalmente */
   align-items: center; /* Centramos los botones verticalmente */
-  margin-top: 1rem;
 }
 
 .custom-button {
@@ -130,9 +128,3 @@ export default {
   overflow-y: auto;
 }
 </style>
-
-
-
-
-
-
