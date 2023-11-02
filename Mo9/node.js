@@ -7,7 +7,7 @@ const fs = require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getNumComanda, getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getNumComanda, getComandesProductes, getComandaAceptada, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies/");
 const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
@@ -228,6 +228,17 @@ io.on('connection', (socket) => {
         const comandesJson = JSON.parse(comandes);
 
         socket.emit('getComandas', JSON.stringify(comandesJson));
+
+
+    });
+
+    //Para solicitar todas las comandas aceptadas por socket
+    socket.on('solicitarComandasAceptadasIniciales', async () => {
+
+        const comandes = await getComandaAceptada(connection);
+        const comandesJson = JSON.parse(comandes);
+
+        socket.emit('getComandasAceptadas', JSON.stringify(comandesJson));
 
 
     });

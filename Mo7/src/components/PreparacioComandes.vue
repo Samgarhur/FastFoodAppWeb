@@ -51,6 +51,7 @@
 <script>
 
 import { comandaFinalitzada, getComandasAceptadas } from './communicationsManager';
+import { socket, state } from './socket';
 export default {
   name: 'PreparacioComandes',
   data() {
@@ -58,7 +59,8 @@ export default {
       mostrarDetalls: false,
       comandaSeleccionada: null,
       finalitzada: "",
-      comandes: [{
+      comandes:[],
+      comandesPrueba: [{
         id: 1,
         info: "PATATAS, ANVORGESA,COLACOCA",
         temps: "10"
@@ -133,8 +135,17 @@ export default {
 
   },
   created() {
+    socket.on('getComandasAceptadas', (comandas) => {
+      const comandesJson = JSON.parse(comandas);
+      this.comandes = comandesJson;
+
+    });
+    // Solicitar comandas iniciales
+    socket.emit('solicitarComandasAceptadasIniciales');
+    
+    /*
     //Coge las comandas que han sido aceptadas del servidor
-    getComandasAceptadas()
+    getComandasAceptadas()*/
 
     // Ordena las comandas por el tiempo en que entran
     this.comandes.sort((a, b) => b.temps - a.temps);
