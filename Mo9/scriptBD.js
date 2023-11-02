@@ -150,7 +150,7 @@ async function insertProdComand(connection,productes, id_comanda){
 
 async function marcarComandaFinalizada(connection, id_comanda) {
     try {
-        const [rows, fields] = await connection.execute('UPDATE Comanda SET estat = \'Finalitzada\' WHERE id_comanda = ?', [id_comanda]);
+        const [rows, fields] = await connection.execute('UPDATE Comanda SET estat = \'finalitzada\' WHERE id_comanda = ?', [id_comanda]);
         return rows.affectedRows;
     } catch (error) {
         console.error('Error al finalitzar la comanda:', error.message);
@@ -160,7 +160,7 @@ async function marcarComandaFinalizada(connection, id_comanda) {
 
 async function getComandaFinalizada(connection) {
     try {
-        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE estat = \'Finalitzada\'');
+        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE estat = \'finalitzada\'');
         const comandasJSON = JSON.stringify(rows);
         return comandasJSON;
     } catch (error) {
@@ -173,11 +173,11 @@ async function getComandaFinalizada(connection) {
 
 async function getComandaAceptada(connection) {
     try {
-        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE estat = true AND Finalitzada = false');
+        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE estat = \'aceptada\'');
         const comandasJSON = JSON.stringify(rows);
         return comandasJSON;
     } catch (error) {
-        console.error('Error al obtenir les comandes aceptades:', error.message);
+        console.error('Error al obtener las comandas aceptadas:', error.message);
         throw error;
     }
 }
@@ -222,7 +222,7 @@ async function insertProducte(connection, producteData) {
     try {    
 
         // INSERT
-        let {idProd, nom, descripcio, preu, estat, foto} = producteData;      
+        let { nom, descripcio, preu, estat, foto} = producteData;      
             foto=null;
           
         const [result] = await connection.execute(
