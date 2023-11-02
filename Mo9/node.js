@@ -22,6 +22,7 @@ var usuariLog
 
 const { createServer } = require('http');
 const { Server } = require('socket.io');
+const { timeStamp } = require("console");
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
@@ -97,10 +98,12 @@ app.post("/crearComanda", function (req, res) {
     const comanda = req.body;
         var infoUsuari = getUsuariInfo(connection, usuariLog).then((infoUsuari) => {
             infoUsuari=JSON.parse(infoUsuari)
+            //console.log(infoUsuari)
+            //console.log(infoUsuari[0])
             comanda.id_usuari=infoUsuari[0].id_usuari
            // console.log(infoUsuari.id_usuari)
             comanda.estat="rebut"
-
+            comanda.data=timeStamp
         var idComanda=getNumComanda(connection).then((idComanda)=>{
             //console.log(idComanda)
             idComanda=JSON.parse(idComanda)
