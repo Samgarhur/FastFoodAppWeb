@@ -222,12 +222,7 @@ async function insertProducte(connection, producteData) {
     try {    
 
         // INSERT
-        let {idProd, nom, descripcio, preu, estat, foto} = producteData;
-        id=getNumProductes(connection).then(async (id)=>{
-            id=JSON.parse(id)
-            let obj = id[0];
-            let valor = obj['MAX(id_producte)'];
-            idProd=valor+1
+        let {idProd, nom, descripcio, preu, estat, foto} = producteData;      
             foto=null;
           
         const [result] = await connection.execute(
@@ -241,7 +236,7 @@ async function insertProducte(connection, producteData) {
             return true;
         } else {
             return false;
-        }})
+        }
     } catch (error) {
         console.error('Error al inserir el producte:', error.message);
         throw error;
