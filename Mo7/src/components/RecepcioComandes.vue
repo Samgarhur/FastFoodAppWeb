@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-card v-for="comanda in comandes" :key="comanda.id" class="mb-3 resum-comanda">
-      <v-card-title class="headline">{{ comanda.id_comanda }}</v-card-title>
+      <v-card-title class="headline">Comanda {{ comanda.id_comanda }} - Usuari: {{ comanda.nombre_usuario }}</v-card-title>
       <v-card-subtitle v-for="producte in comanda.productos" class="subheading">
         {{ producte.nombre_producto }} ,
         Quantitat: {{ producte.quantitat }}
