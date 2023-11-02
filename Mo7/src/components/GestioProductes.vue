@@ -114,36 +114,46 @@ export default {
     editarProducte() {
       const id = this.producteEditat.id_producte;
       // Lògica per editar el producte
-      updateProducte(id, this.producteEditat).then(response => {
+      updateProducte(id, this.producteEditat)
+
+      /*.then(response => {
         // Actualiza la lista de productos después de editarlo
         getProductos().then(response => {
           this.productes = response;
         });
-      });
+      });*/
       this.dialogEditarProducte = false;
+      // Actualiza la lista de productos con socket después de modificar el producto
+      socket.emit('solicitarProductosIniciales');
     },
     eliminarProducte(producte) {
-      deleteProducte(producte).then(response => {
+      deleteProducte(producte)
+      /*.then(response => {
         // Actualiza la lista de productos después de eliminar
         getProductos().then(response => {
           this.productes = response;
         });
-      });
+      });*/
       this.dialogEliminarProducte = false;
       this.snackbarMessage = 'Producte eliminat';
       this.snackbar = true;
+      socket.emit('solicitarProductosIniciales');
 
     },
     activarDesactivarProducte(id, estat) {
       const nuevoEstat = !estat; // Cambia el estado al contrario de el que estaba
       console.log(nuevoEstat)
 
-      updateEstatProducte(id, nuevoEstat).then(response => {
-        // Actualiza la lista de productos después cambiarle el estado
+      updateEstatProducte(id, nuevoEstat)
+      /*.then(response => {
+        //Actualiza la lista de productos después cambiarle el estado
         getProductos().then(response => {
           this.productes = response;
         });
-      });
+        
+      });*/
+      // Actualiza la lista de productos con socket después de modificar el estado del producto
+      socket.emit('solicitarProductosIniciales');
 
     },
     menuAfegirProducte() {
@@ -151,15 +161,18 @@ export default {
 
     },
     afegirProducte() {
-      addProducte(this.nouProducte).then(response => {
+      addProducte(this.nouProducte)
+      /*.then(response => {
         // Actualiza la lista de productos después de agregar
         getProductos().then(response => {
           this.productes = response;
         });
-      });
+      });*/
       this.dialogCrearProducte = false;
       this.snackbarMessage = 'Producte Afegit';
       this.snackbar = true;
+      // Actualiza la lista de productos con socket después de agregar 
+      socket.emit('solicitarProductosIniciales');
 
 
     },
@@ -247,4 +260,5 @@ export default {
 /*Para cambiar el color del boton para selecionar si cambiar imagen o no*/
 .correcte {
   color: green;
-}</style>
+}
+</style>
