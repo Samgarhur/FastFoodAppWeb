@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes, getUsuariInfo, insertProducte, deleteProducte, getNumProductes,updateProducte,updateEstatProducte,updateEstatComanda};
+module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatComanda};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -87,6 +87,7 @@ async function getNumComanda(connection) {
     try {
         const [rows, fields] = await connection.execute('SELECT MAX(id_comanda) FROM Comanda  ');
         const productosJSON = JSON.stringify(rows);
+        console.log("obtingut!")
         return productosJSON;
     } catch (error) {
         console.error('Error al obtenir les comandes:', error.message);
@@ -98,12 +99,12 @@ async function insertComanda(connection, comandaData) {
     try {
         // INSERT
         console.log(comandaData)
-        const { id_comanda, id_usuari, data_comanda, estat } = comandaData;
+        const { id_comanda, id_usuari, data_comanda, estat, productes } = comandaData;
         const [result] = await connection.execute(
             'INSERT INTO Comanda (id_comanda, id_usuari, data_comanda, estat) VALUES (?, ?, ?, ?)',
             [id_comanda, id_usuari, data_comanda, estat]
         );
-
+        insertProdComand(connection,productes, id_comanda )
 
         // Casos Error
         if (result.affectedRows === 1) {
@@ -116,8 +117,29 @@ async function insertComanda(connection, comandaData) {
         throw error;
     }
 }
+async function insertProdComand(connection,productes, id_comanda){
+    try {
+        // INSERT
+        for(let i=0; i<productes.lenght; i++){
+            id_producte=productes[i].id
+            cantidad=productes[i].cantidad
+            const [result] = await connection.execute(
+                'INSERT INTO Comanda (id_comanda, id_producte, cantidad) VALUES (?, ?,?)',
+                [id_comanda, id_producte, cantidad]
+            );
 
-
+            // Casos Error
+            if (result.affectedRows === 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    } catch (error) {
+        console.error('Error al insertar comanda:', error.message);
+        throw error;
+    }
+}
 
 async function marcarComandaFinalizada(connection, id_comanda) {
     try {

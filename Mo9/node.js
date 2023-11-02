@@ -1,5 +1,4 @@
 const express = require("express");
-const http = require('http');
 const app = express();
 const cors = require("cors");
 const PORT = 3001;
@@ -8,7 +7,7 @@ const fs = require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatProducte, updateEstatComanda } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getNumComanda, getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies/");
 const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
@@ -62,14 +61,23 @@ app.post("/usuaris", function (req, res) {
     autoritzacio = { "autoritzacio": false };
 
     usuaris = getUsuarisLogin(connection).then((usuaris) => {
+        console.log(usuaris)
         usuaris = JSON.parse(usuaris)
-        console.log(usuaris[0].usuario)
-        for (var i = 0; i < usuaris.length || usuariTrobat == false; i++) {
-            if (usuaris[i].usuario == user.usuario && usuaris[i].contra == user.contra) {
-                console.log("hola")
-                usuariTrobat = true;
-                req.session.nombre = user.usuario;
-                usuariLog = req.session.nombre
+        console.log(usuaris)
+        for (var i = 0; i < usuaris.length && usuariTrobat == false; i++) {
+            console.log(i)
+            if (usuaris[i].usuario == user.usuario  ) {
+                console.log("userCorrecte")
+                contra=(user.passwd)
+                console.log(usuaris[i].passwd)
+                console.log(contra)
+                if (usuaris[i].passwd == contra){
+                    console.log(contra)
+                    console.log("hola")
+                    usuariTrobat = true;
+                    req.session.nombre = user.usuario;
+                    usuariLog=req.session.nombre
+                }
             }
         }
         autoritzacio.autoritzacio = usuariTrobat;
@@ -87,21 +95,27 @@ app.get("/dadesUsuari", function (req, res) {
 })//pasar dades del usuari a android
 app.post("/crearComanda", function (req, res) {
     const comanda = req.body;
-    var idComanda = getNumComanda(connection).then(() => {
-        idComanda = JSON.parse(idComanda)
-        let obj = idComanda[0];
-        let valor = obj['MAX(id_comanda)'];
-        idComanda = valor + 1
-        comanda.id_comanda = idComanda
+        var infoUsuari = getUsuariInfo(connection, usuariLog).then((infoUsuari) => {
+            infoUsuari=JSON.parse(infoUsuari)
+            comanda.id_usuari=infoUsuari[0].id_usuari
+           // console.log(infoUsuari.id_usuari)
+            comanda.estat="rebut"
 
-        var infoUsuari = getUsuariInfo(connection, usuariLog).then((result) => {
-            infoUsuari = JSON.parse(infoUsuari)
-            comanda.id_usuari = infoUsuari.id_usuari
+        var idComanda=getNumComanda(connection).then((idComanda)=>{
+            //console.log(idComanda)
+            idComanda=JSON.parse(idComanda)
+            let obj = idComanda[0];
+            let valor = obj['MAX(id_comanda)'];
+            idComanda = valor + 1
+            comanda.id_comanda=idComanda
+            //console.log(comanda.id)
 
-            var resultat = insertComanda(connection, comanda).then((resultat) => {
-                resultat = { "autoritzacio": resultat }
-                res.send(resultat)
-            })
+        //.log(infoUsuari.id_usuari)
+        //console.log(comanda)
+        var resultat = insertComanda(connection, comanda).then((resultat) => {
+            resultat = { "autoritzacio": resultat }
+            res.send(resultat)
+        })
         })
     })
 })//crear la comanda a la bbdd
