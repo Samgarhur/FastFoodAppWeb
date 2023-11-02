@@ -123,6 +123,9 @@ export default {
         });
       });
       this.dialogEditarProducte = false;
+      /*
+      // Actualiza la lista de productos con socket después de modificar el producto
+      socket.emit('solicitarProductosIniciales');*/
     },
     eliminarProducte(producte) {
       deleteProducte(producte).then(response => {
@@ -130,10 +133,13 @@ export default {
         getProductos().then(response => {
           this.productes = response;
         });
-      });
+      })
       this.dialogEliminarProducte = false;
       this.snackbarMessage = 'Producte eliminat';
       this.snackbar = true;
+
+
+      //socket.emit('solicitarProductosIniciales');
 
     },
     activarDesactivarProducte(id, estat) {
@@ -141,11 +147,16 @@ export default {
       console.log(nuevoEstat)
 
       updateEstatProducte(id, nuevoEstat).then(response => {
-        // Actualiza la lista de productos después cambiarle el estado
+        //Actualiza la lista de productos después cambiarle el estado
         getProductos().then(response => {
           this.productes = response;
         });
+
       });
+
+      /*
+      // Actualiza la lista de productos con socket después de modificar el estado del producto
+      socket.emit('solicitarProductosIniciales');*/
 
     },
     menuAfegirProducte() {
@@ -162,6 +173,9 @@ export default {
       this.dialogCrearProducte = false;
       this.snackbarMessage = 'Producte Afegit';
       this.snackbar = true;
+      /*
+      // Actualiza la lista de productos con socket después de agregar 
+      socket.emit('solicitarProductosIniciales');*/
 
 
     },
@@ -178,18 +192,18 @@ export default {
     }
   },
   created() {
+    /*
+        socket.on('getProductes', (productos) => {
+          const productosJson = JSON.parse(productos);
+          this.productes = productosJson;
+    
+        });
+        // Solicitar productos iniciales
+        socket.emit('solicitarProductosIniciales');*/
 
-    socket.on('getProductes', (productos) => {
-      const productosJson = JSON.parse(productos);
-      this.productes = productosJson;
-
-    });
-    // Solicitar productos iniciales
-    socket.emit('solicitarProductosIniciales');
-
-    /*getProductos().then(response => {
+    getProductos().then(response => {
       this.productes = response;
-    });*/
+    });
   },
 }
 </script>

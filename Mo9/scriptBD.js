@@ -104,6 +104,9 @@ async function insertComanda(connection, comandaData) {
             'INSERT INTO Comanda (id_comanda, id_usuari, data_comanda, estat) VALUES (?, ?, ?, ?)',
             [id_comanda, id_usuari, data_comanda, estat]
         );
+        console.log("insertant productes...")
+        console.log(productes)
+        console.log(id_comanda)
         insertProdComand(connection,productes, id_comanda )
 
         // Casos Error
@@ -118,21 +121,25 @@ async function insertComanda(connection, comandaData) {
     }
 }
 async function insertProdComand(connection,productes, id_comanda){
+    console.log("seguim insertant productes...")
     try {
+        console.log(productes.length)
+        console.log("tercer missatge...")
         // INSERT
-        for(let i=0; i<productes.lenght; i++){
-            id_producte=productes[i].id
-            cantidad=productes[i].cantidad
+        for(let i=0; i<productes.length; i++){
+            let id_producte=productes[i].id
+            let cantidad=productes[i].cantidad
+            console.log("insertant " )
             const [result] = await connection.execute(
-                'INSERT INTO Comanda (id_comanda, id_producte, cantidad) VALUES (?, ?,?)',
+                'INSERT INTO Comanda_Producte (id_comanda, id_producte, quantitat) VALUES (?, ?, ?)',
                 [id_comanda, id_producte, cantidad]
             );
 
             // Casos Error
             if (result.affectedRows === 1) {
-                return true;
+                console.log("insertat");
             } else {
-                return false;
+                console.log("no instertat");
             }
         }
     } catch (error) {
@@ -215,12 +222,7 @@ async function insertProducte(connection, producteData) {
     try {    
 
         // INSERT
-        let {idProd, nom, descripcio, preu, estat, foto} = producteData;
-        id=getNumProductes(connection).then(async (id)=>{
-            id=JSON.parse(id)
-            let obj = id[0];
-            let valor = obj['MAX(id_producte)'];
-            idProd=valor+1
+        let {idProd, nom, descripcio, preu, estat, foto} = producteData;      
             foto=null;
           
         const [result] = await connection.execute(
@@ -234,7 +236,7 @@ async function insertProducte(connection, producteData) {
             return true;
         } else {
             return false;
-        }})
+        }
     } catch (error) {
         console.error('Error al inserir el producte:', error.message);
         throw error;
