@@ -65,8 +65,10 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-btn @click="activarDesactivarProducte(producte.id_producte, producte.estat)">{{ producte.estat ? 'Desactivar'
-          : 'Activar' }}</v-btn>
+        <v-btn @click="activarDesactivarProducte(producte.id_producte, producte.estat)"
+          :class="{ 'red-background': producte.estat, 'green-background': !producte.estat }">
+          {{ producte.estat ? 'Desactivar' : 'Activar' }}
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -121,9 +123,12 @@ export default {
         });
       });
       this.dialogEditarProducte = false;
+<<<<<<< HEAD
       /*
       // Actualiza la lista de productos con socket después de modificar el producto
       socket.emit('solicitarProductosIniciales');*/
+=======
+>>>>>>> 15e95960f16ad10e1c11abd52fddf18d527552db
     },
     eliminarProducte(producte) {
       deleteProducte(producte).then(response => {
@@ -131,6 +136,7 @@ export default {
         getProductos().then(response => {
           this.productes = response;
         });
+<<<<<<< HEAD
       })
       this.dialogEliminarProducte = false;
       this.snackbarMessage = 'Producte eliminat';
@@ -138,6 +144,12 @@ export default {
 
 
       //socket.emit('solicitarProductosIniciales');
+=======
+      });
+      this.dialogEliminarProducte = false;
+      this.snackbarMessage = 'Producte eliminat';
+      this.snackbar = true;
+>>>>>>> 15e95960f16ad10e1c11abd52fddf18d527552db
 
     },
     activarDesactivarProducte(id, estat) {
@@ -145,6 +157,7 @@ export default {
       console.log(nuevoEstat)
 
       updateEstatProducte(id, nuevoEstat).then(response => {
+<<<<<<< HEAD
         //Actualiza la lista de productos después cambiarle el estado
         getProductos().then(response => {
           this.productes = response;
@@ -155,6 +168,13 @@ export default {
       /*
       // Actualiza la lista de productos con socket después de modificar el estado del producto
       socket.emit('solicitarProductosIniciales');*/
+=======
+        // Actualiza la lista de productos después cambiarle el estado
+        getProductos().then(response => {
+          this.productes = response;
+        });
+      });
+>>>>>>> 15e95960f16ad10e1c11abd52fddf18d527552db
 
     },
     menuAfegirProducte() {
@@ -171,9 +191,12 @@ export default {
       this.dialogCrearProducte = false;
       this.snackbarMessage = 'Producte Afegit';
       this.snackbar = true;
+<<<<<<< HEAD
       /*
       // Actualiza la lista de productos con socket después de agregar 
       socket.emit('solicitarProductosIniciales');*/
+=======
+>>>>>>> 15e95960f16ad10e1c11abd52fddf18d527552db
 
 
     },
@@ -207,6 +230,13 @@ export default {
 </script>
 
 <style>
+.red-background:hover{
+    background-color: rgb(255, 101, 101);
+  }
+
+  .green-background:hover {
+    background-color: rgb(142, 238, 142);
+  }
 .my-button-class {
   position: absolute;
   top: 1rem;
@@ -239,7 +269,7 @@ export default {
 
 .custom-button:hover,
 .smaller-button:hover {
-  background-color: #0056b3;
+  background-color: #66B3FF;
 }
 
 /*Para cambiar el color del boton para selecionar si cambiar imagen o no*/
