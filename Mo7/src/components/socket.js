@@ -21,5 +21,11 @@ socket.on("disconnect", () => {
 });
 
 socket.on('comandaAceptada', (estat) => {   
+
   
 });
+
+socket.on('comandaRebutjada', (estat) => {   
+  
+});
+
