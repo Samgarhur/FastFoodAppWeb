@@ -29,7 +29,7 @@
       <v-card-subtitle>Preu: {{ producte.preu }}</v-card-subtitle>
       <v-img :src="decodeBase64Image(producte.foto)" height="150" width="150" cover></v-img>
       <v-card-actions>
-        <v-dialog v-model="dialogEditarProducte" max-width="300">
+        <v-dialog v-model="dialogEditarProducte" max-width="380">
           <template v-slot:activator="{ on }">
             <v-btn class="custom-button" @click="openEditDialog(producte)">Editar producte</v-btn>
           </template>
@@ -50,7 +50,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="dialogEliminarProducte" max-width="300">
+        <v-dialog v-model="dialogEliminarProducte" max-width="380">
           <template v-slot:activator="{ on }">
             <v-btn class="custom-button" @click="dialogEliminarProducte = true">Eliminar</v-btn>
           </template>
@@ -65,8 +65,10 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-btn @click="activarDesactivarProducte(producte.id_producte, producte.estat)">{{ producte.estat ? 'Desactivar'
-          : 'Activar' }}</v-btn>
+        <v-btn @click="activarDesactivarProducte(producte.id_producte, producte.estat)"
+          :class="{ 'red-background': producte.estat, 'green-background': !producte.estat }">
+          {{ producte.estat ? 'Desactivar' : 'Activar' }}
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -121,6 +123,9 @@ export default {
         });
       });
       this.dialogEditarProducte = false;
+      /*
+      // Actualiza la lista de productos con socket después de modificar el producto
+      socket.emit('solicitarProductosIniciales');*/
     },
     eliminarProducte(producte) {
       deleteProducte(producte).then(response => {
@@ -128,10 +133,13 @@ export default {
         getProductos().then(response => {
           this.productes = response;
         });
-      });
+      })
       this.dialogEliminarProducte = false;
       this.snackbarMessage = 'Producte eliminat';
       this.snackbar = true;
+
+
+      //socket.emit('solicitarProductosIniciales');
 
     },
     activarDesactivarProducte(id, estat) {
@@ -139,11 +147,16 @@ export default {
       console.log(nuevoEstat)
 
       updateEstatProducte(id, nuevoEstat).then(response => {
-        // Actualiza la lista de productos después cambiarle el estado
+        //Actualiza la lista de productos después cambiarle el estado
         getProductos().then(response => {
           this.productes = response;
         });
+
       });
+
+      /*
+      // Actualiza la lista de productos con socket después de modificar el estado del producto
+      socket.emit('solicitarProductosIniciales');*/
 
     },
     menuAfegirProducte() {
@@ -160,6 +173,9 @@ export default {
       this.dialogCrearProducte = false;
       this.snackbarMessage = 'Producte Afegit';
       this.snackbar = true;
+      /*
+      // Actualiza la lista de productos con socket después de agregar 
+      socket.emit('solicitarProductosIniciales');*/
 
 
     },
@@ -176,23 +192,30 @@ export default {
     }
   },
   created() {
+    /*
+        socket.on('getProductes', (productos) => {
+          const productosJson = JSON.parse(productos);
+          this.productes = productosJson;
+    
+        });
+        // Solicitar productos iniciales
+        socket.emit('solicitarProductosIniciales');*/
 
-    socket.on('getProductes', (productos) => {
-      const productosJson = JSON.parse(productos);
-      this.productes = productosJson;
-
-    });
-    // Solicitar productos iniciales
-    socket.emit('solicitarProductosIniciales');
-
-    /*getProductos().then(response => {
+    getProductos().then(response => {
       this.productes = response;
-    });*/
+    });
   },
 }
 </script>
 
 <style>
+.red-background:hover{
+    background-color: rgb(255, 101, 101);
+  }
+
+  .green-background:hover {
+    background-color: rgb(142, 238, 142);
+  }
 .my-button-class {
   position: absolute;
   top: 1rem;
@@ -218,22 +241,6 @@ export default {
   background-color: #0056b3;
 }
 
-.custom-button,
-.smaller-button {
-  margin-right: 1rem;
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
-  background-color: #66B3FF;
-  color: #fff;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease;
-}
-
 .custom-button:last-child,
 .smaller-button:last-child {
   margin-right: 0;
@@ -241,10 +248,11 @@ export default {
 
 .custom-button:hover,
 .smaller-button:hover {
-  background-color: #0056b3;
+  background-color: #66B3FF;
 }
 
 /*Para cambiar el color del boton para selecionar si cambiar imagen o no*/
 .correcte {
   color: green;
-}</style>
+}
+</style>
