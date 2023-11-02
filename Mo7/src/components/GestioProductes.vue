@@ -29,7 +29,7 @@
       <v-card-subtitle>Preu: {{ producte.preu }}</v-card-subtitle>
       <v-img :src="decodeBase64Image(producte.foto)" height="150" width="150" cover></v-img>
       <v-card-actions>
-        <v-dialog v-model="dialogEditarProducte" max-width="300">
+        <v-dialog v-model="dialogEditarProducte" max-width="380">
           <template v-slot:activator="{ on }">
             <v-btn class="custom-button" @click="openEditDialog(producte)">Editar producte</v-btn>
           </template>
@@ -50,7 +50,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="dialogEliminarProducte" max-width="300">
+        <v-dialog v-model="dialogEliminarProducte" max-width="380">
           <template v-slot:activator="{ on }">
             <v-btn class="custom-button" @click="dialogEliminarProducte = true">Eliminar</v-btn>
           </template>
@@ -229,22 +229,6 @@ export default {
 
 .my-button-class:hover {
   background-color: #0056b3;
-}
-
-.custom-button,
-.smaller-button {
-  margin-right: 1rem;
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
-  background-color: #66B3FF;
-  color: #fff;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease;
 }
 
 .custom-button:last-child,
