@@ -118,9 +118,10 @@ async function insertComanda(connection, comandaData) {
 }
 
 
+
 async function marcarComandaFinalizada(connection, id_comanda) {
     try {
-        const [rows, fields] = await connection.execute('UPDATE Comanda SET Finalitzada = true WHERE id_comanda = ?', [id_comanda]);
+        const [rows, fields] = await connection.execute('UPDATE Comanda SET estat = \'Finalitzada\' WHERE id_comanda = ?', [id_comanda]);
         return rows.affectedRows;
     } catch (error) {
         console.error('Error al finalitzar la comanda:', error.message);
@@ -130,14 +131,15 @@ async function marcarComandaFinalizada(connection, id_comanda) {
 
 async function getComandaFinalizada(connection) {
     try {
-        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE Finalitzada = true');
+        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE estat = \'Finalitzada\'');
         const comandasJSON = JSON.stringify(rows);
         return comandasJSON;
     } catch (error) {
-        console.error('Error al obtenir les comandes finalitzades:', error.message);
+        console.error('Error al obtener las comandas finalizadas:', error.message);
         throw error;
     }
 }
+
 
 
 async function getComandaAceptada(connection) {
