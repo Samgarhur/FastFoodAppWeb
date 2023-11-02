@@ -73,6 +73,7 @@
   
 <script>
 import { getProductos, deleteProducte, addProducte, updateProducte, updateEstatProducte } from './communicationsManager';
+import { socket, state } from './socket';
 export default {
   data() {
     return {
@@ -132,7 +133,12 @@ export default {
     activarDesactivarProducte(id,estat) {
       const nuevoEstat = !estat;//Cambia el estado al contrario de el que estaba
       console.log(nuevoEstat)
-      updateEstatProducte(id,nuevoEstat)
+      updateEstatProducte(id,nuevoEstat).then(response => {
+        // Actualiza la lista de productos después cambiarle el estado
+        getProductos().then(response => {
+          this.productes = response;
+        });
+      });
     },
     menuAfegirProducte() {
       this.verMenuAfegir = true;
@@ -164,9 +170,18 @@ export default {
     }
   },
   created() {
-    getProductos().then(response => {
-      this.productes = response;
+
+    socket.on('getProductes', (productos) => {
+      const productosJson = JSON.parse(productos);
+      this.productes = productosJson ;
+
     });
+    // Solicitar productos iniciales
+    socket.emit('solicitarProductosIniciales');
+    
+    /*getProductos().then(response => {
+      this.productes = response;
+    });*/
   },
 }
 </script>

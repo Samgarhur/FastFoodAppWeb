@@ -93,6 +93,7 @@ export default {
     });
     // Solicitar comandas iniciales
     socket.emit('solicitarComandasIniciales');
+    
     /*getComandas().then(response => {
       this.comandes = response;
     });*/

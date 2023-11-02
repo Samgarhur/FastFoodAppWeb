@@ -8,7 +8,7 @@ const fs = require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte,updateEstatProducte, updateEstatComanda } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatProducte, updateEstatComanda } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies/");
 const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
@@ -69,7 +69,7 @@ app.post("/usuaris", function (req, res) {
                 console.log("hola")
                 usuariTrobat = true;
                 req.session.nombre = user.usuario;
-                usuariLog=req.session.nombre
+                usuariLog = req.session.nombre
             }
         }
         autoritzacio.autoritzacio = usuariTrobat;
@@ -87,26 +87,26 @@ app.get("/dadesUsuari", function (req, res) {
 })//pasar dades del usuari a android
 app.post("/crearComanda", function (req, res) {
     const comanda = req.body;
-        var idComanda=getNumComanda(connection).then(()=>{
-            idComanda=JSON.parse(idComanda)
-            let obj = idComanda[0];
-            let valor = obj['MAX(id_comanda)'];
-            idComanda = valor + 1
-            comanda.id_comanda=idComanda
+    var idComanda = getNumComanda(connection).then(() => {
+        idComanda = JSON.parse(idComanda)
+        let obj = idComanda[0];
+        let valor = obj['MAX(id_comanda)'];
+        idComanda = valor + 1
+        comanda.id_comanda = idComanda
 
         var infoUsuari = getUsuariInfo(connection, usuariLog).then((result) => {
             infoUsuari = JSON.parse(infoUsuari)
-            comanda.id_usuari=infoUsuari.id_usuari
+            comanda.id_usuari = infoUsuari.id_usuari
 
-        var resultat = insertComanda(connection, comanda).then((resultat) => {
-            resultat = { "autoritzacio": resultat }
-            res.send(resultat)
+            var resultat = insertComanda(connection, comanda).then((resultat) => {
+                resultat = { "autoritzacio": resultat }
+                res.send(resultat)
+            })
         })
-        })
-        })
+    })
 })//crear la comanda a la bbdd
 
-//----------------cosses vue----------------------//
+//----------------cosses vue------------------------------------------------------------------------//
 app.post("/agregarProducte", function (req, res) {
     nouProducte = req.body
     novaFoto = nouProducte.foto
@@ -166,13 +166,13 @@ app.put("/modificarProducte/:id", function (req, res) {
 app.put("/updateEstatProducte/:id", function (req, res) {
     //console.log("Entra en update estat del producte");
     const estatProducte = req.body.estat
-    const producteId = req.params.id   
+    const producteId = req.params.id
     updateEstatProducte(connection, producteId, estatProducte)
 
 })
 
 
-//----------------General-------------------------//
+//----------------General-----------------------------------------------------------------//
 app.get("/getProductos", function (req, res) {
     result = getProductes(connection).then((result) => {
         result = JSON.parse(result)
@@ -207,7 +207,7 @@ server.listen(3002, () => {
 
 io.on('connection', (socket) => {
     console.log('Usuario conectado');
-
+    //Para solicitar todas las comandas por socket
     socket.on('solicitarComandasIniciales', async () => {
 
         const comandes = await getComandesProductes(connection);
@@ -217,6 +217,22 @@ io.on('connection', (socket) => {
 
 
     });
+
+    //Para solicitar todas los productos por socket
+    socket.on('solicitarProductosIniciales', async () => {
+        const result = await getProductes(connection);
+        const productesJson = JSON.parse(result);
+
+        const fitxers = await comprobarExistencia(ubicacioArxius);
+        for (let i = 0; i < productesJson.length; i++) {
+            const foto = base64_encode(ubicacioArxius + fitxers[i]);
+            productesJson[i].foto = foto;
+        }
+
+        socket.emit('getProductes', JSON.stringify(productesJson));
+    });
+
+
 
     // Escuchar la solicitud de comanda aceptada
     socket.on('comandaAceptada', (id, estat) => {
