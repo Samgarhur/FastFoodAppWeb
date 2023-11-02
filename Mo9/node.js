@@ -15,12 +15,9 @@ const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
 const arxiuPython = path.join(__dirname, "..", "python/main.py");
 const axios = require('axios');
 var session = require('express-session')
-<<<<<<< HEAD
 let esPot = false
 
-=======
 var usuariLog
->>>>>>> c45bf5ea3d66105fb7df3e3e9b65e93b17ba86c6
 
 //const io = require('socket.io')(server);
 
@@ -278,12 +275,8 @@ async function comprobarExistencia(fotografia) {
 
         })
     })
-<<<<<<< HEAD
 }
-=======
-})
-}//llegir el directori de fotografies 
->>>>>>> c45bf5ea3d66105fb7df3e3e9b65e93b17ba86c6
+//llegir el directori de fotografies 
 function base64_encode(file) {
     // read binary data
     var bitmap = fs.readFileSync(file);
