@@ -118,9 +118,10 @@ async function insertComanda(connection, comandaData) {
 }
 
 
+
 async function marcarComandaFinalizada(connection, id_comanda) {
     try {
-        const [rows, fields] = await connection.execute('UPDATE Comanda SET Finalitzada = true WHERE id_comanda = ?', [id_comanda]);
+        const [rows, fields] = await connection.execute('UPDATE Comanda SET estat = \'Finalitzada\' WHERE id_comanda = ?', [id_comanda]);
         return rows.affectedRows;
     } catch (error) {
         console.error('Error al finalitzar la comanda:', error.message);
