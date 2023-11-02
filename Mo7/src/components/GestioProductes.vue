@@ -1,6 +1,6 @@
 <template>
   <button class="my-button-class" onclick="window.location.href = '/';">
-    <img src="./901844-200.png" alt="icono Pag Principal" width="50" height="55">
+    <img src="./home.png" alt="icono Pag Principal" width="40" height="45">
   </button>
   <v-container>
     <v-dialog v-model="dialogCrearProducte" max-width="380">
