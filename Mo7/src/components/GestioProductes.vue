@@ -65,8 +65,10 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-btn @click="activarDesactivarProducte(producte.id_producte, producte.estat)">{{ producte.estat ? 'Desactivar'
-          : 'Activar' }}</v-btn>
+        <v-btn @click="activarDesactivarProducte(producte.id_producte, producte.estat)"
+          :class="{ 'red-background': producte.estat, 'green-background': !producte.estat }">
+          {{ producte.estat ? 'Desactivar' : 'Activar' }}
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -193,6 +195,13 @@ export default {
 </script>
 
 <style>
+.red-background:hover{
+    background-color: rgb(255, 101, 101);
+  }
+
+  .green-background:hover {
+    background-color: rgb(142, 238, 142);
+  }
 .my-button-class {
   position: absolute;
   top: 1rem;
@@ -225,10 +234,11 @@ export default {
 
 .custom-button:hover,
 .smaller-button:hover {
-  background-color: #0056b3;
+  background-color: #66B3FF;
 }
 
 /*Para cambiar el color del boton para selecionar si cambiar imagen o no*/
 .correcte {
   color: green;
-}</style>
+}
+</style>
