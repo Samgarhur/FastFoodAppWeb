@@ -176,14 +176,47 @@ async function getComandaFinalizada(connection) {
 
 async function getComandaAceptada(connection) {
     try {
-        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE estat = \'aceptada\'');
-        const comandasJSON = JSON.stringify(rows);
-        return comandasJSON;
+        const queryString = `
+            SELECT C.id_comanda, C.id_usuari, U.usuario as nombre_usuario, P.nom AS nombre_producto, CP.quantitat
+            FROM Comanda_Producte CP
+            JOIN Comanda C ON CP.id_comanda = C.id_comanda
+            JOIN Producte P ON CP.id_producte = P.id_producte
+            JOIN Usuari U ON C.id_usuari = U.id_usuari
+            WHERE C.estat = "aceptada";
+        `;
+        
+        const [rows, fields] = await connection.execute(queryString);
+
+        // Organizar los resultados por id_comanda
+        const comandesOrganizados = rows.reduce((result, row) => {
+            const { id_comanda, id_usuari, nombre_usuario, nombre_producto, quantitat } = row;
+
+            if (!result[id_comanda]) {
+                result[id_comanda] = {
+                    id_comanda,
+                    id_usuari,
+                    nombre_usuario,
+                    productos: [],
+                };
+            }
+
+            result[id_comanda].productos.push({
+                nombre_producto,
+                quantitat,
+            });
+
+            return result;
+        }, {});
+
+        // Convertir a JSON
+        const comandesJSON = JSON.stringify(Object.values(comandesOrganizados));
+        return comandesJSON;
     } catch (error) {
         console.error('Error al obtener las comandas aceptadas:', error.message);
         throw error;
     }
 }
+
 
 async function updateEstatComanda(connection, id_comanda, estat) {
     try {

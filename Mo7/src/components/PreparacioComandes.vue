@@ -3,10 +3,9 @@
     <v-row justify="center">
       <v-col v-for="comanda in comandes" :key="comanda.id" cols="3">
         <v-card :class="posarColorComandes(comanda.temps)">
-          <v-card-title>Comanda numero {{ comanda.id }}</v-card-title>
+          <v-card-title>Comanda ID {{ comanda.id_comanda }}</v-card-title>
           <v-card-title>Temps: {{ comanda.temps }} minuts</v-card-title>
           <v-card-subtitle>{{ comanda.info }}</v-card-subtitle>
-
 
           <v-card-actions>
             <v-btn @click="veureDetalls(comanda.id)">Veure Detalls</v-btn>
@@ -20,17 +19,31 @@
                   ¿Estás segur de que la comanda esta finalitzada?
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn @click=" marcarComandaFinalitzada(comanda.id)">Sí</v-btn>
+                  <v-btn @click="marcarComandaFinalitzada(comanda.id)">Sí</v-btn>
                   <v-btn @click="dialog = false">No</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
           </v-card-actions>
+
           <v-expand-transition>
             <v-card v-if="mostrarDetalls && comandaSeleccionada == comanda.id" class="v-card--reveal"
               style="height: 100%;">
               <v-card-text class="pb-0">
-                <v-list-item>Temps comanda: {{ comanda.temps }}</v-list-item>
+                <v-list-item>
+                  <v-list-item-content>
+                    <!--<v-list-item-title>Temps comanda: {{ comanda.temps }}</v-list-item-title>-->
+                    <v-list-item-subtitle>Usuari: {{ comanda.nombre_usuario }}</v-list-item-subtitle><br>
+                    <v-list-item-subtitle>
+                      Productes ->
+                      <ul>
+                        <li v-for="producto in comanda.productos" :key="producto.nombre_producto">
+                          ·{{ producto.nombre_producto }} - Quantitat: {{ producto.quantitat }}
+                        </li>
+                      </ul>
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
               </v-card-text>
               <v-card-actions class="pt-0">
                 <v-btn variant="text" color="teal-accent-4" @click="mostrarDetalls = false">
@@ -47,6 +60,7 @@
     {{ snackbarMessage }}
   </v-snackbar>
 </template>
+
   
 <script>
 
