@@ -114,46 +114,47 @@ export default {
     editarProducte() {
       const id = this.producteEditat.id_producte;
       // Lògica per editar el producte
-      updateProducte(id, this.producteEditat)
-
-      /*.then(response => {
+      updateProducte(id, this.producteEditat).then(response => {
         // Actualiza la lista de productos después de editarlo
         getProductos().then(response => {
           this.productes = response;
         });
-      });*/
+      });
       this.dialogEditarProducte = false;
+      /*
       // Actualiza la lista de productos con socket después de modificar el producto
-      socket.emit('solicitarProductosIniciales');
+      socket.emit('solicitarProductosIniciales');*/
     },
     eliminarProducte(producte) {
-      deleteProducte(producte)
-      /*.then(response => {
+      deleteProducte(producte).then(response => {
         // Actualiza la lista de productos después de eliminar
         getProductos().then(response => {
           this.productes = response;
         });
-      });*/
+      })
       this.dialogEliminarProducte = false;
       this.snackbarMessage = 'Producte eliminat';
       this.snackbar = true;
-      socket.emit('solicitarProductosIniciales');
+
+
+      //socket.emit('solicitarProductosIniciales');
 
     },
     activarDesactivarProducte(id, estat) {
       const nuevoEstat = !estat; // Cambia el estado al contrario de el que estaba
       console.log(nuevoEstat)
 
-      updateEstatProducte(id, nuevoEstat)
-      /*.then(response => {
+      updateEstatProducte(id, nuevoEstat).then(response => {
         //Actualiza la lista de productos después cambiarle el estado
         getProductos().then(response => {
           this.productes = response;
         });
-        
-      });*/
+
+      });
+
+      /*
       // Actualiza la lista de productos con socket después de modificar el estado del producto
-      socket.emit('solicitarProductosIniciales');
+      socket.emit('solicitarProductosIniciales');*/
 
     },
     menuAfegirProducte() {
@@ -161,18 +162,18 @@ export default {
 
     },
     afegirProducte() {
-      addProducte(this.nouProducte)
-      /*.then(response => {
+      addProducte(this.nouProducte).then(response => {
         // Actualiza la lista de productos después de agregar
         getProductos().then(response => {
           this.productes = response;
         });
-      });*/
+      });
       this.dialogCrearProducte = false;
       this.snackbarMessage = 'Producte Afegit';
       this.snackbar = true;
+      /*
       // Actualiza la lista de productos con socket después de agregar 
-      socket.emit('solicitarProductosIniciales');
+      socket.emit('solicitarProductosIniciales');*/
 
 
     },
@@ -189,18 +190,18 @@ export default {
     }
   },
   created() {
+    /*
+        socket.on('getProductes', (productos) => {
+          const productosJson = JSON.parse(productos);
+          this.productes = productosJson;
+    
+        });
+        // Solicitar productos iniciales
+        socket.emit('solicitarProductosIniciales');*/
 
-    socket.on('getProductes', (productos) => {
-      const productosJson = JSON.parse(productos);
-      this.productes = productosJson;
-
-    });
-    // Solicitar productos iniciales
-    socket.emit('solicitarProductosIniciales');
-
-    /*getProductos().then(response => {
+    getProductos().then(response => {
       this.productes = response;
-    });*/
+    });
   },
 }
 </script>
