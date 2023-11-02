@@ -123,12 +123,9 @@ export default {
         });
       });
       this.dialogEditarProducte = false;
-<<<<<<< HEAD
       /*
       // Actualiza la lista de productos con socket después de modificar el producto
       socket.emit('solicitarProductosIniciales');*/
-=======
->>>>>>> 15e95960f16ad10e1c11abd52fddf18d527552db
     },
     eliminarProducte(producte) {
       deleteProducte(producte).then(response => {
@@ -136,7 +133,6 @@ export default {
         getProductos().then(response => {
           this.productes = response;
         });
-<<<<<<< HEAD
       })
       this.dialogEliminarProducte = false;
       this.snackbarMessage = 'Producte eliminat';
@@ -144,12 +140,6 @@ export default {
 
 
       //socket.emit('solicitarProductosIniciales');
-=======
-      });
-      this.dialogEliminarProducte = false;
-      this.snackbarMessage = 'Producte eliminat';
-      this.snackbar = true;
->>>>>>> 15e95960f16ad10e1c11abd52fddf18d527552db
 
     },
     activarDesactivarProducte(id, estat) {
@@ -157,7 +147,6 @@ export default {
       console.log(nuevoEstat)
 
       updateEstatProducte(id, nuevoEstat).then(response => {
-<<<<<<< HEAD
         //Actualiza la lista de productos después cambiarle el estado
         getProductos().then(response => {
           this.productes = response;
@@ -168,13 +157,6 @@ export default {
       /*
       // Actualiza la lista de productos con socket después de modificar el estado del producto
       socket.emit('solicitarProductosIniciales');*/
-=======
-        // Actualiza la lista de productos después cambiarle el estado
-        getProductos().then(response => {
-          this.productes = response;
-        });
-      });
->>>>>>> 15e95960f16ad10e1c11abd52fddf18d527552db
 
     },
     menuAfegirProducte() {
@@ -191,12 +173,9 @@ export default {
       this.dialogCrearProducte = false;
       this.snackbarMessage = 'Producte Afegit';
       this.snackbar = true;
-<<<<<<< HEAD
       /*
       // Actualiza la lista de productos con socket después de agregar 
       socket.emit('solicitarProductosIniciales');*/
-=======
->>>>>>> 15e95960f16ad10e1c11abd52fddf18d527552db
 
 
     },
