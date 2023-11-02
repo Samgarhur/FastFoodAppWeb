@@ -99,13 +99,14 @@ export async function updateProducte(id,dadesProductemodificar) {
 }
 
 export async function updateEstatProducte(id,estat) {
-  //console.log("datos recibidos: " + dadesProductemodificar)
-  const response = await fetch(`http://localhost:3001/${id},${estat}`,
+  console.log("producte a updatear estado: " + id)
+  console.log("estado: " + estat)
+  const response = await fetch(`http://localhost:3001/updateEstatProducte/${id}}`,
     {
       method: 'PUT', headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(dadesProductemodificar),
+      body: JSON.stringify(estat),
       mode: "cors"
     },);
 

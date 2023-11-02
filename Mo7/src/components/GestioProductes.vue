@@ -62,7 +62,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog> 
-        <v-btn @click="activarDesactivarProducte(producte.id_producte)">{{ producte.estat ? 'Desactivar' :'Activar'}}</v-btn>
+        <v-btn @click="activarDesactivarProducte(producte.id_producte,producte.estat)">{{ producte.estat ? 'Desactivar' :'Activar'}}</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -129,8 +129,10 @@ export default {
       this.snackbar = true;
 
     },
-    activarDesactivarProducte(producte) {
-      // Lògica per activar o desactivar el producte
+    activarDesactivarProducte(id,estat) {
+      const nuevoEstat = !estat;//Cambia el estado al contrario de el que estaba
+      console.log(nuevoEstat)
+      updateEstatProducte(id,nuevoEstat)
     },
     menuAfegirProducte() {
       this.verMenuAfegir = true;

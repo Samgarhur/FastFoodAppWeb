@@ -8,14 +8,14 @@ const fs = require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte,updateEstatProducte, updateEstatComanda } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies/");
 const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
 const arxiuPython = path.join(__dirname, "..", "python/main.py");
 const axios = require('axios');
 var session = require('express-session')
-let esPot=false
+let esPot = false
 
 
 //const io = require('socket.io')(server);
@@ -121,6 +121,7 @@ app.delete("/eliminarProducte/:id", function (req, res) {
     deleteProducte(connection, prod)
     fs.unlinkSync(ubicacioArxius + "/" + prod + ".jpeg")
 })//Eliminar productes a la bbdd 
+
 app.put("/modificarProducte/:id", function (req, res) {
     console.log("Entra en modificar producte");
     const producteModificat = req.body
@@ -149,22 +150,31 @@ app.put("/modificarProducte/:id", function (req, res) {
         .catch(console.error);
 })//modificar un producte de la bbdd
 
+app.put("/updateEstatProducte/:id", function (req, res) {
+    console.log("Entra en update estat del producte");
+    const estatProducte = req.body
+    const producteId = req.params.id
+    //console.log(producteModificat)
+    updateEstatProducte(connection, producteId, estatProducte)
+
+})
+
 
 //----------------General-------------------------//
 app.get("/getProductos", function (req, res) {
     result = getProductes(connection).then((result) => {
         result = JSON.parse(result)
-        fitxers=comprobarExistencia(ubicacioArxius).then((fitxers)=>{
+        fitxers = comprobarExistencia(ubicacioArxius).then((fitxers) => {
 
-        for (var i = 0; i < result.length; i++) {
-            console.log(i)
-            console.log(fitxers[i])
-            result[i].foto = base64_encode(ubicacioArxius+fitxers[i])
-        }
-        res.json(result)
+            for (var i = 0; i < result.length; i++) {
+                console.log(i)
+                console.log(fitxers[i])
+                result[i].foto = base64_encode(ubicacioArxius + fitxers[i])
+            }
+            res.json(result)
         })
         //console.log(result)
-        
+
     })
 })//Passar productes amb la seva foto codificada
 app.get("/getComandes", async function (req, res) {
@@ -238,20 +248,20 @@ async function descargarImagen(url, rutaImagen,) {
         escritor.on('error', rechazar);
     });
 }//descarregar la foto desde la url amb axios
-async function comprobarExistencia(fotografia){
+async function comprobarExistencia(fotografia) {
     console.log("hola")
     return new Promise((resolve, reject) => {
-      fs.readdir(fotografia, function (err, archivos) {
-        console.log("hola2")
-        if (err) {
-            console.log('Error al leer el directorio');
-        } else {
-            console.log(archivos)
-            resolve(archivos);
-        }
+        fs.readdir(fotografia, function (err, archivos) {
+            console.log("hola2")
+            if (err) {
+                console.log('Error al leer el directorio');
+            } else {
+                console.log(archivos)
+                resolve(archivos);
+            }
 
+        })
     })
-})
 }
 function base64_encode(file) {
     // read binary data
