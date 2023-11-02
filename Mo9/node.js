@@ -184,6 +184,16 @@ server.listen(3002, () => {
 io.on('connection', (socket) => {
     console.log('Usuario conectado');
 
+    socket.on('solicitarComandasIniciales', async () => {
+
+        const comandes = await getComandesProductes(connection);
+        const comandesJson = JSON.parse(comandes);
+
+        socket.emit('getComandas', JSON.stringify(comandesJson));
+
+
+    });
+
     // Escuchar la solicitud de comanda aceptada
     socket.on('comandaAceptada', (id, estat) => {
         console.log('comanda aceptada numero : ' + id)
@@ -195,7 +205,7 @@ io.on('connection', (socket) => {
         updateEstatComanda(connection, id, estat); // Llama a la funcion para cambiar el estado en la BD a aceptada       
 
     });
-    socket.on('comandaRebutjada', (id,estat) => {
+    socket.on('comandaRebutjada', (id, estat) => {
         console.log('comanda rebutjada numero : ' + id)
         console.log('estado : ' + estat)
         // Aquí puedes procesar la información (id y estat) como desees

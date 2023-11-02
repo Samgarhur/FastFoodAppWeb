@@ -50,7 +50,7 @@
 <script>
 
 import { getComandas } from './communicationsManager';
-import { socket ,state } from './socket';
+import { socket, state } from './socket';
 export default {
   name: 'RecepcioComandes',
   data() {
@@ -65,33 +65,37 @@ export default {
   },
   methods: {
     acceptarComanda(id) {
-      this.estatComandas = "aceptada";      
+      this.estatComandas = "aceptada";
       console.log(id)
-      socket.emit("comandaAceptada",id, this.estatComandas);
+      socket.emit("comandaAceptada", id, this.estatComandas);
       this.dialog[id] = false; // Cierra el diálogo después de la confirmación
       this.snackbarMessage = 'Comanda aceptada';
       this.snackbar = true; // Muestra el Snackbar
-      getComandas().then(response => {
-      this.comandes = response;
-    });
+      socket.emit('solicitarComandasIniciales');
     },
     rebutjarComanda(id) {
       this.estatComandas = "rebutjada";
       //estatComanda(id, this.estatComandas)
-      socket.emit("comandaRebutjada",id, this.estatComandas);
+      socket.emit("comandaRebutjada", id, this.estatComandas);
       this.rechazarDialog[id] = false; // Cierra el diálogo de rechazo después de la confirmación
       this.snackbarMessage = 'Comanda rebutjada';
       this.snackbar = true; // Muestra el Snackbar
-      getComandas().then(response => {
-      this.comandes = response;
-    });
+      socket.emit('solicitarComandasIniciales');
     },
 
   },
   created() {
-    getComandas().then(response => {
-      this.comandes = response;
+
+    socket.on('getComandas', (comandas) => {
+      const comandesJson = JSON.parse(comandas);
+      this.comandes = comandesJson;
+
     });
+    // Solicitar comandas iniciales
+    socket.emit('solicitarComandasIniciales');
+    /*getComandas().then(response => {
+      this.comandes = response;
+    });*/
   },
 }
 </script>

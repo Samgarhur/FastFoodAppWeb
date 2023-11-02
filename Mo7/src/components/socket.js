@@ -20,6 +20,11 @@ socket.on("disconnect", () => {
   state.connected = false;
 });
 
+socket.on('getComandas', (estat) => {   
+
+  
+});
+
 socket.on('comandaAceptada', (estat) => {   
 
   
