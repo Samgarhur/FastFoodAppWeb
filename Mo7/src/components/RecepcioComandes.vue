@@ -1,8 +1,8 @@
 <template>
   <v-container>
-    <v-card v-for="comanda in comandes" :key="comanda.id">
-      <v-card-title>Comanda numero {{ comanda.id_comanda }}</v-card-title>
-      <v-card-subtitle v-for="producte in comanda.productos">
+    <v-card v-for="comanda in comandes" :key="comanda.id" class="mb-3 resum-comanda">
+      <v-card-title class="headline">{{ comanda.id_comanda }}</v-card-title>
+      <v-card-subtitle v-for="producte in comanda.productos" class="subheading">
         {{ producte.nombre_producto }} ,
         Quantitat: {{ producte.quantitat }}
       </v-card-subtitle>
@@ -100,4 +100,52 @@ export default {
   },
 }
 </script>
-  
+
+<style scoped>
+/* Estilos específicos para la segunda página */
+.resum-comanda {
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.headline {
+  font-size: 20px;
+  color: #333;
+}
+
+.subheading {
+  font-size: 14px;
+  color: #777;
+}
+
+.v-card-title {
+  font-size: 18px;
+  color: #333;
+}
+
+.v-card-subtitle {
+  font-size: 14px;
+  color: #777;
+}
+
+.v-btn.ma-2 {
+  margin: 0.5rem;
+}
+
+.v-divider {
+  margin: 1rem 0;
+}
+
+.v-row {
+  justify-content: center;
+}
+
+.v-col {
+  text-align: center;
+}
+
+.v-snackbar {
+  background-color: #66B3FF;
+  color: #fff;
+}
+</style>
