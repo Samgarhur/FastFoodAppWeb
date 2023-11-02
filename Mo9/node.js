@@ -11,12 +11,12 @@ const path = require("path");
 const { spawn } = require('child_process');
 const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getComandesProductes, insertProducte, deleteProducte, getNumProductes, updateProducte } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
-const ubicacioArxius = path.join(__dirname, "..", "fotografies");
+const ubicacioArxius = path.join(__dirname, "..", "fotografies/");
 const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
 const arxiuPython = path.join(__dirname, "..", "python/main.py");
 const axios = require('axios');
 var session = require('express-session')
-
+let esPot=false
 
 
 //const io = require('socket.io')(server);
@@ -147,29 +147,18 @@ app.put("/modificarProducte/:id", function (req, res) {
 //----------------General-------------------------//
 app.get("/getProductos", function (req, res) {
     result = getProductes(connection).then((result) => {
-        //console.log(result)
         result = JSON.parse(result)
-        //console.log(result)
-        let j=0
-        for (var i = 0; i < result.length; i++) {
-            numFoto = i + 1
-            let fitxer
-            let fotografia = ubicacioArxius + "/" + numFoto + ".jpeg"
-            fs.access(fotografia, fs.constants.F_OK, (err) => {
-                if (err) {
-                    fitxer=false
-                } else {
-                    fitxer=true
-                }
-            })
-            if(fitxer)
-                result[i-j].foto = base64_encode(fotografia)
-            else
-                j++
-        }
+        fitxers=comprobarExistencia(ubicacioArxius).then((fitxers)=>{
 
-        //console.log(result)
+        for (var i = 0; i < result.length; i++) {
+            console.log(i)
+            console.log(fitxers[i])
+            result[i].foto = base64_encode(ubicacioArxius+fitxers[i])
+        }
         res.json(result)
+        })
+        //console.log(result)
+        
     })
 })//Passar productes amb la seva foto codificada
 app.get("/getComandes", async function (req, res) {
@@ -199,7 +188,7 @@ io.on('connection', (socket) => {
 
 //-----------funcions auxiliars-------------------//
 
-async function descargarImagen(url, rutaImagen) {
+async function descargarImagen(url, rutaImagen,) {
     console.log("descarregant imatge")
     const respuesta = await axios({
         url,
@@ -215,6 +204,21 @@ async function descargarImagen(url, rutaImagen) {
         escritor.on('error', rechazar);
     });
 }//descarregar la foto desde la url amb axios
+async function comprobarExistencia(fotografia){
+    console.log("hola")
+    return new Promise((resolve, reject) => {
+      fs.readdir(fotografia, function (err, archivos) {
+        console.log("hola2")
+        if (err) {
+            console.log('Error al leer el directorio');
+        } else {
+            console.log(archivos)
+            resolve(archivos);
+        }
+
+    })
+})
+}
 function base64_encode(file) {
     // read binary data
     var bitmap = fs.readFileSync(file);
