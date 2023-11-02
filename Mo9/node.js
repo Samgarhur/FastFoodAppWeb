@@ -187,7 +187,7 @@ app.put("/updateEstatProducte/:id", function (req, res) {
 
 
 //----------------General-----------------------------------------------------------------//
-app.get("/getProductos", function (req, res) {
+app.get("/getProductos",function (req, res) {
     result = getProductes(connection).then((result) => {
         result = JSON.parse(result)
         fitxers = comprobarExistencia(ubicacioArxius).then((fitxers) => {
