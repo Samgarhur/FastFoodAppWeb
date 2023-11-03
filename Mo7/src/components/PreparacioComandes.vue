@@ -33,16 +33,15 @@
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-subtitle>Usuari: {{ comanda.nombre_usuario }}</v-list-item-subtitle><br>
-                    <v-list-item-subtitle>
-                      Productes ->
-                      <ul>
-                        <li v-for="producto in comanda.productos" :key="producto.nombre_producto">
-                          ·{{ producto.nombre_producto }} - Quantitat: {{ producto.quantitat }}
-                        </li>
-                      </ul>
+                    Productes ->
+                    <v-list-item-subtitle v-for="producto in comanda.productos" :key="producto.nombre_producto">
+
+                      {{ producto.nombre_producto }} - Quantitat: {{ producto.quantitat }}
+
                     </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
+
               </v-card-text>
               <v-card-actions class="pt-0">
                 <v-btn variant="text" color="teal-accent-4" @click="mostrarDetalls = false">
@@ -148,7 +147,7 @@ export default {
 }
 
 .comanda-verde {
-  background-color: mediumseagreen;
+  background-color: mediumaquamarine;
   color: white;
   border: 1px solid black;
   margin-bottom: 5px;
