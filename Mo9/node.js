@@ -21,6 +21,7 @@ var usuariLog //guardem el nom del usuari logejat aqui
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const { timeStamp } = require("console");
+const { getRandomValues } = require("crypto");
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
@@ -53,26 +54,17 @@ const connection = mysql.createPool({
 //------------cosses android----------------//
 app.post("/usuaris", function (req, res) {
     const user = req.body;
-    console.log(user)
-    console.log(user.usuario)
-    console.log(user.passwd)
     let usuariTrobat = false;
+
     autoritzacio = { "autoritzacio": false };
 
     usuaris = getUsuarisLogin(connection).then((usuaris) => {
-        console.log(usuaris)
         usuaris = JSON.parse(usuaris)
-        console.log(usuaris)
         for (var i = 0; i < usuaris.length && usuariTrobat == false; i++) {
-            console.log(i)
+
             if (usuaris[i].usuario == user.usuario  ) {
-                console.log("userCorrecte")
                 contra=(user.passwd)
-                console.log(usuaris[i].passwd)
-                console.log(contra)
                 if (usuaris[i].passwd == contra){
-                    console.log(contra)
-                    console.log("hola")
                     usuariTrobat = true;
                     req.session.nombre = user.usuario;
                     usuariLog=req.session.nombre
@@ -370,12 +362,41 @@ function base64_encode(file) {
 
 
 //-------------py-----------------//
-function comensarPython() {
+function comensarPython(ara) {
+    if(ara){
+        //cridar inmediatament als grafics
+    }
+    else{
+        while (true){ //cridar als grafics de forma intermitent cada x temps
+            setInterval(
+                function(){
 
+                }
+                ,10000
+            )
+        }
+    }
 }
-//començarPython()
-
-
+app.post('/py', function(req, res){
+    // ara es boolean, pasa true si vols regenerar grafics, pasa false per agafar els actuals
+    comensarPython(req.params.ara)//generar grafics
+    //passar grafics
+    arxiu={"titol":"", "foto":""}
+    arxius=[]
+    comprobarExistencia(arxiuPython).then((grafics)=>{
+        for(var i=0; i<grafics.length; i++){
+            arxiu=
+            {
+                titol:grafics[i],
+                foto:base64_encode[arxiuPython+"/"+grafics[i]]
+            }
+            arxius[i]=arxiu
+        }
+        arxius=JSON.parse(arxius)
+        res.json(arxius)
+    })
+})
+comensarPython(false)
 
 
 //movil - node-> enviar usuari, demanar productes i enviar comanda
