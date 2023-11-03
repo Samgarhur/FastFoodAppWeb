@@ -63,6 +63,17 @@ export default {
       snackbarMessage: '', // Mensaje del Snackbar
     };
   },
+  /*computed: {
+    comandesComputed() {
+      return this.comandes;
+    },
+  },*/
+  watch: {
+    comandes: {
+      handler: 'cambiComandes',
+      deep: true, // Para detectar cambios en propiedades anidadas
+    },
+  },
   methods: {
     acceptarComanda(id) {
       this.estatComandas = "aceptada";
@@ -80,6 +91,9 @@ export default {
       this.rechazarDialog[id] = false; // Cierra el diálogo de rechazo después de la confirmación
       this.snackbarMessage = 'Comanda rebutjada';
       this.snackbar = true; // Muestra el Snackbar
+      socket.emit('solicitarComandasIniciales');
+    },
+    cambiComandes() {      // Por ejemplo, puedes emitir un evento cuando las comandas cambien
       socket.emit('solicitarComandasIniciales');
     },
 
