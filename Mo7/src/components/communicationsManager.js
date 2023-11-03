@@ -10,16 +10,16 @@ export async function getComandas() {
 
 //Funcion para coger todas las aceptadas
 export async function getComandasAceptadas() {
-  const response = await fetch(`http://localhost:3001`);
-  const peliculas = await response.json();
-  return peliculas.Search;
+  const response = await fetch(`http://localhost:3001/getComandesAceptadas`);
+  const comandas = await response.json();
+  return comandas;
 }
 
 //Funcion para coger todas las comandas finalizadas
 export async function getComandasFinalizadas() {
-  const response = await fetch(`http://localhost:3001`);
-  const peliculas = await response.json();
-  return peliculas.Search;
+  const response = await fetch(`http://localhost:3001/getComandasFinalizadas`);
+  const comandas = await response.json();
+  return comandas;
 }
 
 /*

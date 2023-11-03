@@ -202,6 +202,17 @@ app.get("/getComandes", async function (req, res) {
     }
 });
 
+app.get("/getComandasFinalizadas", async function (req, res) {
+    try {
+        const comandes = await getComandaFinalizada(connection);
+        const comandesJson = JSON.parse(comandes);
+        res.json(comandesJson);
+    } catch (error) {
+        console.error('Error al obtener las comandas:', error.message);
+        res.status(500).send('Error al obtener datos de comandas.');
+    }
+});
+
 //-----------Conexion con socket-----------------------------------------------------//
 server.listen(3002, () => {
     console.log('Server Socket running at http://localhost:3002');
@@ -265,9 +276,8 @@ io.on('connection', (socket) => {
         // Aquí puedes procesar la información (id y estat) como desees
         // Por ejemplo, guardar el estado de la comanda en tu fuente de datos
         // y luego enviar una respuesta al cliente
-
         updateEstatComanda(connection, id, estat); // Llama a la funcion para cambiar el estado en la BD a aceptada       
-
+       
     });
 
     // Escuchar la solicitud de comanda rebutjada
