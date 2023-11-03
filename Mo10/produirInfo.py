@@ -41,8 +41,8 @@ def VentaPreu (info): #comparacio venta preu json=productes
 
 def VentaPreu (info): #comparacio tipus producte json=productes 
     df = pd.read_json(info)
-    x_values = df['numCompra']
-    y_values = df['Preu']
+    x_values = df['tipus'].unique()
+    y_values = df['tipus'].value_counts().tolist()
     plt.bar(x_values, y_values)
     plt.title('Comparativa productes comprats')
     ax = plt.subplot()                   
