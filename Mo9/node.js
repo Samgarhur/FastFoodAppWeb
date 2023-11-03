@@ -395,7 +395,7 @@ app.post('/py', function(req, res){
         res.json(arxius)
     })
 })
-comensarPython(false)
+//comensarPython(false)
 
 
 //movil - node-> enviar usuari, demanar productes i enviar comanda
