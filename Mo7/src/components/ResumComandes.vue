@@ -149,7 +149,6 @@ export default {
 }
 
 .v-snackbar {
-  background-color: #66B3FF;
   color: #fff;
 }
 </style>
