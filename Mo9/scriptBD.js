@@ -151,15 +151,6 @@ async function insertProdComand(connection,productes, id_comanda){
     }
 }
 
-async function marcarComandaFinalizada(connection, id_comanda) {
-    try {
-        const [rows, fields] = await connection.execute('UPDATE Comanda SET estat = \'finalitzada\' WHERE id_comanda = ?', [id_comanda]);
-        return rows.affectedRows;
-    } catch (error) {
-        console.error('Error al finalitzar la comanda:', error.message);
-        throw error;
-    }
-}
 
 async function getComandaFinalizada(connection) {
     try {

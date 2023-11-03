@@ -5,7 +5,7 @@
         <v-card :class="posarColorComandes(comanda.temps)">
           <v-card-title>Comanda {{ comanda.id_comanda }}</v-card-title>
           <v-card-title>Temps: {{ comanda.temps }} minuts</v-card-title>
-          <v-card-subtitle>{{ comanda.info }}</v-card-subtitle>
+
 
           <v-card-actions>
             <v-btn @click="veureDetalls(comanda.id_comanda)">Veure Detalls</v-btn>
@@ -32,7 +32,6 @@
               <v-card-text class="pb-0">
                 <v-list-item>
                   <v-list-item-content>
-                    <!--<v-list-item-title>Temps comanda: {{ comanda.temps }}</v-list-item-title>-->
                     <v-list-item-subtitle>Usuari: {{ comanda.nombre_usuario }}</v-list-item-subtitle><br>
                     <v-list-item-subtitle>
                       Productes ->
@@ -133,7 +132,7 @@ export default {
 
 <style>
 .comanda-roja {
-  background-color: red;
+  background-color: indianred;
   color: white;
   border: 1px solid black;
   margin-bottom: 5px;
@@ -149,7 +148,7 @@ export default {
 }
 
 .comanda-verde {
-  background-color: green;
+  background-color: mediumaquamarine;
   color: white;
   border: 1px solid black;
   margin-bottom: 5px;
