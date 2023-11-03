@@ -19,7 +19,7 @@
                   ¿Estás segur de que la comanda esta finalitzada?
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn @click="marcarComandaFinalitzada(comanda.id_comanda)">Sí</v-btn>
+                  <v-btn @click="marcarComandaFinalitzada(comanda.id_comanda,comanda.tempsRestant)">Sí</v-btn>
                   <v-btn @click="dialog = false">No</v-btn>
                 </v-card-actions>
               </v-card>
@@ -83,11 +83,12 @@ export default {
       this.mostrarDetalls = true;
       this.comandaSeleccionada = id;
     },
-    marcarComandaFinalitzada(id) {
+    marcarComandaFinalitzada(id,temps) {
       // Lògica per marcar la comanda com a finalitzada     
       this.finalitzada = "finalitzada";
       //Envia el estado de la comanda finalizada por socket
-      socket.emit("comandaFinalitzada", id, this.finalitzada);
+      console.log("comanda: "+id+", temps: "+temps)
+      socket.emit("comandaFinalitzada", id, this.finalitzada,temps);
 
       //comandaFinalitzada(id, this.finalitzada);
       this.dialog = false; // Cierra el diálogo después de la confirmación
@@ -124,11 +125,16 @@ export default {
   created() {
     socket.on('getComandasAceptadas', (comandas) => {
       const comandesJson = JSON.parse(comandas);
-      this.comandes = comandesJson;
-      console.log(comandesJson)
+      
+      //console.log(comandesJson);
 
-      // Iniciar el temporizador para calcular el tiempo restante
-      this.calcularTempsRestant();
+      // Calcular el tiempo transcurrido y agregarlo a las comandas
+      this.calcularTempsRestant(comandesJson);
+
+      // Ordenar las comandas por tiempo transcurrido (de menor a mayor)
+      comandesJson.sort((a, b) => b.tempsRestant - a.tempsRestant);
+      this.comandes = comandesJson;
+      // Iniciar el temporizador para actualizar el tiempo restante
       this.interval = setInterval(this.calcularTempsRestant, 1000); // Actualizar cada segundo
 
     });
@@ -140,7 +146,7 @@ export default {
     getComandasAceptadas()*/
 
     // Ordena las comandas por el tiempo en que entran
-    this.comandes.sort((a, b) => b.temps - a.temps);
+    this.comandes.sort((a, b) => b.data_comanda - a.data_comanda);
   },
 
   beforeDestroy() {

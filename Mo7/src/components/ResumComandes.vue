@@ -93,6 +93,13 @@ export default {
       recollida: ""
     };
   },
+  computed: {
+    comandesComputed() {
+      // Usa esta propiedad computed para realizar cálculos o detectar cambios en las comandas
+      // Por ejemplo, podrías emitir eventos cuando las comandas cambian
+      return this.comandes;
+    },
+  },
   methods: {
     recollirComanda(id) {
       //comandaRecogida(id, this.recollida);

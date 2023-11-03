@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandaAceptada,getComandaFinalizada,getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatProducte,updateEstatComanda};
+module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandaAceptada,getComandaFinalizada,getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatProducte,updateEstatComanda,updateTempsComanda};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -218,6 +218,16 @@ async function getComandaAceptada(connection) {
 async function updateEstatComanda(connection, id_comanda, estat) {
     try {
         const [rows, fields] = await connection.execute('UPDATE Comanda SET estat = ? WHERE id_comanda = ?', [estat, id_comanda]);
+        return rows.affectedRows;
+    } catch (error) {
+        console.error('Error al actualizar el estat de la comanda:', error.message);
+        throw error;
+    }
+}
+
+async function updateTempsComanda(connection, id_comanda, temps) {
+    try {
+        const [rows, fields] = await connection.execute('UPDATE Comanda SET temps = ? WHERE id_comanda = ?', [temps, id_comanda]);
         return rows.affectedRows;
     } catch (error) {
         console.error('Error al actualizar el estat de la comanda:', error.message);
