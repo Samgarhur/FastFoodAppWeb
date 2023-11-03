@@ -21,7 +21,6 @@ var usuariLog //guardem el nom del usuari logejat aqui
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const { timeStamp } = require("console");
-const { getRandomValues } = require("crypto");
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
@@ -383,12 +382,12 @@ app.post('/py', function(req, res){
     //passar grafics
     arxiu={"titol":"", "foto":""}
     arxius=[]
-    comprobarExistencia(arxiuPython).then((grafics)=>{
+    comprobarExistencia(ubicacioGrafics).then((grafics)=>{
         for(var i=0; i<grafics.length; i++){
             arxiu=
             {
                 titol:grafics[i],
-                foto:base64_encode[arxiuPython+"/"+grafics[i]]
+                foto:base64_encode[ubicacioGrafics+"/"+grafics[i]]
             }
             arxius[i]=arxiu
         }

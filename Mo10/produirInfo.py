@@ -1,6 +1,8 @@
-#pedidos por dia
-#dinero por dia
-#tiempo entrega
+#pedidos por dia xDias, yPedidos
+#dinero por dia xDias, yDinero
+#tiempo finalizar xidComanda, yTIempo--Recta regresion
+#productos/precio xnumCompras yPrecio
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
