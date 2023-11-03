@@ -1,7 +1,7 @@
-#pedidos por dia xDias, yPedidos
-#dinero por dia xDias, yDinero
-#tiempo finalizar xidComanda, yTIempo--Recta regresion
-#productos/precio xnumCompras yPrecio
+#pedidos por dia xDias, yPedidos json=comandes
+#dinero por dia xDias, yDinero json=join productes, comandes, comandaProd
+#tiempo finalizar xidComanda, yTIempo--Recta regresion json=comanda
+#productos/precio xnumCompras yPrecio json=productes
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -11,7 +11,7 @@ from datetime import date
 avui = date.today();
 terminacio=avui +'.jpeg';
 
-def productes (info): #comparacio venta productes
+def VentaProductes (info): #comparacio venta productes json=productes 
     df = pd.read_json(info)
     x_values = df['nom']
     y_values = df['numCompra']
@@ -25,7 +25,35 @@ def productes (info): #comparacio venta productes
     plt.savefig('VentaProductes'+terminacio)
     plt.close('all')
 
-def commandas (info): #comprobacio estats actuals de comandes
+def VentaPreu (info): #comparacio venta preu json=productes 
+    df = pd.read_json(info)
+    x_values = df['numCompra']
+    y_values = df['Preu']
+    plt.bar(x_values, y_values)
+    plt.title('Comparativa productes comprats donat el preu')
+    ax = plt.subplot()                   
+    ax.set_xticks(x_values)             
+    ax.set_xticklabels(x_values)       
+    ax.set_xlabel('Unitats venudes')  
+    ax.set_ylabel('Cost') 
+    plt.savefig('VentaProductes'+terminacio)
+    plt.close('all')
+
+def VentaPreu (info): #comparacio tipus producte json=productes 
+    df = pd.read_json(info)
+    x_values = df['numCompra']
+    y_values = df['Preu']
+    plt.bar(x_values, y_values)
+    plt.title('Comparativa productes comprats')
+    ax = plt.subplot()                   
+    ax.set_xticks(x_values)             
+    ax.set_xticklabels(x_values)       
+    ax.set_xlabel('Producte')  
+    ax.set_ylabel('Quantitat venuda') 
+    plt.savefig('VentaProductes'+terminacio)
+    plt.close('all')
+
+def commandas (info): #comprobacio estats actuals de comandes json=comandes
     df = pd.read_json(info)
     x_values = df['estat'].unique()
     y_values = df['estat'].value_counts().tolist()

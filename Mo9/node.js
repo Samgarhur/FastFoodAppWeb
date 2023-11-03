@@ -84,15 +84,20 @@ app.get("/dadesUsuari", function (req, res) {
     })
 })//pasar dades del usuari a android
 app.post("/crearComanda", function (req, res) {
-    const comanda = req.body;
+     comanda = 
+     {
+        id_usuari:"",
+        id_comanda:"",
+        data:timeStamp,
+        estat:"rebut",
+        productes:req.body
+    }
         var infoUsuari = getUsuariInfo(connection, usuariLog).then((infoUsuari) => {
             infoUsuari=JSON.parse(infoUsuari)
             //console.log(infoUsuari)
             //console.log(infoUsuari[0])
             comanda.id_usuari=infoUsuari[0].id_usuari
            // console.log(infoUsuari.id_usuari)
-            comanda.estat="rebut"
-            comanda.data=timeStamp
         var idComanda=getNumComanda(connection).then((idComanda)=>{
             //console.log(idComanda)
             idComanda=JSON.parse(idComanda)
@@ -102,7 +107,6 @@ app.post("/crearComanda", function (req, res) {
             comanda.id_comanda=idComanda
             //console.log(comanda.id)
 
-        //.log(infoUsuari.id_usuari)
         //console.log(comanda)
         var resultat = insertComanda(connection, comanda).then((resultat) => {
             resultat = { "autoritzacio": resultat }
