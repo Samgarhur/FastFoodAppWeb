@@ -74,46 +74,6 @@ export default {
       comandaSeleccionada: null,
       finalitzada: "",
       comandes:[],
-      comandesPrueba: [{
-        id: 1,
-        info: "PATATAS, ANVORGESA,COLACOCA",
-        temps: "10"
-      },
-      {
-        id: 2,
-        info: "PATATAS, AMBORGUSA,FANTA",
-        temps: "20"
-      },
-      {
-        id: 3,
-        info: "PATATAS, AMBORGUSA,FANTA",
-        temps: "02"
-      },
-      {
-        id: 4,
-        info: "PATATAS, AMBORGUSA,FANTA",
-        temps: "05"
-      },
-      {
-        id: 5,
-        info: "PATATAS, AMBORGUSA,FANTA",
-        temps: "1"
-      },
-      {
-        id: 6,
-        info: "PATATAS, AMBORGUSA,FANTA",
-        temps: "2"
-      },
-      {
-        id: 7,
-        info: "PATATAS, AMBORGUSA,FANTA",
-        temps: "55"
-      },
-      {
-        id: 8,
-        info: "PATATAS, AMBORGUSA,FANTA",
-        temps: "32"
-      }],
       dialog: false, // Controla la visibilidad del diálogo de aceptación
       rechazarDialog: false, // Controla la visibilidad del diálogo de rechazo
       snackbar: false, // Controla la visibilidad del Snackbar
