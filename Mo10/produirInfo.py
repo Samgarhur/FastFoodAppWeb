@@ -1,13 +1,15 @@
-#pedidos por dia
-#dinero por dia
-#tiempo entrega
+#pedidos por dia xDias, yPedidos
+#dinero por dia xDias, yDinero
+#tiempo finalizar xidComanda, yTIempo--Recta regresion
+#productos/precio xnumCompras yPrecio
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 from datetime import date
 
-avui = date.today()
-
+avui = date.today();
+terminacio=avui +'.jpeg';
 
 def productes (info): #comparacio venta productes
     df = pd.read_json(info)
@@ -20,7 +22,7 @@ def productes (info): #comparacio venta productes
     ax.set_xticklabels(x_values)       
     ax.set_xlabel('Producte')  
     ax.set_ylabel('Quantitat venuda') 
-    plt.savefig('VentaProductes '+avui +'.jpeg')
+    plt.savefig('VentaProductes'+terminacio)
     plt.close('all')
 
 def commandas (info): #comprobacio estats actuals de comandes
@@ -34,6 +36,6 @@ def commandas (info): #comprobacio estats actuals de comandes
     ax.set_xticklabels(x_values)       
     ax.set_xlabel('Estat actual')  
     ax.set_ylabel('Quantitat')
-    plt.savefig('ComparativaEstats '+avui +'.jpeg')
+    plt.savefig('ComparativaEstats'+terminacio)
     plt.close('all')
 
