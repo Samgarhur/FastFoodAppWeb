@@ -148,7 +148,7 @@ export default {
 }
 
 .comanda-verde {
-  background-color: mediumaquamarine;
+  background-color: mediumseagreen;
   color: white;
   border: 1px solid black;
   margin-bottom: 5px;
