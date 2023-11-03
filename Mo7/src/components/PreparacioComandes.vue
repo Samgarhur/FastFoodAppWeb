@@ -2,9 +2,9 @@
   <v-container>
     <v-row justify="center">
       <v-col v-for="comanda in comandes" :key="comanda.id_comanda" cols="3">
-        <v-card :class="posarColorComandes(comanda.temps)">
+        <v-card :class="posarColorComandes(comanda.tempsRestant)">
           <v-card-title>Comanda {{ comanda.id_comanda }}</v-card-title>
-          <v-card-title>Temps: {{ comanda.temps }} minuts</v-card-title>
+          <v-card-title>Temps: {{ comanda.tempsRestant }} minuts</v-card-title>
 
 
           <v-card-actions>
@@ -96,6 +96,17 @@ export default {
       socket.emit('solicitarComandasAceptadasIniciales');
 
     },
+
+    // Función para calcular el tiempo restante de cada comanda en minutos
+    calcularTempsRestant() {
+      const now = new Date(); // Hora actual
+      for (const comanda of this.comandes) {
+        const dataComanda = new Date(comanda.data_comanda); // Hora de la comanda
+        const diffMillis = now - dataComanda; // Diferencia en milisegundos
+        const diffMinutes = Math.floor(diffMillis / (1000 * 60)); // Diferencia en minutos
+        comanda.tempsRestant = diffMinutes;
+      }
+    },
     //Funcion para cambiar el color de los pedidos en funcion del tiempo
     posarColorComandes(temps) {
       if (temps >= 20) {
@@ -114,6 +125,11 @@ export default {
     socket.on('getComandasAceptadas', (comandas) => {
       const comandesJson = JSON.parse(comandas);
       this.comandes = comandesJson;
+      console.log(comandesJson)
+
+      // Iniciar el temporizador para calcular el tiempo restante
+      this.calcularTempsRestant();
+      this.interval = setInterval(this.calcularTempsRestant, 1000); // Actualizar cada segundo
 
     });
     // Solicitar comandas iniciales
@@ -125,6 +141,11 @@ export default {
 
     // Ordena las comandas por el tiempo en que entran
     this.comandes.sort((a, b) => b.temps - a.temps);
+  },
+
+  beforeDestroy() {
+    // Limpiar el intervalo al salir del componente
+    clearInterval(this.interval);
   },
 }
 </script>
