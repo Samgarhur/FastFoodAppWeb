@@ -130,15 +130,16 @@ app.post("/agregarProducte", function (req, res) {
     //console.log(nouProducte)
     //separar la foto al seu directori
     insertProducte(connection, nouProducte).then(() => {
-    id = getNumProductes(connection).then((id) => {
+        id = getNumProductes(connection).then((id) => {
         console.log(id, "1")
         id = JSON.parse(id)
         //console.log(id[0].MAX(id_producte), "2")
         let obj = id[0];
         let valor = obj['MAX(id_producte)'];
         numProd = valor 
-        descargarImagen(novaFoto, ubicacioArxius + "/" + numProd + ".jpeg")
-    })})
+        descargarImagen(novaFoto, ubicacioArxius + "/" + numProd +"00"+ ".jpeg")
+        })
+    })
         .catch(console.error);
 
 
@@ -165,7 +166,7 @@ app.put("/modificarProducte/:id", function (req, res) {
         numProd = valor + 1
         if (producteModificat.modificarFoto) {
             fs.unlinkSync(ubicacioArxius + "/" + producteId + ".jpeg")
-            descargarImagen(novaFoto, ubicacioArxius + "/" + producteId + ".jpeg")
+            descargarImagen(novaFoto, ubicacioArxius + "/" + producteId +"00"+ ".jpeg")
                 .then(() =>
                     //console.log('Imagen descargada con éxito')d
                     updateProducte(connection, producteId, producteModificat)
