@@ -283,6 +283,8 @@ io.on('connection', (socket) => {
         updateEstatComanda(connection, id, estat); // Llama a la funcion para cambiar el estado en la BD a aceptada       
 
     });
+
+    // Escuchar la solicitud de comanda rebutjada
     socket.on('comandaRebutjada', (id, estat) => {
         console.log('comanda rebutjada numero : ' + id)
         console.log('estado : ' + estat)
@@ -293,6 +295,7 @@ io.on('connection', (socket) => {
 
     });
 
+    // Escuchar la solicitud de comanda finalitzada
     socket.on('comandaFinalitzada', (id, estat) => {
         console.log('comanda finalitzada numero : ' + id)
         console.log('estado : ' + estat)
@@ -302,6 +305,19 @@ io.on('connection', (socket) => {
         updateEstatComanda(connection, id, estat); // Llama a la funcion para cambiar el estado en la BD a aceptada        
 
     });
+
+    // Escuchar la solicitud de comanda recollida
+    socket.on('comandaRecollida', (id, estat) => {
+        console.log('comanda recollida numero : ' + id)
+        console.log('estado : ' + estat)
+        // Aquí puedes procesar la información (id y estat) como desees
+        // Por ejemplo, guardar el estado de la comanda en tu fuente de datos
+        // y luego enviar una respuesta al cliente
+        updateEstatComanda(connection, id, estat); // Llama a la funcion para cambiar el estado en la BD a aceptada        
+
+    });
+    
+    
 
     // Resto de la lógica de tu aplicación...
 })// Manejar la conexión de sockets

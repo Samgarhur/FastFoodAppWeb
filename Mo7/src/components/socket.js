@@ -41,3 +41,8 @@ socket.on('comandaFinalitzada', (estat) => {
   
 });
 
+socket.on('comandaRecollida', (estat) => {   
+  
+});
+
+
