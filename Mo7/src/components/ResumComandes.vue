@@ -1,8 +1,7 @@
 <template>
   <v-container>
     <v-card v-for="comanda in comandes" :key="comanda.id_comanda" class="mb-3">
-      <v-card-title class="headline">Comanda {{ comanda.id_comanda }}</v-card-title>
-      <v-card-subtitle class="subheading">{{ comanda.info }}</v-card-subtitle>
+      <v-card-title class="headline">Comanda {{ comanda.id_comanda }}</v-card-title>     
 
       <v-dialog v-model="dialog" max-width="300">
         <template v-slot:activator="{ on }">
