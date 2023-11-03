@@ -138,7 +138,7 @@ async function insertProdComand(connection,productes, id_comanda){
                 [id_comanda, id_producte, cantidad]
             );
 
-            // Casos Error
+            // Casos para mostrar error
             if (result.affectedRows === 1) {
                 console.log("insertat");
             } else {
