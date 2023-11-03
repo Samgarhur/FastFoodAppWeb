@@ -7,7 +7,7 @@ const fs = require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getNumComanda, getComandesProductes, getComandaAceptada, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda, updateEstatProducte } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getNumComanda, getComandesProductes, getComandaAceptada,getComandaFinalizada, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda, updateEstatProducte } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies/");
 const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
@@ -244,6 +244,18 @@ io.on('connection', (socket) => {
 
     });
 
+    //Para solicitar todas las comandas finalizadas por socket
+    socket.on('solicitarComandasFinalizadasIniciales', async () => {
+
+        const comandes = await getComandaFinalizada(connection);
+        const comandesJson = JSON.parse(comandes);
+
+        socket.emit('getComandasFinalizadas', JSON.stringify(comandesJson));
+
+
+    });
+   
+
     //Para solicitar todas los productos por socket
     socket.on('solicitarProductosIniciales', async () => {
         const result = await getProductes(connection);
@@ -273,6 +285,16 @@ io.on('connection', (socket) => {
     });
     socket.on('comandaRebutjada', (id, estat) => {
         console.log('comanda rebutjada numero : ' + id)
+        console.log('estado : ' + estat)
+        // Aquí puedes procesar la información (id y estat) como desees
+        // Por ejemplo, guardar el estado de la comanda en tu fuente de datos
+        // y luego enviar una respuesta al cliente
+        updateEstatComanda(connection, id, estat); // Llama a la funcion para cambiar el estado en la BD a aceptada        
+
+    });
+
+    socket.on('comandaFinalitzada', (id, estat) => {
+        console.log('comanda finalitzada numero : ' + id)
         console.log('estado : ' + estat)
         // Aquí puedes procesar la información (id y estat) como desees
         // Por ejemplo, guardar el estado de la comanda en tu fuente de datos

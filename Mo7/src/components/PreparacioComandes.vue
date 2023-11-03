@@ -1,14 +1,14 @@
 <template>
   <v-container>
     <v-row justify="center">
-      <v-col v-for="comanda in comandes" :key="comanda.id" cols="3">
+      <v-col v-for="comanda in comandes" :key="comanda.id_comanda" cols="3">
         <v-card :class="posarColorComandes(comanda.temps)">
-          <v-card-title>Comanda ID {{ comanda.id_comanda }}</v-card-title>
+          <v-card-title>Comanda {{ comanda.id_comanda }}</v-card-title>
           <v-card-title>Temps: {{ comanda.temps }} minuts</v-card-title>
           <v-card-subtitle>{{ comanda.info }}</v-card-subtitle>
 
           <v-card-actions>
-            <v-btn @click="veureDetalls(comanda.id)">Veure Detalls</v-btn>
+            <v-btn @click="veureDetalls(comanda.id_comanda)">Veure Detalls</v-btn>
             <v-dialog v-model="dialog" max-width="300">
               <template v-slot:activator="{ on }">
                 <v-btn class="ma-2" @click="dialog = true">Finalitzar comanda</v-btn>
@@ -19,7 +19,7 @@
                   ¿Estás segur de que la comanda esta finalitzada?
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn @click="marcarComandaFinalitzada(comanda.id)">Sí</v-btn>
+                  <v-btn @click="marcarComandaFinalitzada(comanda.id_comanda)">Sí</v-btn>
                   <v-btn @click="dialog = false">No</v-btn>
                 </v-card-actions>
               </v-card>
@@ -27,7 +27,7 @@
           </v-card-actions>
 
           <v-expand-transition>
-            <v-card v-if="mostrarDetalls && comandaSeleccionada == comanda.id" class="v-card--reveal"
+            <v-card v-if="mostrarDetalls && comandaSeleccionada == comanda.id_comanda" class="v-card--reveal"
               style="height: 100%;">
               <v-card-text class="pb-0">
                 <v-list-item>
@@ -73,7 +73,7 @@ export default {
       mostrarDetalls: false,
       comandaSeleccionada: null,
       finalitzada: "",
-      comandes:[],
+      comandes: [],
       dialog: false, // Controla la visibilidad del diálogo de aceptación
       rechazarDialog: false, // Controla la visibilidad del diálogo de rechazo
       snackbar: false, // Controla la visibilidad del Snackbar
@@ -88,10 +88,14 @@ export default {
     marcarComandaFinalitzada(id) {
       // Lògica per marcar la comanda com a finalitzada     
       this.finalitzada = "finalitzada";
-      comandaFinalitzada(id, this.finalitzada);
+      //Envia el estado de la comanda finalizada por socket
+      socket.emit("comandaFinalitzada", id, this.finalitzada);
+
+      //comandaFinalitzada(id, this.finalitzada);
       this.dialog = false; // Cierra el diálogo después de la confirmación
       this.snackbarMessage = 'Comanda finalitzada';
       this.snackbar = true;
+      socket.emit('solicitarComandasAceptadasIniciales');
 
     },
     //Funcion para cambiar el color de los pedidos en funcion del tiempo
@@ -116,7 +120,7 @@ export default {
     });
     // Solicitar comandas iniciales
     socket.emit('solicitarComandasAceptadasIniciales');
-    
+
     /*
     //Coge las comandas que han sido aceptadas del servidor
     getComandasAceptadas()*/

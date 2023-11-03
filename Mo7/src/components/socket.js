@@ -37,3 +37,7 @@ socket.on('comandaRebutjada', (estat) => {
   
 });
 
+socket.on('comandaFinalitzada', (estat) => {   
+  
+});
+

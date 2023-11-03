@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <v-card v-for="comanda in comandes" :key="comanda.id" class="mb-3">
-      <v-card-title class="headline">{{ comanda.id }}</v-card-title>
+    <v-card v-for="comanda in comandes" :key="comanda.id_comanda" class="mb-3">
+      <v-card-title class="headline">Comanda {{ comanda.id_comanda }}</v-card-title>
       <v-card-subtitle class="subheading">{{ comanda.info }}</v-card-subtitle>
 
       <v-dialog v-model="dialog" max-width="300">
@@ -14,7 +14,7 @@
             ¿Estás seguro de que has recogido la comanda?
           </v-card-text>
           <v-card-actions>
-            <v-btn @click="recollirComanda(comanda.id)">Sí</v-btn>
+            <v-btn @click="recollirComanda(comanda.id_comanda)">Sí</v-btn>
             <v-btn @click="dialog = false">No</v-btn>
           </v-card-actions>
         </v-card>
@@ -37,12 +37,14 @@
 
 <script>
 import { getComandasFinalizadas, comandaRecogida } from './communicationsManager';
+import { socket, state } from './socket';
 
 export default {
   name: 'ResumComandes',
   data() {
     return {
-      comandes: [
+      comandes:[],
+      comandesPruebas: [
         {
           id: 1,
           info: "PATATAS, ANVORGESA, COLA COCA",
@@ -100,8 +102,16 @@ export default {
     },
   },
   created() {
+    socket.on('getComandasFinalizadas', (comandas) => {
+      const comandesJson = JSON.parse(comandas);
+      this.comandes = comandesJson;
+    });
+    // Solicitar comandas iniciales
+    socket.emit('solicitarComandasFinalizadasIniciales');
+    
+    /*
     // Obtiene todas las comandas ya finalizadas del servidor
-    getComandasFinalizadas();
+    getComandasFinalizadas();*/
   },
 };
 </script>
