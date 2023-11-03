@@ -111,7 +111,6 @@ async function insertComanda(connection, comandaData) {
         console.log(productes)
         console.log(id_comanda)
         insertProdComand(connection,productes, id_comanda )
-
         // Casos Error
         if (result.affectedRows === 1) {
             return true;
@@ -137,9 +136,15 @@ async function insertProdComand(connection,productes, id_comanda){
                 'INSERT INTO Comanda_Producte (id_comanda, id_producte, quantitat) VALUES (?, ?, ?)',
                 [id_comanda, id_producte, cantidad]
             );
+            const [result2] = await connection.execute('UPDATE Producte SET num_comprat = num_comprat + ? WHERE id_producte = ?', [cantidad, id_producte]);
 
             // Casos para mostrar error
             if (result.affectedRows === 1) {
+                console.log("insertat");
+            } else {
+                console.log("no instertat");
+            }
+            if (result2.affectedRows === 1) {
                 console.log("insertat");
             } else {
                 console.log("no instertat");

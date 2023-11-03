@@ -14,9 +14,7 @@ const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
 const arxiuPython = path.join(__dirname, "..", "python/main.py");
 const axios = require('axios');
 var session = require('express-session')
-let esPot = false
-
-var usuariLog
+var usuariLog //guardem el nom del usuari logejat aqui
 
 //const io = require('socket.io')(server);
 
@@ -149,7 +147,6 @@ app.delete("/eliminarProducte/:id", function (req, res) {
     deleteProducte(connection, prod)
     fs.unlinkSync(ubicacioArxius + "/" + prod + ".jpeg")
 })//Eliminar productes a la bbdd 
-
 app.put("/modificarProducte/:id", function (req, res) {
     console.log("Entra en modificar producte");
     const producteModificat = req.body
@@ -177,14 +174,13 @@ app.put("/modificarProducte/:id", function (req, res) {
     })
         .catch(console.error);
 })//modificar un producte de la bbdd
-
 app.put("/updateEstatProducte/:id", function (req, res) {
     //console.log("Entra en update estat del producte");
     const estatProducte = req.body.estat
     const producteId = req.params.id
     updateEstatProducte(connection, producteId, estatProducte)
 
-})
+})//desactiva un producte
 
 
 //----------------General-----------------------------------------------------------------//
@@ -219,7 +215,6 @@ app.get("/getComandes", async function (req, res) {
 server.listen(3002, () => {
     console.log('Server Socket running at http://localhost:3002');
 });
-
 io.on('connection', (socket) => {
     console.log('Usuario conectado');
     //Para solicitar todas las comandas por socket
@@ -316,8 +311,7 @@ async function comprobarExistencia(fotografia) {
 
         })
     })
-}
-//llegir el directori de fotografies 
+}//llegir el directori de fotografies 
 function base64_encode(file) {
     // read binary data
     var bitmap = fs.readFileSync(file);
