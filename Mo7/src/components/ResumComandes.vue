@@ -1,12 +1,11 @@
 <template>
   <v-container>
-    <v-card v-for="comanda in comandes" :key="comanda.id" class="mb-3">
-      <v-card-title class="headline">{{ comanda.id }}</v-card-title>
-      <v-card-subtitle class="subheading">{{ comanda.info }}</v-card-subtitle>
+    <v-card v-for="comanda in comandes" :key="comanda.id_comanda" class="mb-3">
+      <v-card-title class="headline">Comanda {{ comanda.id_comanda }}</v-card-title>
 
-      <v-dialog v-model="dialog" max-width="300">
+      <v-dialog v-model="dialog[comanda.id_comanda]" max-width="300">
         <template v-slot:activator="{ on }">
-          <v-btn class="ma-2" @click="dialog = true">Recollir comanda</v-btn>
+          <v-btn class="ma-2" @click="dialog[comanda.id_comanda] = true">Recollir comanda</v-btn>
         </template>
         <v-card>
           <v-card-title>Confirmación</v-card-title>
@@ -14,15 +13,15 @@
             ¿Estás seguro de que has recogido la comanda?
           </v-card-text>
           <v-card-actions>
-            <v-btn @click="recollirComanda(comanda.id)">Sí</v-btn>
+            <v-btn @click="recollirComanda(comanda.id_comanda)">Sí</v-btn>
             <v-btn @click="dialog = false">No</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-card>
-    
+
     <v-divider class="my-3"></v-divider>
-    
+
     <v-row justify="center">
       <v-col>
         <p class="headline">Recaudació Total: {{ recaudacioTotal }}</p>
@@ -37,12 +36,14 @@
 
 <script>
 import { getComandasFinalizadas, comandaRecogida } from './communicationsManager';
+import { socket, state } from './socket';
 
 export default {
   name: 'ResumComandes',
   data() {
     return {
-      comandes: [
+      comandes: [],
+      comandesPruebas: [
         {
           id: 1,
           info: "PATATAS, ANVORGESA, COLA COCA",
@@ -84,24 +85,38 @@ export default {
           temps: "32"
         },
       ],
-      dialog: false,
+      dialog: {},
       snackbar: false,
       snackbarMessage: '',
       recaudacioTotal: 0,
       tempsMitjaPreparacio: 0,
+      recollida: ""
     };
   },
   methods: {
     recollirComanda(id) {
-      comandaRecogida(id, this.recollida);
-      this.dialog = false;
+      //comandaRecogida(id, this.recollida);
+      this.recollida = "recollida";
+      socket.emit("comandaRecollida", id, this.recollida);
+      this.dialog[id] = false;
       this.snackbarMessage = 'Comanda recogida';
       this.snackbar = true;
+      // Actualiza las comandas al recoger una
+      socket.emit('solicitarComandasFinalizadasIniciales');
     },
   },
   created() {
+    //Para coger las comandas finalizadas al entrar en la pagina
+    socket.on('getComandasFinalizadas', (comandas) => {
+      const comandesJson = JSON.parse(comandas);
+      this.comandes = comandesJson;
+    });
+    // Solicitar comandas iniciales
+    socket.emit('solicitarComandasFinalizadasIniciales');
+
+    /*
     // Obtiene todas las comandas ya finalizadas del servidor
-    getComandasFinalizadas();
+    getComandasFinalizadas();*/
   },
 };
 </script>
@@ -149,7 +164,6 @@ export default {
 }
 
 .v-snackbar {
-  background-color: #66B3FF;
   color: #fff;
 }
 </style>

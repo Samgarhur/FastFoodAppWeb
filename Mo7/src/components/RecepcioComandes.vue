@@ -144,8 +144,7 @@ export default {
   text-align: center;
 }
 
-.v-snackbar {
-  background-color: #66B3FF;
+.v-snackbar {  
   color: #fff;
 }
 </style>

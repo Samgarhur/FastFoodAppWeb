@@ -2,14 +2,14 @@
   <div class="page">
     <v-btn class="home-button" @click="redirectToHome">
       <img src="./home.png" alt="icono Pag Principal" width="40" height="45">
-      <span class="home-text">Inicio</span>
+      <span class="home-text">Inici</span>
     </v-btn>
 
     <v-container>
       <div class="button-container">
-        <v-btn class="custom-button" @click="mostrarRecepcioComandes">Recepción de Comandas</v-btn>
-        <v-btn class="custom-button" @click="mostrarPreparacioComandes">Preparación de Comandas</v-btn>
-        <v-btn class="custom-button" @click="mostrarResumComandes">Resumen de Comandas</v-btn>
+        <v-btn class="custom-button" @click="mostrarRecepcioComandes">Recepció de Comandes</v-btn>
+        <v-btn class="custom-button" @click="mostrarPreparacioComandes">Preparació de Comandes</v-btn>
+        <v-btn class="custom-button" @click="mostrarResumComandes">Resum de Comandes</v-btn>
       </div>
       <div class="comandas-container">
         <RecepcioComandes v-if="mostrarRecepcio" />
@@ -96,8 +96,8 @@ export default {
 
 .button-container {
   display: flex;
-  justify-content: center; /* Centramos los botones horizontalmente */
-  align-items: center; /* Centramos los botones verticalmente */
+  justify-content: center; 
+  align-items: center; 
 }
 
 .custom-button {

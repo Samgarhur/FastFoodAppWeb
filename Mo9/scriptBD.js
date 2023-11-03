@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandaAceptada,getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatComanda};
+module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandaAceptada,getComandaFinalizada,getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatProducte,updateEstatComanda};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -156,15 +156,6 @@ async function insertProdComand(connection,productes, id_comanda){
     }
 }
 
-async function marcarComandaFinalizada(connection, id_comanda) {
-    try {
-        const [rows, fields] = await connection.execute('UPDATE Comanda SET estat = \'finalitzada\' WHERE id_comanda = ?', [id_comanda]);
-        return rows.affectedRows;
-    } catch (error) {
-        console.error('Error al finalitzar la comanda:', error.message);
-        throw error;
-    }
-}
 
 async function getComandaFinalizada(connection) {
     try {
