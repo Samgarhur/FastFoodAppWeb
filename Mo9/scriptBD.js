@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatComanda};
+module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandaAceptada,getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatComanda};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -47,10 +47,11 @@ async function getComandes(connection) {
 async function getComandesProductes(connection) {
     try {
         const queryString = `
-            SELECT C.id_comanda, P.nom AS nombre_producto, CP.quantitat
+            SELECT C.id_comanda, C.id_usuari, U.usuario as nombre_usuario, P.nom AS nombre_producto, CP.quantitat
             FROM Comanda_Producte CP
             JOIN Comanda C ON CP.id_comanda = C.id_comanda
             JOIN Producte P ON CP.id_producte = P.id_producte
+            JOIN Usuari U ON C.id_usuari = U.id_usuari
             WHERE C.estat = "rebut";
         `;
         
@@ -58,11 +59,13 @@ async function getComandesProductes(connection) {
 
         // Organizar los resultados por id_comanda
         const comandesOrganizados = rows.reduce((result, row) => {
-            const { id_comanda, nombre_producto, quantitat } = row;
+            const { id_comanda, id_usuari, nombre_usuario, nombre_producto, quantitat } = row;
 
             if (!result[id_comanda]) {
                 result[id_comanda] = {
                     id_comanda,
+                    id_usuari,
+                    nombre_usuario,
                     productos: [],
                 };
             }
@@ -135,7 +138,7 @@ async function insertProdComand(connection,productes, id_comanda){
                 [id_comanda, id_producte, cantidad]
             );
 
-            // Casos Error
+            // Casos para mostrar error
             if (result.affectedRows === 1) {
                 console.log("insertat");
             } else {
@@ -150,7 +153,7 @@ async function insertProdComand(connection,productes, id_comanda){
 
 async function marcarComandaFinalizada(connection, id_comanda) {
     try {
-        const [rows, fields] = await connection.execute('UPDATE Comanda SET estat = \'Finalitzada\' WHERE id_comanda = ?', [id_comanda]);
+        const [rows, fields] = await connection.execute('UPDATE Comanda SET estat = \'finalitzada\' WHERE id_comanda = ?', [id_comanda]);
         return rows.affectedRows;
     } catch (error) {
         console.error('Error al finalitzar la comanda:', error.message);
@@ -160,7 +163,7 @@ async function marcarComandaFinalizada(connection, id_comanda) {
 
 async function getComandaFinalizada(connection) {
     try {
-        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE estat = \'Finalitzada\'');
+        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE estat = \'finalitzada\'');
         const comandasJSON = JSON.stringify(rows);
         return comandasJSON;
     } catch (error) {
@@ -173,14 +176,47 @@ async function getComandaFinalizada(connection) {
 
 async function getComandaAceptada(connection) {
     try {
-        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE estat = true AND Finalitzada = false');
-        const comandasJSON = JSON.stringify(rows);
-        return comandasJSON;
+        const queryString = `
+            SELECT C.id_comanda, C.id_usuari, U.usuario as nombre_usuario, P.nom AS nombre_producto, CP.quantitat
+            FROM Comanda_Producte CP
+            JOIN Comanda C ON CP.id_comanda = C.id_comanda
+            JOIN Producte P ON CP.id_producte = P.id_producte
+            JOIN Usuari U ON C.id_usuari = U.id_usuari
+            WHERE C.estat = "aceptada";
+        `;
+        
+        const [rows, fields] = await connection.execute(queryString);
+
+        // Organizar los resultados por id_comanda
+        const comandesOrganizados = rows.reduce((result, row) => {
+            const { id_comanda, id_usuari, nombre_usuario, nombre_producto, quantitat } = row;
+
+            if (!result[id_comanda]) {
+                result[id_comanda] = {
+                    id_comanda,
+                    id_usuari,
+                    nombre_usuario,
+                    productos: [],
+                };
+            }
+
+            result[id_comanda].productos.push({
+                nombre_producto,
+                quantitat,
+            });
+
+            return result;
+        }, {});
+
+        // Convertir a JSON
+        const comandesJSON = JSON.stringify(Object.values(comandesOrganizados));
+        return comandesJSON;
     } catch (error) {
-        console.error('Error al obtenir les comandes aceptades:', error.message);
+        console.error('Error al obtener las comandas aceptadas:', error.message);
         throw error;
     }
 }
+
 
 async function updateEstatComanda(connection, id_comanda, estat) {
     try {
@@ -222,7 +258,7 @@ async function insertProducte(connection, producteData) {
     try {    
 
         // INSERT
-        let {idProd, nom, descripcio, preu, estat, foto} = producteData;      
+        let { nom, descripcio, preu, estat, foto} = producteData;      
             foto=null;
           
         const [result] = await connection.execute(
