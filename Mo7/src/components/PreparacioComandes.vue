@@ -96,9 +96,8 @@ export default {
       this.snackbar = true;
       socket.emit('solicitarComandasAceptadasIniciales');
 
-    },
+    },  
 
-    // Función para calcular el tiempo restante de cada comanda en minutos
     calcularTempsRestant() {
       const now = new Date(); // Hora actual
       for (const comanda of this.comandes) {
@@ -107,6 +106,9 @@ export default {
         const diffMinutes = Math.floor(diffMillis / (1000 * 60)); // Diferencia en minutos
         comanda.tempsRestant = diffMinutes;
       }
+
+      // Ordenar las comandas por tiempo transcurrido (de menor a mayor)
+      this.comandes.sort((a, b) => b.tempsRestant - a.tempsRestant);
     },
     //Funcion para cambiar el color de los pedidos en funcion del tiempo
     posarColorComandes(temps) {
@@ -129,10 +131,8 @@ export default {
       //console.log(comandesJson);
 
       // Calcular el tiempo transcurrido y agregarlo a las comandas
-      this.calcularTempsRestant(comandesJson);
+      this.calcularTempsRestant(comandesJson);     
 
-      // Ordenar las comandas por tiempo transcurrido (de menor a mayor)
-      comandesJson.sort((a, b) => b.tempsRestant - a.tempsRestant);
       this.comandes = comandesJson;
       // Iniciar el temporizador para actualizar el tiempo restante
       this.interval = setInterval(this.calcularTempsRestant, 1000); // Actualizar cada segundo
