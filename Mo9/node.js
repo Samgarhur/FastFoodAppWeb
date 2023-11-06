@@ -87,33 +87,18 @@ app.post("/crearComanda", function (req, res) {
      comanda = 
      {
         id_usuari:"",
-        id_comanda:"",
-        data:timeStamp,
         estat:"rebut",
         productes:req.body
     }
         var infoUsuari = getUsuariInfo(connection, usuariLog).then((infoUsuari) => {
             infoUsuari=JSON.parse(infoUsuari)
-            //console.log(infoUsuari)
-            //console.log(infoUsuari[0])
             comanda.id_usuari=infoUsuari[0].id_usuari
-           // console.log(infoUsuari.id_usuari)
-        var idComanda=getNumComanda(connection).then((idComanda)=>{
-            //console.log(idComanda)
-            idComanda=JSON.parse(idComanda)
-            let obj = idComanda[0];
-            let valor = obj['MAX(id_comanda)'];
-            idComanda = valor + 1
-            comanda.id_comanda=idComanda
-            //console.log(comanda.id)
 
-        //console.log(comanda)
         var resultat = insertComanda(connection, comanda).then((resultat) => {
             resultat = { "autoritzacio": resultat }
             res.send(resultat)
         })
         })
-    })
 })//crear la comanda a la bbdd
 
 //----------------cosses vue------------------------------------------------------------------------//
@@ -130,7 +115,7 @@ app.post("/agregarProducte", function (req, res) {
         let obj = id[0];
         let valor = obj['MAX(id_producte)'];
         numProd = valor 
-        descargarImagen(novaFoto, ubicacioArxius + "/" + numProd +"00"+ ".jpeg")
+        descargarImagen(novaFoto, ubicacioArxius + "/"+"00"+ + numProd + ".jpeg")
         })
     })
         .catch(console.error);
