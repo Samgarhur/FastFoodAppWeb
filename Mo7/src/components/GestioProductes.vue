@@ -13,7 +13,7 @@
           <v-text-field v-model="nouProducte.nom" label="Nom producte"></v-text-field>
           <v-text-field v-model="nouProducte.descripcio" label="Descripcio"></v-text-field>
           <v-text-field v-model="nouProducte.preu" label="Preu"></v-text-field>
-          <v-select v-model="nouProducte.tipus_producte" :items="['Hamburguesas','Fregits','Begudes','Postres']"
+          <v-select v-model="nouProducte.tipus_producte" :items="['Hamburguesas', 'Fregits', 'Begudes', 'Postres']"
             label="Tipus"></v-select>
           <v-text-field v-model="nouProducte.foto" label="Imatge del producte" required></v-text-field>
         </v-card-text>
@@ -25,56 +25,60 @@
     </v-dialog>
   </v-container>
   <v-container>
-    <v-card v-for="producte in productes">
-      <v-card-title>{{ producte.nom }}</v-card-title>
-      <v-card-subtitle>Descripcio: {{ producte.descripcio }}</v-card-subtitle>
-      <v-card-subtitle>Preu: {{ producte.preu }}</v-card-subtitle>
-      <v-img :src="decodeBase64Image(producte.foto)" height="150" width="150" cover></v-img>
-      <v-card-actions>
-        <v-dialog v-model="dialogEditarProducte" max-width="380">
-          <template v-slot:activator="{ on }">
-            <v-btn class="custom-button" @click="openEditDialog(producte)">Editar producte</v-btn>
-          </template>
-          <v-card>
-            <v-card-title>Confirmación</v-card-title>
-            <v-card-text>
-              <v-text-field v-model="producteEditat.nom" label="Nom del producte"></v-text-field>
-              <v-text-field v-model="producteEditat.descripcio" label="Descripcio del producte"></v-text-field>
-              <v-text-field v-model="producteEditat.preu" label="Preu del producte"></v-text-field>
-              <v-select v-model="producteEditat.tipus_producte" :items="['Hamburguesas','Fregits','Begudes','Postres']"
-            label="Tipus"></v-select>
-              <v-text-field v-model="producteEditat.foto" label="Posa la URL de la imatge del producte"
-                required></v-text-field>
-              <v-switch v-model="producteEditat.modificarFoto" :class="{ 'correcte': producteEditat.modificarFoto }"
-                label="Vols modificar la imatge?"></v-switch>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn class="custom-button" @click="editarProducte()">Modificar producte</v-btn>
-              <v-btn class="custom-button" @click="dialogEditarProducte = false">Cancelar</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="dialogEliminarProducte" max-width="380">
-          <template v-slot:activator="{ on }">
-            <v-btn class="custom-button" @click="dialogEliminarProducte = true">Eliminar</v-btn>
-          </template>
-          <v-card>
-            <v-card-title>Confirmación</v-card-title>
-            <v-card-text>
-              ¿Estás segur de que vols eliminar el producte?
-            </v-card-text>
-            <v-card-actions>
-              <v-btn class="custom-button" @click="eliminarProducte(producte.id_producte)">Sí</v-btn>
-              <v-btn class="custom-button" @click="dialogEliminarProducte = false">No</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-btn @click="activarDesactivarProducte(producte.id_producte, producte.estat)"
-          :class="{ 'red-background': producte.estat, 'green-background': !producte.estat }">
-          {{ producte.estat ? 'Desactivar' : 'Activar' }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+    <v-row justify="center">
+      <v-col v-for="producte in productes" cols="3">
+        <v-card>
+          <v-card-title>{{ producte.nom }}</v-card-title>
+          <v-card-subtitle>Descripcio: {{ producte.descripcio }}</v-card-subtitle>
+          <v-card-subtitle>Preu: {{ producte.preu }}</v-card-subtitle>
+          <v-img :src="decodeBase64Image(producte.foto)" class="imatge" height="300" width="300" contain></v-img>
+          <v-card-actions>
+            <v-dialog v-model="dialogEditarProducte" max-width="380">
+              <template v-slot:activator="{ on }">
+                <v-btn class="custom-button" @click="openEditDialog(producte)">Editar producte</v-btn>
+              </template>
+              <v-card>
+                <v-card-title>Confirmación</v-card-title>
+                <v-card-text>
+                  <v-text-field v-model="producteEditat.nom" label="Nom del producte"></v-text-field>
+                  <v-text-field v-model="producteEditat.descripcio" label="Descripcio del producte"></v-text-field>
+                  <v-text-field v-model="producteEditat.preu" label="Preu del producte"></v-text-field>
+                  <v-select v-model="producteEditat.tipus_producte"
+                    :items="['Hamburguesas', 'Fregits', 'Begudes', 'Postres']" label="Tipus"></v-select>
+                  <v-text-field v-model="producteEditat.foto" label="Posa la URL de la imatge del producte"
+                    required></v-text-field>
+                  <v-switch v-model="producteEditat.modificarFoto" :class="{ 'correcte': producteEditat.modificarFoto }"
+                    label="Vols modificar la imatge?"></v-switch>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn class="custom-button" @click="editarProducte()">Modificar producte</v-btn>
+                  <v-btn class="custom-button" @click="dialogEditarProducte = false">Cancelar</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-dialog v-model="dialogEliminarProducte" max-width="380">
+              <template v-slot:activator="{ on }">
+                <v-btn class="custom-button" @click="dialogEliminarProducte = true">Eliminar</v-btn>
+              </template>
+              <v-card>
+                <v-card-title>Confirmación</v-card-title>
+                <v-card-text>
+                  ¿Estás segur de que vols eliminar el producte?
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn class="custom-button" @click="eliminarProducte(producte.id_producte)">Sí</v-btn>
+                  <v-btn class="custom-button" @click="dialogEliminarProducte = false">No</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-btn @click="activarDesactivarProducte(producte.id_producte, producte.estat)"
+              :class="{ 'red-background': producte.estat, 'green-background': !producte.estat }">
+              {{ producte.estat ? 'Desactivar' : 'Activar' }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
   <v-snackbar v-model="snackbar" :timeout="2000">
     {{ snackbarMessage }}
@@ -93,7 +97,7 @@ export default {
         nom: "",
         descripcio: "",
         preu: 0,
-        estat: 1,        
+        estat: 1,
         foto: "",
         tipus_producte: ""
       },
@@ -261,5 +265,10 @@ export default {
 /*Para cambiar el color del boton para selecionar si cambiar imagen o no*/
 .correcte {
   color: green;
+}
+.imatges {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

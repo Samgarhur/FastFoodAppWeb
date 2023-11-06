@@ -141,7 +141,7 @@ app.put("/modificarProducte/:id", function (req, res) {
         let valor = obj['MAX(id_producte)'];
         numProd = valor + 1
         if (producteModificat.modificarFoto) {
-            fs.unlinkSync(ubicacioArxius + "/" +"00"+ producteId + ".jpeg")
+            fs.unlinkSync(ubicacioArxius +"00"+ producteId + ".jpeg")
             descargarImagen(novaFoto, ubicacioArxius + "/" +"00"+ producteId+  ".jpeg")
                 .then(() =>
                     //console.log('Imagen descargada con éxito')d
