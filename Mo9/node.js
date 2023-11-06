@@ -128,29 +128,26 @@ app.delete("/eliminarProducte/:id", function (req, res) {
     deleteProducte(connection, prod)
     fs.unlinkSync(ubicacioArxius + "/" +"00"+ prod + ".jpeg")
 })//Eliminar productes a la bbdd 
-app.put("/modificarProducte/:id", async function (req, res) {
-    try {
-        console.log("Entra en modificar producte");
-        const producteModificat = req.body;
-        const producteId = req.params.id;
-        const novaFoto = producteModificat.foto;
-
-        // Eliminar la imagen antigua si es necesario
+app.put("/modificarProducte/:id", function (req, res) {
+    console.log("Entra en modificar producte");
+    const producteModificat = req.body
+    const producteId = req.params.id
+    //console.log(producteModificat)
+    novaFoto = producteModificat.foto
+    //separar la foto al seu director
         if (producteModificat.modificarFoto) {
-            fs.unlinkSync(`${ubicacioArxius}00${producteId}.jpeg`);
-            // Descargar la nueva imagen y esperar a que se complete
-            await descargarImagen(novaFoto, `${ubicacioArxius}/00${producteId}.jpeg`);
+            fs.unlinkSync(ubicacioArxius +"00"+ producteId + ".jpeg")
+            descargarImagen(novaFoto, ubicacioArxius + "/" +"00"+ producteId+  ".jpeg")
+                .then(() =>
+                    //console.log('Imagen descargada con éxito')d
+                    updateProducte(connection, producteId, producteModificat)
+                )
         }
-
-        // Actualizar el producto en la base de datos
-        await updateProducte(connection, producteId, producteModificat);
-
-        res.send("Producto modificado correctamente.");
-    } catch (error) {
-        console.error("Error al modificar producto:", error);
-        res.status(500).send("Error al modificar producto.");
-    }
-});//modificar un producte de la bbdd
+        else
+            updateProducte(connection, producteId, producteModificat)
+    
+        .catch(console.error);
+})//modificar un producte de la bbdd
 app.put("/updateEstatProducte/:id", function (req, res) {
     //console.log("Entra en update estat del producte");
     const estatProducte = req.body.estat
@@ -253,12 +250,7 @@ io.on('connection', (socket) => {
         socket.emit('getProductes', JSON.stringify(productesJson));
     });
 
-    //Para updatear el estado de los productos por socket
-    socket.on('updateEstatProductes', async (id,estat) => {
-        updateEstatProducte(connection, id, estat);      
 
-       
-    });
 
     // Escuchar la solicitud de comanda aceptada
     socket.on('comandaAceptada', (id, estat) => {
@@ -365,24 +357,20 @@ function base64_encode(file) {
 async function comensarPython() {
     console.log("dintre de la generacio de grafics")
     //passar dades
-    data={
-        productos:[],
-        comandas:[]
-        }
+    data=[]
     productos=getProductes(connection).then((productos) => {
         productos=JSON.parse(productos)
-        data.productos=productos
+        data[0]=productos
         console.log("369")
         comandas=getComandesSenceres(connection).then((comandas) => {
             comandas=JSON.parse(comandas)
-            data.comandas=comandas
+            data[1]=comandas
             console.log("373")
             //generar grafics
             console.log(arxiuPython)
-            //console.log(data)
             data=JSON.stringify(data)
             console.log("377")
-            
+            //console.log(data)
             py=spawn('python', [arxiuPython, data])
             py.stdout.on('data', (data) => {
                 console.log(`Resultado de Python: ${data}`);
