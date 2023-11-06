@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandes, getComandaAceptada,getComandaFinalizada,getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatProducte,updateEstatComanda,updateTempsComanda};
+module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandesSenceres, getComandaAceptada,getComandaFinalizada,getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatProducte,updateEstatComanda,updateTempsComanda};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -33,9 +33,9 @@ async function getUsuariInfo(connection, user) {
 /*-------------------Comandes------------------*/
 
 
-async function getComandes(connection) {
+async function getComandesSenceres(connection) {
     try {
-        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE  ');
+        const [rows, fields] = await connection.execute('SELECT * FROM Comanda ');
         const comandasJSON = JSON.stringify(rows);
         return comandasJSON;
     } catch (error) {
@@ -102,9 +102,9 @@ async function insertComanda(connection, comandaData) {
     try {
         // INSERT
         console.log(comandaData)
-        const { id_comanda, id_usuari, data_comanda, estat, productes } = comandaData;
+        const {  id_usuari, estat, productes } = comandaData;
         const [result] = await connection.execute(
-            'INSERT INTO Comanda (id_comanda, id_usuari, data_comanda, estat) VALUES (?, ?, ?, ?)',
+            'INSERT INTO Comanda ( id_usuari,  estat) VALUES (?, ?, ?, ?)',
             [id_comanda, id_usuari, data_comanda, estat]
         );
         console.log("insertant productes...")
