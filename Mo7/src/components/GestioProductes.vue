@@ -13,6 +13,8 @@
           <v-text-field v-model="nouProducte.nom" label="Nom producte"></v-text-field>
           <v-text-field v-model="nouProducte.descripcio" label="Descripcio"></v-text-field>
           <v-text-field v-model="nouProducte.preu" label="Preu"></v-text-field>
+          <v-select v-model="nouProducte.tipus_producte" :items="['Hamburguesas','Fregits','Begudes','Postres']"
+            label="Tipus"></v-select>
           <v-text-field v-model="nouProducte.foto" label="Imatge del producte" required></v-text-field>
         </v-card-text>
         <v-card-actions>
@@ -39,6 +41,8 @@
               <v-text-field v-model="producteEditat.nom" label="Nom del producte"></v-text-field>
               <v-text-field v-model="producteEditat.descripcio" label="Descripcio del producte"></v-text-field>
               <v-text-field v-model="producteEditat.preu" label="Preu del producte"></v-text-field>
+              <v-select v-model="producteEditat.tipus_producte" :items="['Hamburguesas','Fregits','Begudes','Postres']"
+            label="Tipus"></v-select>
               <v-text-field v-model="producteEditat.foto" label="Posa la URL de la imatge del producte"
                 required></v-text-field>
               <v-switch v-model="producteEditat.modificarFoto" :class="{ 'correcte': producteEditat.modificarFoto }"
@@ -89,8 +93,9 @@ export default {
         nom: "",
         descripcio: "",
         preu: 0,
-        estat: 1,
-        foto: ""
+        estat: 1,        
+        foto: "",
+        tipus_producte: ""
       },
       producteEditat: {
         nom: "",
@@ -98,6 +103,7 @@ export default {
         preu: 0,
         estat: 1,
         foto: "",
+        tipus_producte: "",
         modificarFoto: false
       },
       dialogCrearProducte: false, // Controla la visibilidad del diálogo de crear producto
@@ -209,13 +215,14 @@ export default {
 </script>
 
 <style>
-.red-background:hover{
-    background-color: rgb(255, 101, 101);
-  }
+.red-background:hover {
+  background-color: rgb(255, 101, 101);
+}
 
-  .green-background:hover {
-    background-color: rgb(142, 238, 142);
-  }
+.green-background:hover {
+  background-color: rgb(142, 238, 142);
+}
+
 .my-button-class {
   position: absolute;
   top: 1rem;
