@@ -156,17 +156,32 @@ export default {
       const nuevoEstat = !estat; // Cambia el estado al contrario de el que estaba
       console.log(nuevoEstat)
 
+      //Cambiar el estado del producto por node
+      socket.emit('updateEstatProductes', id, nuevoEstat);
+
+      //Llamamos a getProductes con socket para actualizarlo al momento
+      socket.on('getProductes', (productos) => {
+        const productosJson = JSON.parse(productos);
+        this.productes = productosJson;
+
+      });
+      // Actualiza la lista de productos con socket después de modificar el estado del producto
+      socket.emit('solicitarProductosIniciales');
+
+
+
+
+      /*
+      //Cambiar el estado del producto por node
       updateEstatProducte(id, nuevoEstat).then(response => {
         //Actualiza la lista de productos después cambiarle el estado
         getProductos().then(response => {
           this.productes = response;
         });
 
-      });
+      });*/
 
-      /*
-      // Actualiza la lista de productos con socket después de modificar el estado del producto
-      socket.emit('solicitarProductosIniciales');*/
+
 
     },
     menuAfegirProducte() {
@@ -266,6 +281,7 @@ export default {
 .correcte {
   color: green;
 }
+
 .imatges {
   display: flex;
   align-items: center;
