@@ -253,7 +253,12 @@ io.on('connection', (socket) => {
         socket.emit('getProductes', JSON.stringify(productesJson));
     });
 
+    //Para updatear el estado de los productos por socket
+    socket.on('updateEstatProductes', async (id,estat) => {
+        updateEstatProducte(connection, id, estat);      
 
+       
+    });
 
     // Escuchar la solicitud de comanda aceptada
     socket.on('comandaAceptada', (id, estat) => {
@@ -360,20 +365,24 @@ function base64_encode(file) {
 async function comensarPython() {
     console.log("dintre de la generacio de grafics")
     //passar dades
-    data=[]
+    data={
+        productos:[],
+        comandas:[]
+        }
     productos=getProductes(connection).then((productos) => {
         productos=JSON.parse(productos)
-        data[0]=productos
+        data.productos=productos
         console.log("369")
         comandas=getComandesSenceres(connection).then((comandas) => {
             comandas=JSON.parse(comandas)
-            data[1]=comandas
+            data.comandas=comandas
             console.log("373")
             //generar grafics
             console.log(arxiuPython)
+            //console.log(data)
             data=JSON.stringify(data)
             console.log("377")
-            //console.log(data)
+            
             py=spawn('python', [arxiuPython, data])
             py.stdout.on('data', (data) => {
                 console.log(`Resultado de Python: ${data}`);
