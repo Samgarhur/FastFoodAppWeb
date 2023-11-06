@@ -6,15 +6,14 @@ import sys
 import json
 from sklearn.linear_model import LinearRegression
 
-avui = date.today();
-terminacio=avui ,'.jpeg';
+
 info = sys.argv[1]
 
 
 def VentaProductes (info2): #comparacio venta productes json=productes 
-    df = pd.read_json(info2, lines=True)
+    df = pd.DataFrame(info2['productos'])
     x_values = df['nom']
-    y_values = df['numCompra']
+    y_values = df['num_comprat']
     plt.bar(x_values, y_values)
     plt.title('Comparativa productes comprats')
     ax = plt.subplot()                   
@@ -22,11 +21,11 @@ def VentaProductes (info2): #comparacio venta productes json=productes
     ax.set_xticklabels(x_values)       
     ax.set_xlabel('Producte')  
     ax.set_ylabel('Quantitat venuda') 
-    plt.savefig('VentaProductes'+terminacio)
+    plt.savefig('../Mo10/grafics/VentaProductes.jpeg')
     plt.close('all')
 
 def VentaPreu (info2): #comparacio venta preu json=productes 
-    df = pd.read_json(info2, lines=True)
+    df = pd.DataFrame(info2['productos'])
     x_values = df['numCompra']
     y_values = df['Preu']
     plt.bar(x_values, y_values)
@@ -36,11 +35,11 @@ def VentaPreu (info2): #comparacio venta preu json=productes
     ax.set_xticklabels(x_values)       
     ax.set_xlabel('Unitats venudes')  
     ax.set_ylabel('Cost') 
-    plt.savefig('VentaProductes'+terminacio)
+    plt.savefig('../Mo10/grafics/VentaProductes.jpeg')
     plt.close('all')
 
 def TipusProducte (info2): #comparacio tipus producte json=productes 
-    df = pd.read_json(info2, lines=True)
+    df = pd.DataFrame(info2['productos'])
     x_values = df['tipus'].unique()
     y_values = df['tipus'].value_counts().tolist()
     plt.bar(x_values, y_values)
@@ -50,11 +49,11 @@ def TipusProducte (info2): #comparacio tipus producte json=productes
     ax.set_xticklabels(x_values)       
     ax.set_xlabel('Producte')  
     ax.set_ylabel('Quantitat venuda') 
-    plt.savefig('VentaProductes'+terminacio)
+    plt.savefig('../Mo10/grafics/VentaProductes.jpeg')
     plt.close('all')
 
 def EstatCommandas (info2): #comprobacio estats actuals de comandes json=comandes
-    df = pd.read_json(info2, lines=True)
+    df = pd.DataFrame(info2['productos'])
     x_values = df['estat'].unique()
     y_values = df['estat'].value_counts().tolist()
     plt.bar(x_values, y_values)
@@ -64,7 +63,7 @@ def EstatCommandas (info2): #comprobacio estats actuals de comandes json=comande
     ax.set_xticklabels(x_values)       
     ax.set_xlabel('Estat actual')  
     ax.set_ylabel('Quantitat')
-    plt.savefig('ComparativaEstats'+terminacio)
+    plt.savefig('../Mo10/grafics/VentaProductes.jpeg')
     plt.close('all')
 
 def ComandesXdia (info2): #pedidos por dia xDias, yPedidos json=comandes
@@ -146,14 +145,13 @@ def ProductesPreu(info2): #productos/precio xnumCompras yPrecio json=productes
     plt.close('all')
 
 def cridarFuncions(info2):
-    VentaProductes(info2[0])
-    VentaPreu(info2[0])
-    TipusProducte(info2[0])
-    EstatCommandas(info2[1])
+    VentaProductes(info2)
+    VentaPreu(info2)
+    TipusProducte(info2)
+    EstatCommandas(info2)
 
 
 
-info1=json.dumps(info)
-info2=json.loads(info1)
-print(info2)
+info2=json.loads(info)
+
 cridarFuncions(info2)
