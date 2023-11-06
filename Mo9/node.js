@@ -250,7 +250,12 @@ io.on('connection', (socket) => {
         socket.emit('getProductes', JSON.stringify(productesJson));
     });
 
+ //Para updatear el estado de los productos por socket
+ socket.on('updateEstatProductes', async (id,estat) => {
+    updateEstatProducte(connection, id, estat);      
 
+
+});
 
     // Escuchar la solicitud de comanda aceptada
     socket.on('comandaAceptada', (id, estat) => {
