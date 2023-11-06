@@ -7,9 +7,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 from datetime import date
+import sys
+import json
+
 
 avui = date.today();
-terminacio=avui +'.jpeg';
+terminacio=avui ,'.jpeg';
+info = sys.argv[1]
+
 
 def VentaProductes (info): #comparacio venta productes json=productes 
     df = pd.read_json(info)
@@ -39,7 +44,7 @@ def VentaPreu (info): #comparacio venta preu json=productes
     plt.savefig('VentaProductes'+terminacio)
     plt.close('all')
 
-def VentaPreu (info): #comparacio tipus producte json=productes 
+def TipusProducte (info): #comparacio tipus producte json=productes 
     df = pd.read_json(info)
     x_values = df['tipus'].unique()
     y_values = df['tipus'].value_counts().tolist()
@@ -53,7 +58,7 @@ def VentaPreu (info): #comparacio tipus producte json=productes
     plt.savefig('VentaProductes'+terminacio)
     plt.close('all')
 
-def commandas (info): #comprobacio estats actuals de comandes json=comandes
+def EstatCommandas (info): #comprobacio estats actuals de comandes json=comandes
     df = pd.read_json(info)
     x_values = df['estat'].unique()
     y_values = df['estat'].value_counts().tolist()
@@ -67,3 +72,13 @@ def commandas (info): #comprobacio estats actuals de comandes json=comandes
     plt.savefig('ComparativaEstats'+terminacio)
     plt.close('all')
 
+def cridarFuncions(info):
+    VentaProductes(info[0])
+    VentaPreu(info[0])
+    TipusProducte(info[0])
+    EstatCommandas(info[1])
+
+#print(info)
+info=json.loads(info)
+print(info)
+cridarFuncions(info)
