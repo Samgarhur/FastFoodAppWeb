@@ -13,7 +13,11 @@ const routes = [
   {
     path: '/gestioproductes',
     component: () => import('@/components/GestioProductes.vue'),
-  }  
+  },
+  {
+    path: '/gestioestadistiques',
+    component: () => import('@/components/gestioEstadistiques.vue'),
+  }   
 ]
 
 const router = createRouter({
