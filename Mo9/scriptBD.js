@@ -270,12 +270,12 @@ async function insertProducte(connection, producteData) {
     try {    
 
         // INSERT
-        let { nom, descripcio, preu, estat, foto} = producteData;      
+        let { nom, descripcio, preu, estat, foto, tipus_producte} = producteData;      
             foto=null;
           
         const [result] = await connection.execute(
-            'INSERT INTO Producte ( nom, descripcio, preu, estat, foto) VALUES ( ?, ?, ?, ?, ?)',
-            [ nom, descripcio, preu, estat, foto]
+            'INSERT INTO Producte ( nom, descripcio, preu, estat, foto, tipus_producte) VALUES ( ?, ?, ?, ?, ?, ?)',
+            [ nom, descripcio, preu, estat, foto, tipus_producte]
         );
 
 
@@ -314,12 +314,12 @@ async function deleteProducte(connection, id_producte) {
 //Update Productes (prova)
 async function updateProducte(connection, id_producte, producteData) {
 try {
-        let { nom, descripcio, preu, estat, foto } = producteData;
+        let { nom, descripcio, preu, estat, foto, tipus_producte } = producteData;
 
         foto=null;
         const [result] = await connection.execute(
-            'UPDATE Producte SET nom = ?, descripcio = ?, preu = ?, estat = ?, foto = ? WHERE id_producte = ?',
-            [nom, descripcio, preu, estat, foto, id_producte]
+            'UPDATE Producte SET nom = ?, descripcio = ?, preu = ?, estat = ?, foto = ?, tipus_producte = ? WHERE id_producte = ?',
+            [nom, descripcio, preu, estat, foto, tipus_producte, id_producte]
         );
 
         if (result.affectedRows === 1) {
