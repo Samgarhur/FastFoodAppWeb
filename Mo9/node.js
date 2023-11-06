@@ -7,11 +7,11 @@ const fs = require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandes, getProductes, getUsuariInfo, getNumComanda, getComandesProductes, getComandaAceptada,getComandaFinalizada, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda, updateEstatProducte,updateTempsComanda } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandesSenceres, getProductes, getUsuariInfo, getComandesProductes, getComandaAceptada,getComandaFinalizada, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda, updateEstatProducte,updateTempsComanda } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies/");
-const ubicacioGrafics = path.join(__dirname, "..", "python/grafics");
-const arxiuPython = path.join(__dirname, "..", "python/main.py");
+const ubicacioGrafics = path.join(__dirname, "..", "Mo10/grafics");
+const arxiuPython = path.join(__dirname, "..", "Mo10/produirInfo.py");
 const axios = require('axios');
 var session = require('express-session')
 var usuariLog //guardem el nom del usuari logejat aqui
@@ -87,7 +87,6 @@ app.post("/crearComanda", function (req, res) {
      comanda = 
      {
         id_usuari:"",
-        estat:"rebut",
         productes:req.body
     }
         var infoUsuari = getUsuariInfo(connection, usuariLog).then((infoUsuari) => {
@@ -125,7 +124,7 @@ app.post("/agregarProducte", function (req, res) {
 app.delete("/eliminarProducte/:id", function (req, res) {
     const prod = req.params.id
     deleteProducte(connection, prod)
-    fs.unlinkSync(ubicacioArxius + "/" + prod + ".jpeg")
+    fs.unlinkSync(ubicacioArxius + "/" +"00"+ prod + ".jpeg")
 })//Eliminar productes a la bbdd 
 app.put("/modificarProducte/:id", function (req, res) {
     console.log("Entra en modificar producte");
@@ -142,8 +141,8 @@ app.put("/modificarProducte/:id", function (req, res) {
         let valor = obj['MAX(id_producte)'];
         numProd = valor + 1
         if (producteModificat.modificarFoto) {
-            fs.unlinkSync(ubicacioArxius + "/" + producteId + ".jpeg")
-            descargarImagen(novaFoto, ubicacioArxius + "/" + producteId +"00"+ ".jpeg")
+            fs.unlinkSync(ubicacioArxius + "/" +"00"+ producteId + ".jpeg")
+            descargarImagen(novaFoto, ubicacioArxius + "/" +"00"+ producteId+  ".jpeg")
                 .then(() =>
                     //console.log('Imagen descargada con éxito')d
                     updateProducte(connection, producteId, producteModificat)
@@ -360,28 +359,43 @@ function base64_encode(file) {
 
 
 //-------------py-----------------//
-function comensarPython(ara) {
-    if(ara){
-        //cridar inmediatament als grafics
-    }
-    else{
-        while (true){ //cridar als grafics de forma intermitent cada x temps
-            setInterval(
-                function(){
-
-                }
-                ,10000
-            )
-        }
-    }
+async function comensarPython() {
+    console.log("dintre de la generacio de grafics")
+    //passar dades
+    data=[]
+    productos=getProductes(connection).then((productos) => {
+        productos=JSON.parse(productos)
+        data[0]=productos
+        console.log("369")
+        comandas=getComandesSenceres(connection).then((comandas) => {
+            comandas=JSON.parse(comandas)
+            data[1]=comandas
+            console.log("373")
+            //generar grafics
+            console.log(arxiuPython)
+            data=JSON.stringify(data)
+            console.log("377")
+            //console.log(data)
+            py=spawn('python', [arxiuPython, data])
+            py.stdout.on('data', (data) => {
+                console.log(`Resultado de Python: ${data}`);
+            });
+            py.stderr.on('data', (data) => {
+                console.error(`Error: ${data}`);
+            });
+        })
+    })
+    
+    
 }
-app.post('/py', function(req, res){
-    // ara es boolean, pasa true si vols regenerar grafics, pasa false per agafar els actuals
-    comensarPython(req.params.ara)//generar grafics
+app.get('/py', function(req, res){
+    console.log("entrant a python")
+    //generar grafics
+    comensarPython().then(()=>{
     //passar grafics
     arxiu={"titol":"", "foto":""}
     arxius=[]
-    comprobarExistencia(ubicacioGrafics).then((grafics)=>{
+    /*comprobarExistencia(ubicacioGrafics).then((grafics)=>{
         for(var i=0; i<grafics.length; i++){
             arxiu=
             {
@@ -391,11 +405,10 @@ app.post('/py', function(req, res){
             arxius[i]=arxiu
         }
         arxius=JSON.parse(arxius)
-        res.json(arxius)
+        res.json(arxius)})*/
     })
 })
-//comensarPython(false)
-
+//setInterval(comensarPython, 24 * 60 * 60 * 1000);
 
 //movil - node-> enviar usuari, demanar productes i enviar comanda
 //vue - node -> demanar i enviar productes i comandes
