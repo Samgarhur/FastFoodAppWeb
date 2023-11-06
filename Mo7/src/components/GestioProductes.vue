@@ -31,6 +31,9 @@
           <v-card-title>{{ producte.nom }}</v-card-title>
           <v-card-subtitle>Descripcio: {{ producte.descripcio }}</v-card-subtitle>
           <v-card-subtitle>Preu: {{ producte.preu }}</v-card-subtitle>
+          <v-card-title :class="{ 'producteActivat': producte.estat, 'producteDesactivat': !producte.estat }">
+              {{ producte.estat ? 'Producte activat (amb stock)' : 'Producte desactivat (sense stock)' }}
+            </v-card-title>
           <v-img :src="decodeBase64Image(producte.foto)" class="imatge" height="300" width="300" contain></v-img>
           <v-card-actions>
             <v-dialog v-model="dialogEditarProducte" max-width="380">
@@ -239,6 +242,14 @@ export default {
 }
 
 .green-background:hover {
+  background-color: rgb(142, 238, 142);
+}
+
+.producteDesactivat{
+  background-color: rgb(255, 101, 101);
+}
+
+.producteActivat {
   background-color: rgb(142, 238, 142);
 }
 
