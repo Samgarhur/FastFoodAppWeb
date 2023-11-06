@@ -87,7 +87,9 @@ app.post("/crearComanda", function (req, res) {
      comanda = 
      {
         id_usuari:"",
-        productes:req.body
+        productes:req.body.productos,
+        hora_recollida:req.body.hora,
+        dia_recollida:req.body.dia
     }
         var infoUsuari = getUsuariInfo(connection, usuariLog).then((infoUsuari) => {
             infoUsuari=JSON.parse(infoUsuari)
@@ -132,17 +134,10 @@ app.put("/modificarProducte/:id", function (req, res) {
     const producteId = req.params.id
     //console.log(producteModificat)
     novaFoto = producteModificat.foto
-    //separar la foto al seu directori
-    id = getNumProductes(connection).then((id) => {
-        console.log(id, "1")
-        id = JSON.parse(id)
-        //console.log(id[0].MAX(id_producte), "2")
-        let obj = id[0];
-        let valor = obj['MAX(id_producte)'];
-        numProd = valor + 1
+    //separar la foto al seu director
         if (producteModificat.modificarFoto) {
-            fs.unlinkSync(ubicacioArxius + "/" +"00"+ producteId + ".jpeg")
-            descargarImagen(novaFoto, ubicacioArxius + "/" +"00"+ producteId+  ".jpeg")
+            fs.unlinkSync(ubicacioArxius + "/" +"0"+ producteId + ".jpeg")
+            descargarImagen(novaFoto, ubicacioArxius + "/" +"0"+ producteId+  ".jpeg")
                 .then(() =>
                     //console.log('Imagen descargada con éxito')d
                     updateProducte(connection, producteId, producteModificat)
@@ -150,7 +145,7 @@ app.put("/modificarProducte/:id", function (req, res) {
         }
         else
             updateProducte(connection, producteId, producteModificat)
-    })
+    
         .catch(console.error);
 })//modificar un producte de la bbdd
 app.put("/updateEstatProducte/:id", function (req, res) {
