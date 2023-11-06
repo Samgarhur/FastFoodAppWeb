@@ -270,12 +270,12 @@ async function insertProducte(connection, producteData) {
     try {    
 
         // INSERT
-        let { nom, descripcio, preu, estat, foto, tipus_producte} = producteData;      
+        let { nom, descripcio, preu, estat, tipus_producte, foto} = producteData;      
             foto=null;
           
         const [result] = await connection.execute(
-            'INSERT INTO Producte ( nom, descripcio, preu, estat, foto, tipus_producte) VALUES ( ?, ?, ?, ?, ?, ?)',
-            [ nom, descripcio, preu, estat, foto, tipus_producte]
+            'INSERT INTO Producte ( nom, descripcio, preu, estat, tipus_producte, foto) VALUES ( ?, ?, ?, ?, ?, ?)',
+            [ nom, descripcio, preu, estat, tipus_producte, foto]
         );
 
 
