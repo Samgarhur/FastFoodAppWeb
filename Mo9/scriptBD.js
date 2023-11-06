@@ -102,15 +102,19 @@ async function insertComanda(connection, comandaData) {
     try {
         // INSERT
         console.log(comandaData)
-        const { id_comanda, id_usuari, data_comanda, estat, productes } = comandaData;
+        const { id_usuari, productes } = comandaData;
         const [result] = await connection.execute(
-            'INSERT INTO Comanda (id_comanda, id_usuari, data_comanda, estat) VALUES (?, ?, ?, ?)',
-            [id_comanda, id_usuari, data_comanda, estat]
+            'INSERT INTO Comanda (id_usuari) VALUES (?)',
+            [id_usuari]
         );
+
+        //Obtenir id comanda de la comanda inserida
+        const id_comanda = result.insertId;
+        console.log(id_comanda)
         console.log("insertant productes...")
         console.log(productes)
-        console.log(id_comanda)
-        insertProdComand(connection,productes, id_comanda )
+        await insertProdComand(connection, productes, id_comanda);
+
         // Casos Error
         if (result.affectedRows === 1) {
             return true;
@@ -122,16 +126,17 @@ async function insertComanda(connection, comandaData) {
         throw error;
     }
 }
-async function insertProdComand(connection,productes, id_comanda){
+
+async function insertProdComand(connection, productes, id_comanda) {
     console.log("seguim insertant productes...")
     try {
         console.log(productes.length)
         console.log("tercer missatge...")
         // INSERT
-        for(let i=0; i<productes.length; i++){
-            let id_producte=productes[i].id
-            let cantidad=productes[i].cantidad
-            console.log("insertant " )
+        for (let i = 0; i < productes.length; i++) {
+            let id_producte = productes[i].id
+            let cantidad = productes[i].cantidad
+            console.log("insertant ")
             const [result] = await connection.execute(
                 'INSERT INTO Comanda_Producte (id_comanda, id_producte, quantitat) VALUES (?, ?, ?)',
                 [id_comanda, id_producte, cantidad]
