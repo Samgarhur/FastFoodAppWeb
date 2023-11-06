@@ -133,10 +133,8 @@ def TempsFinalitzarComanda(info2): #tiempo finalizar xidComanda, yTIempo--Recta 
 
 def ProductesPreu(info2): #productos/precio xnumCompras yPrecio json=productes
     df = pd.read_json(info2, lines=True)
-
     x_values = df['numCompra']
     y_values = df['Preu']
-
     plt.scatter(x_values, y_values)
     plt.title('Productes/Preu')
     plt.xlabel('Nombre de Compres')
