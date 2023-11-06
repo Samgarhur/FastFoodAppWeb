@@ -128,26 +128,29 @@ app.delete("/eliminarProducte/:id", function (req, res) {
     deleteProducte(connection, prod)
     fs.unlinkSync(ubicacioArxius + "/" +"00"+ prod + ".jpeg")
 })//Eliminar productes a la bbdd 
-app.put("/modificarProducte/:id", function (req, res) {
-    console.log("Entra en modificar producte");
-    const producteModificat = req.body
-    const producteId = req.params.id
-    //console.log(producteModificat)
-    novaFoto = producteModificat.foto
-    //separar la foto al seu director
+app.put("/modificarProducte/:id", async function (req, res) {
+    try {
+        console.log("Entra en modificar producte");
+        const producteModificat = req.body;
+        const producteId = req.params.id;
+        const novaFoto = producteModificat.foto;
+
+        // Eliminar la imagen antigua si es necesario
         if (producteModificat.modificarFoto) {
-            fs.unlinkSync(ubicacioArxius +"00"+ producteId + ".jpeg")
-            descargarImagen(novaFoto, ubicacioArxius + "/" +"00"+ producteId+  ".jpeg")
-                .then(() =>
-                    //console.log('Imagen descargada con éxito')d
-                    updateProducte(connection, producteId, producteModificat)
-                )
+            fs.unlinkSync(`${ubicacioArxius}00${producteId}.jpeg`);
+            // Descargar la nueva imagen y esperar a que se complete
+            await descargarImagen(novaFoto, `${ubicacioArxius}/00${producteId}.jpeg`);
         }
-        else
-            updateProducte(connection, producteId, producteModificat)
-    
-        .catch(console.error);
-})//modificar un producte de la bbdd
+
+        // Actualizar el producto en la base de datos
+        await updateProducte(connection, producteId, producteModificat);
+
+        res.send("Producto modificado correctamente.");
+    } catch (error) {
+        console.error("Error al modificar producto:", error);
+        res.status(500).send("Error al modificar producto.");
+    }
+});//modificar un producte de la bbdd
 app.put("/updateEstatProducte/:id", function (req, res) {
     //console.log("Entra en update estat del producte");
     const estatProducte = req.body.estat
