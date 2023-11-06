@@ -136,13 +136,8 @@ app.put("/modificarProducte/:id", function (req, res) {
     novaFoto = producteModificat.foto
     //separar la foto al seu director
         if (producteModificat.modificarFoto) {
-<<<<<<< HEAD
             fs.unlinkSync(ubicacioArxius +"00"+ producteId + ".jpeg")
             descargarImagen(novaFoto, ubicacioArxius + "/" +"00"+ producteId+  ".jpeg")
-=======
-            fs.unlinkSync(ubicacioArxius + "/" +"0"+ producteId + ".jpeg")
-            descargarImagen(novaFoto, ubicacioArxius + "/" +"0"+ producteId+  ".jpeg")
->>>>>>> 911aaba106cc75fd5793a17e9edfd643741eacfa
                 .then(() =>
                     //console.log('Imagen descargada con éxito')d
                     updateProducte(connection, producteId, producteModificat)
