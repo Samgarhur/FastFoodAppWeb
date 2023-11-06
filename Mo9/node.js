@@ -136,8 +136,8 @@ app.put("/modificarProducte/:id", function (req, res) {
     novaFoto = producteModificat.foto
     //separar la foto al seu director
         if (producteModificat.modificarFoto) {
-            fs.unlinkSync(ubicacioArxius + "/" +"0"+ producteId + ".jpeg")
-            descargarImagen(novaFoto, ubicacioArxius + "/" +"0"+ producteId+  ".jpeg")
+            fs.unlinkSync(ubicacioArxius +"00"+ producteId + ".jpeg")
+            descargarImagen(novaFoto, ubicacioArxius + "/" +"00"+ producteId+  ".jpeg")
                 .then(() =>
                     //console.log('Imagen descargada con éxito')d
                     updateProducte(connection, producteId, producteModificat)
@@ -250,7 +250,12 @@ io.on('connection', (socket) => {
         socket.emit('getProductes', JSON.stringify(productesJson));
     });
 
+    //Para updatear el estado de los productos por socket
+    socket.on('updateEstatProductes', async (id,estat) => {
+        updateEstatProducte(connection, id, estat);      
 
+       
+    });
 
     // Escuchar la solicitud de comanda aceptada
     socket.on('comandaAceptada', (id, estat) => {

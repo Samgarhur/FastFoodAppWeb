@@ -71,6 +71,20 @@ def EstatCommandas (info2): #comprobacio estats actuals de comandes json=comande
     plt.savefig('../Mo10/grafics/VentaProductes.jpeg')
     plt.close('all')
 
+def ComandesXdia (info2): #pedidos por dia xDias, yPedidos json=comandes
+    df = pd.read_json(info2, lines=True)
+    x_values = df['dies'].unique()
+    y_values = df['comandes'].value_counts().tolist()
+    plt.bar(x_values, y_values)
+    plt.title('Comandes per Dia')
+    ax = plt.subplot()                   
+    ax.set_xticks(x_values)             
+    ax.set_xticklabels(x_values)       
+    ax.set_xlabel('Dies')  
+    ax.set_ylabel('Comandes')
+    plt.savefig('ComandesAlDia'+terminacio)
+    plt.close('all')
+
 def cridarFuncions(info2):
     VentaProductes(info2)
     VentaPreu(info2)
