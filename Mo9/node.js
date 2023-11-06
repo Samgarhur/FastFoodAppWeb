@@ -124,7 +124,7 @@ app.post("/agregarProducte", function (req, res) {
 app.delete("/eliminarProducte/:id", function (req, res) {
     const prod = req.params.id
     deleteProducte(connection, prod)
-    fs.unlinkSync(ubicacioArxius + "/" + prod + ".jpeg")
+    fs.unlinkSync(ubicacioArxius + "/" +"00"+ prod + ".jpeg")
 })//Eliminar productes a la bbdd 
 app.put("/modificarProducte/:id", function (req, res) {
     console.log("Entra en modificar producte");
@@ -141,8 +141,8 @@ app.put("/modificarProducte/:id", function (req, res) {
         let valor = obj['MAX(id_producte)'];
         numProd = valor + 1
         if (producteModificat.modificarFoto) {
-            fs.unlinkSync(ubicacioArxius + "/" + producteId + ".jpeg")
-            descargarImagen(novaFoto, ubicacioArxius + "/" + producteId +"00"+ ".jpeg")
+            fs.unlinkSync(ubicacioArxius + "/" +"00"+ producteId + ".jpeg")
+            descargarImagen(novaFoto, ubicacioArxius + "/" +"00"+ producteId+  ".jpeg")
                 .then(() =>
                     //console.log('Imagen descargada con éxito')d
                     updateProducte(connection, producteId, producteModificat)
