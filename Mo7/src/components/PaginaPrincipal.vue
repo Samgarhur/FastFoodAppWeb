@@ -4,6 +4,7 @@
     <div class="button-container">
       <v-btn class="custom-button" @click="$router.push('/GestioComandes')">Gestió de Comandes</v-btn>
       <v-btn class="custom-button" @click="$router.push('/gestioProductes')">Gestió de Productes</v-btn>
+      <v-btn class="custom-button" @click="$router.push('/gestioEstadistiques')">Estadistiques</v-btn>
     </div>
   </div>
 </template>
