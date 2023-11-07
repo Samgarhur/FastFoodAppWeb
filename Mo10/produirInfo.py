@@ -1,10 +1,14 @@
+#pedidos por dia xDias, yPedidos json=comandes
+#dinero por dia xDias, yDinero json=join productes, comandes, comandaProd
+#tiempo finalizar xidComanda, yTIempo--Recta regresion json=comanda
+#productos/precio xnumCompras yPrecio json=productes
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
-from datetime import date
 import sys
 import json
-from sklearn.linear_model import LinearRegression
+#from sklearn.linear_model import LinearRegression
 
 
 info = sys.argv[1]
@@ -26,8 +30,8 @@ def VentaProductes (info2): #comparacio venta productes json=productes
 
 def VentaPreu (info2): #comparacio venta preu json=productes 
     df = pd.DataFrame(info2['productos'])
-    x_values = df['numCompra']
-    y_values = df['Preu']
+    x_values = df['num_comprat']
+    y_values = df['preu']
     plt.bar(x_values, y_values)
     plt.title('Comparativa productes comprats donat el preu')
     ax = plt.subplot()                   
@@ -40,8 +44,8 @@ def VentaPreu (info2): #comparacio venta preu json=productes
 
 def TipusProducte (info2): #comparacio tipus producte json=productes 
     df = pd.DataFrame(info2['productos'])
-    x_values = df['tipus'].unique()
-    y_values = df['tipus'].value_counts().tolist()
+    x_values = df['tipus_producte'].unique()
+    y_values = df['tipus_producte'].value_counts().tolist()
     plt.bar(x_values, y_values)
     plt.title('Comparativa productes comprats')
     ax = plt.subplot()                   
@@ -49,11 +53,11 @@ def TipusProducte (info2): #comparacio tipus producte json=productes
     ax.set_xticklabels(x_values)       
     ax.set_xlabel('Producte')  
     ax.set_ylabel('Quantitat venuda') 
-    plt.savefig('../Mo10/grafics/VentaProductes.jpeg')
+    plt.savefig('../Mo10/grafics/TipusProducte.jpeg')
     plt.close('all')
 
 def EstatCommandas (info2): #comprobacio estats actuals de comandes json=comandes
-    df = pd.DataFrame(info2['productos'])
+    df = pd.DataFrame(info2['comandas'])
     x_values = df['estat'].unique()
     y_values = df['estat'].value_counts().tolist()
     plt.bar(x_values, y_values)
@@ -63,11 +67,11 @@ def EstatCommandas (info2): #comprobacio estats actuals de comandes json=comande
     ax.set_xticklabels(x_values)       
     ax.set_xlabel('Estat actual')  
     ax.set_ylabel('Quantitat')
-    plt.savefig('../Mo10/grafics/VentaProductes.jpeg')
+    plt.savefig('../Mo10/grafics/EstatComandas.jpeg')
     plt.close('all')
 
 def ComandesXdia (info2): #pedidos por dia xDias, yPedidos json=comandes
-    df = pd.read_json(info2, lines=True)
+    df = pd.DataFrame(info2['comandas'])
     x_values = df['dies'].unique()
     y_values = df['comandes'].value_counts().tolist()
     plt.bar(x_values, y_values)
@@ -77,10 +81,10 @@ def ComandesXdia (info2): #pedidos por dia xDias, yPedidos json=comandes
     ax.set_xticklabels(x_values)       
     ax.set_xlabel('Dies')  
     ax.set_ylabel('Comandes')
-    plt.savefig('ComandesAlDia'+terminacio)
+    plt.savefig('../Mo10/grafics/ComandesXDia.jpeg')
     plt.close('all')
 
-def DinersPerDia(info2): #dinero por dia xDias, yDinero json=join productes, comandes, comandaProd
+def DinersPerDia(info2): #dinero por dia xDias, yDinero json=join productes, comandes, comandaProd    refer
     # Llegir les dades de les comandes i els productes
     comandes_df = pd.read_json(info2, lines=True)
     productes_df = pd.read_json(info2, lines=True)
@@ -101,12 +105,12 @@ def DinersPerDia(info2): #dinero por dia xDias, yDinero json=join productes, com
     ax.set_xticklabels(x_values)
     ax.set_xlabel('Dia')
     ax.set_ylabel('Diners')
-    plt.savefig('DinersPerDia' + terminacio)
+    plt.savefig('../Mo10/grafics/VentaProductes.jpeg')
     plt.close('all')
 
 def TempsFinalitzarComanda(info2): #tiempo finalizar xidComanda, yTIempo--Recta regresion json=comanda
     # Llegir les dades de les comandes
-    comandes_df = pd.read_json(info2, lines=True)
+    comandes_df = pd.DataFrame(info2['comandas'])
 
     # Filtrar les comandes amb 'idComanda' corresponent
     id_comanda = info2[1]
@@ -128,18 +132,18 @@ def TempsFinalitzarComanda(info2): #tiempo finalizar xidComanda, yTIempo--Recta 
     plt.xlabel('ID de Comanda')
     plt.ylabel('Temps (minuts)')
     plt.legend()
-    plt.savefig('TempsFinalitzarComanda' + terminacio)
+    plt.savefig('../Mo10/grafics/TempsFinComanda.jpeg')
     plt.close('all')
 
 def ProductesPreu(info2): #productos/precio xnumCompras yPrecio json=productes
-    df = pd.read_json(info2, lines=True)
-    x_values = df['numCompra']
-    y_values = df['Preu']
+    df = pd.DataFrame(info2['productos'])
+    x_values = df['num_comprat']
+    y_values = df['preu']
     plt.scatter(x_values, y_values)
     plt.title('Productes/Preu')
     plt.xlabel('Nombre de Compres')
     plt.ylabel('Preu')
-    plt.savefig('ProductesPreu' + terminacio)
+    plt.savefig('../Mo10/grafics/ProductesPreu.jpeg')
     plt.close('all')
 
 def cridarFuncions(info2):
@@ -147,6 +151,7 @@ def cridarFuncions(info2):
     VentaPreu(info2)
     TipusProducte(info2)
     EstatCommandas(info2)
+    #ComandesXdia(info2)
 
 
 

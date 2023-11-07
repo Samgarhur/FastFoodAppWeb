@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-card v-for="comanda in comandes" :key="comanda.id_comanda" class="mb-3">
-      <v-card-title class="headline">Comanda {{ comanda.id_comanda }}</v-card-title>     
+      <v-card-title class="headline">Comanda {{ comanda.id_comanda }}</v-card-title>
 
       <v-dialog v-model="dialog[comanda.id_comanda]" max-width="300">
         <template v-slot:activator="{ on }">
@@ -19,9 +19,9 @@
         </v-card>
       </v-dialog>
     </v-card>
-    
+
     <v-divider class="my-3"></v-divider>
-    
+
     <v-row justify="center">
       <v-col>
         <p class="headline">Recaudació Total: {{ recaudacioTotal }}</p>
@@ -42,7 +42,7 @@ export default {
   name: 'ResumComandes',
   data() {
     return {
-      comandes:[],
+      comandes: [],
       comandesPruebas: [
         {
           id: 1,
@@ -90,20 +90,30 @@ export default {
       snackbarMessage: '',
       recaudacioTotal: 0,
       tempsMitjaPreparacio: 0,
-      recollida:""
+      recollida: ""
     };
   },
+  watch: {
+    comandes: {
+      handler: 'cambiComandes',
+      deep: true, // Para detectar cambios en propiedades anidadas
+    },
+  },
+
   methods: {
     recollirComanda(id) {
-     //comandaRecogida(id, this.recollida);
+      //comandaRecogida(id, this.recollida);
       this.recollida = "recollida";
       socket.emit("comandaRecollida", id, this.recollida);
       this.dialog[id] = false;
       this.snackbarMessage = 'Comanda recogida';
       this.snackbar = true;
       // Actualiza las comandas al recoger una
-    socket.emit('solicitarComandasFinalizadasIniciales');
+      socket.emit('solicitarComandasFinalizadasIniciales');
     },
+    cambiComandes() {      // Por ejemplo, puedes emitir un evento cuando las comandas cambien
+      socket.emit('solicitarComandasFinalizadasIniciales');
+    }
   },
   created() {
     //Para coger las comandas finalizadas al entrar en la pagina
@@ -113,7 +123,7 @@ export default {
     });
     // Solicitar comandas iniciales
     socket.emit('solicitarComandasFinalizadasIniciales');
-    
+
     /*
     // Obtiene todas las comandas ya finalizadas del servidor
     getComandasFinalizadas();*/
