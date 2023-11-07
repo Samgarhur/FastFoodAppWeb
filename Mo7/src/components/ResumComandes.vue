@@ -21,14 +21,7 @@
       </v-dialog>
     </v-card>
 
-    <v-divider class="my-3"></v-divider>
-
-    <v-row justify="center">
-      <v-col>
-        <p class="headline">Recaudació Total: {{ recaudacioTotal }}</p>
-        <p class="subheading">Temps Mitjà de Preparació: {{ tempsMitjaPreparacio }}</p>
-      </v-col>
-    </v-row>
+    <v-divider class="my-3"></v-divider>    
   </v-container>
   <v-snackbar v-model="snackbar" :timeout="2000">
     {{ snackbarMessage }}
