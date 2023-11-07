@@ -8,14 +8,15 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams
 import sys
 import json
+import operator
 #from sklearn.linear_model import LinearRegression
-
+from datetime import date
 
 info = sys.argv[1]
 
 
 def VentaProductes (info2): #comparacio venta productes json=productes 
-    df = pd.DataFrame(info2['productos'])
+    df = pd.DataFrame(info2[0])
     x_values = df['nom']
     y_values = df['num_comprat']
     plt.bar(x_values, y_values)
@@ -25,27 +26,29 @@ def VentaProductes (info2): #comparacio venta productes json=productes
     ax.set_xticklabels(x_values)       
     ax.set_xlabel('Producte')  
     ax.set_ylabel('Quantitat venuda') 
-    plt.savefig('../Mo10/grafics/VentaProductes.jpeg')
+    nom=('VentaProductes'+str(date.today()))
+    plt.savefig('../Mo10/grafics/'+nom+'.jpeg')
     plt.close('all')
 
 def VentaPreu (info2): #comparacio venta preu json=productes 
-    df = pd.DataFrame(info2['productos'])
-    x_values = df['num_comprat']
-    y_values = df['preu']
+    df = pd.DataFrame(info2[0])
+    y_values = df['num_comprat']
+    x_values = df['preu']
     plt.bar(x_values, y_values)
     plt.title('Comparativa productes comprats donat el preu')
     ax = plt.subplot()                   
     ax.set_xticks(x_values)             
     ax.set_xticklabels(x_values)       
-    ax.set_xlabel('Unitats venudes')  
-    ax.set_ylabel('Cost') 
-    plt.savefig('../Mo10/grafics/VentaProductes.jpeg')
+    ax.set_ylabel('Unitats venudes')  
+    ax.set_xlabel('Cost') 
+    nom=('VentaPreu'+str(date.today()))
+    plt.savefig('../Mo10/grafics/'+nom+'.jpeg')
     plt.close('all')
 
 def TipusProducte (info2): #comparacio tipus producte json=productes 
-    df = pd.DataFrame(info2['productos'])
-    x_values = df['tipus_producte'].unique()
-    y_values = df['tipus_producte'].value_counts().tolist()
+    df = pd.DataFrame(info2[0])
+    x_values = df['tipus_producte']
+    y_values = df['num_comprat']
     plt.bar(x_values, y_values)
     plt.title('Comparativa productes comprats')
     ax = plt.subplot()                   
@@ -53,11 +56,12 @@ def TipusProducte (info2): #comparacio tipus producte json=productes
     ax.set_xticklabels(x_values)       
     ax.set_xlabel('Producte')  
     ax.set_ylabel('Quantitat venuda') 
-    plt.savefig('../Mo10/grafics/TipusProducte.jpeg')
+    nom=('TipusProducte'+str(date.today()))
+    plt.savefig('../Mo10/grafics/'+nom+'.jpeg')
     plt.close('all')
 
 def EstatCommandas (info2): #comprobacio estats actuals de comandes json=comandes
-    df = pd.DataFrame(info2['comandas'])
+    df = pd.DataFrame(info2[1])
     x_values = df['estat'].unique()
     y_values = df['estat'].value_counts().tolist()
     plt.bar(x_values, y_values)
@@ -67,10 +71,11 @@ def EstatCommandas (info2): #comprobacio estats actuals de comandes json=comande
     ax.set_xticklabels(x_values)       
     ax.set_xlabel('Estat actual')  
     ax.set_ylabel('Quantitat')
-    plt.savefig('../Mo10/grafics/EstatComandas.jpeg')
+    nom=('EstatProductes'+str(date.today()))
+    plt.savefig('../Mo10/grafics/'+nom+'.jpeg')
     plt.close('all')
 
-def ComandesXdia (info2): #pedidos por dia xDias, yPedidos json=comandes
+def ComandesXdia (info2): #pedidos por dia xDias, yPedidos json=comandes  refer
     df = pd.DataFrame(info2['comandas'])
     x_values = df['dies'].unique()
     y_values = df['comandes'].value_counts().tolist()
@@ -136,7 +141,7 @@ def TempsFinalitzarComanda(info2): #tiempo finalizar xidComanda, yTIempo--Recta 
     plt.close('all')
 
 def ProductesPreu(info2): #productos/precio xnumCompras yPrecio json=productes
-    df = pd.DataFrame(info2['productos'])
+    df = pd.DataFrame(info2[0])
     x_values = df['num_comprat']
     y_values = df['preu']
     plt.scatter(x_values, y_values)

@@ -87,12 +87,14 @@ app.post("/crearComanda", function (req, res) {
      comanda = 
      {
         id_usuari:"",
-        productes:req.body.productos,
-        hora_recollida:req.body.hora,
-        dia_recollida:req.body.dia
+        productes:req.body[0].productos,
+        hora_recollida:req.body[0].hora,
+        dia_recollida:req.body[0].dia
     }
         var infoUsuari = getUsuariInfo(connection, usuariLog).then((infoUsuari) => {
+            console.log(infoUsuari)
             infoUsuari=JSON.parse(infoUsuari)
+            console.log(infoUsuari)
             comanda.id_usuari=infoUsuari[0].id_usuari
 
         var resultat = insertComanda(connection, comanda).then((resultat) => {
