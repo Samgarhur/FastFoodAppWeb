@@ -15,7 +15,7 @@
     
 <script>
 
-import { comandaFinalitzada, getComandasAceptadas } from './communicationsManager';
+//import { comandaFinalitzada, getComandasAceptadas } from './communicationsManager';
 import { socket, state } from './socket';
 export default {
     name: 'GestioEstaditiques',

@@ -16,7 +16,7 @@ const routes = [
   },
   {
     path: '/gestioestadistiques',
-    component: () => import('@/components/gestioEstadistiques.vue'),
+    component: () => import('@/components/GestioEstadistiques.vue'),
   }   
 ]
 
