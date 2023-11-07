@@ -24,6 +24,7 @@ async function getUsuariInfo(connection, user) {
     try {
         const [rows, fields] = await connection.execute('SELECT * FROM Usuari WHERE usuario='+"'"+user+"'");
         const usuariosJSON = JSON.stringify(rows);
+        console.log("a:"+usuariosJSON)
         return usuariosJSON;
     } catch (error) {
         console.error('Error al obtener usuarios:', error.message);

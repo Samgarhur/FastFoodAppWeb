@@ -87,12 +87,14 @@ app.post("/crearComanda", function (req, res) {
      comanda = 
      {
         id_usuari:"",
-        productes:req.body.productos,
-        hora_recollida:req.body.hora,
-        dia_recollida:req.body.dia
+        productes:req.body[0].productos,
+        hora_recollida:req.body[0].hora,
+        dia_recollida:req.body[0].dia
     }
         var infoUsuari = getUsuariInfo(connection, usuariLog).then((infoUsuari) => {
+            console.log(infoUsuari)
             infoUsuari=JSON.parse(infoUsuari)
+            console.log(infoUsuari)
             comanda.id_usuari=infoUsuari[0].id_usuari
 
         var resultat = insertComanda(connection, comanda).then((resultat) => {
@@ -340,6 +342,7 @@ async function comprobarExistencia(fotografia) {
     })
 }//llegir el directori de fotografies 
 function base64_encode(file) {
+    console.log(file)
     // read binary data
     var bitmap = fs.readFileSync(file);
     // convert binary data to base64 encoded string
@@ -395,17 +398,20 @@ app.get('/py', function(req, res){
     //passar grafics
     arxiu={"titol":"", "foto":""}
     arxius=[]
-    /*comprobarExistencia(ubicacioGrafics).then((grafics)=>{
+    comprobarExistencia(ubicacioGrafics).then((grafics)=>{
         for(var i=0; i<grafics.length; i++){
+            console.log(i)
+           // console.log(ubicacioGrafics+"/"+grafics[i])
             arxiu=
             {
                 titol:grafics[i],
-                foto:base64_encode[ubicacioGrafics+"/"+grafics[i]]
+                foto:base64_encode(ubicacioGrafics+"/"+grafics[i])
             }
+            console.log(arxiu)
             arxius[i]=arxiu
         }
-        arxius=JSON.parse(arxius)
-        res.json(arxius)})*/
+        //arxius=JSON.parse(arxius)
+        res.json(arxius)})
     })
 })
 
