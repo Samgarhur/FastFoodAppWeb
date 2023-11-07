@@ -105,14 +105,14 @@ app.post("/crearComanda", function (req, res) {
 })//crear la comanda a la bbdd
 app.post("/registrarUsuari", function(req, res){
     nouUsuari={
-        "usuario":req.body.user,
+        "usuario":req.body.usuario,
         "nom":req.body.nom,
-        "cognom":req.body.cognom,
-        "passwd":req.body.contra,
-        "nTargeta":req.body.tarjeta,
-        "cvv":req.body.cvv,
-        "dataCaducitat":req.body.data,
-        "correu":req.body.mail
+        "cognom":req.body.cognoms,
+        "passwd":req.body.passwd,
+        "nTargeta":req.body.nTarjeta,
+        "cvv":req.body.CVV,
+        "dataCaducitat":req.body.DataCaducitat,
+        "correu":req.body.correu
     }
     autoritzacio = { "autoritzacio": false };
     auto=registrarUsuari(connection, nouUsuari).then((auto)=>{
