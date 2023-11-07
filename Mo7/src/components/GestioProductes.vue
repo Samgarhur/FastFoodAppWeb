@@ -32,7 +32,7 @@
           <v-card-subtitle>Descripcio: {{ producte.descripcio }}</v-card-subtitle>
           <v-card-subtitle>Preu: {{ producte.preu }}</v-card-subtitle>
           <v-card-title :class="{ 'producteActivat': producte.estat, 'producteDesactivat': !producte.estat }">
-              {{ producte.estat ? 'Producte activat (amb stock)' : 'Producte desactivat (sense stock)' }}
+              {{ producte.estat ? 'Producte activat' : 'Producte desactivat' }}
             </v-card-title>
           <v-img :src="decodeBase64Image(producte.foto)" class="imatge" height="300" width="300" contain></v-img>
           <v-card-actions>
