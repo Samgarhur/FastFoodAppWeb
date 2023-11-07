@@ -49,7 +49,7 @@
   
 <script>
 
-import { getComandas } from './communicationsManager';
+//import { getComandas } from './communicationsManager';
 import { socket, state } from './socket';
 export default {
   name: 'RecepcioComandes',

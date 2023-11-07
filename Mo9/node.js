@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const PORT = 3001;
+const PORT = 3044;
 const mysql = require('mysql2/promise');
 const fs = require("fs");
 const bodyParser = require('body-parser')
@@ -40,9 +40,9 @@ app.use(session({
 }))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-app.listen(PORT, function () {
+/*app.listen(PORT, function () {
     console.log("server running")
-})
+})*/
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
     user: "a22albcormad_botigaG7",
@@ -215,8 +215,8 @@ app.get("/getComandasFinalizadas", async function (req, res) {
 });
 
 //-----------Conexion con socket-----------------------------------------------------//
-server.listen(3002, () => {
-    console.log('Server Socket running at http://localhost:3002');
+server.listen(PORT, () => {
+    console.log('Server Socket running at http://pfcgrup7.dam.inspedralbes.cat:3044');
 });
 io.on('connection', (socket) => {
     console.log('Usuario conectado');
@@ -407,7 +407,7 @@ async function comensarPython() {
     
     
 }
-app.get('/py', function(req, res){
+app.get('/getPython', function(req, res){
     console.log("entrant a python")
     //generar grafics
     comensarPython().then(()=>{
@@ -430,7 +430,17 @@ app.get('/py', function(req, res){
         res.json(arxius)})
     })
 })
-setInterval(comensarPython, 24 * 60 * 60 * 1000);
+
+/*** LES SEGUENTS LINIES SON IMPORTANTS PER PODER TENIR RUTES DE CLIENT */
+var history =require ('connect-history-api-fallback')
+const staticFileMiddleware = express.static('../dist');
+app.use(staticFileMiddleware);
+app.use(history({
+  disableDotRule: true,
+  verbose: true
+}));
+app.use(staticFileMiddleware);
+//setInterval(comensarPython, 24 * 60 * 60 * 1000);
 
 //movil - node-> enviar usuari, demanar productes i enviar comanda
 //vue - node -> demanar i enviar productes i comandes

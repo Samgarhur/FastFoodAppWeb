@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { getComandasFinalizadas, comandaRecogida } from './communicationsManager';
+//import { getComandasFinalizadas, comandaRecogida } from './communicationsManager';
 import { socket, state } from './socket';
 
 export default {
