@@ -418,9 +418,10 @@ app.get('/getPython', function(req, res){
         for(var i=0; i<grafics.length; i++){
             console.log(i)
            // console.log(ubicacioGrafics+"/"+grafics[i])
+           nomArxius=grafics[i].split(".")
             arxiu=
             {
-                titol:grafics[i],
+                titol:nomArxius[0],
                 foto:base64_encode(ubicacioGrafics+"/"+grafics[i])
             }
             console.log(arxiu)
