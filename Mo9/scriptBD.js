@@ -163,15 +163,48 @@ async function insertProdComand(connection, productes, id_comanda) {
 
 
 async function getComandaFinalizada(connection) {
-    try {
-        const [rows, fields] = await connection.execute('SELECT * FROM Comanda WHERE estat = \'finalitzada\'');
-        const comandasJSON = JSON.stringify(rows);
-        return comandasJSON;
-    } catch (error) {
-        console.error('Error al obtener las comandas finalizadas:', error.message);
-        throw error;
+        try {
+            const queryString = `
+                SELECT C.id_comanda, C.id_usuari,C.data_comanda, U.usuario as nombre_usuario, P.nom AS nombre_producto, CP.quantitat
+                FROM Comanda_Producte CP
+                JOIN Comanda C ON CP.id_comanda = C.id_comanda
+                JOIN Producte P ON CP.id_producte = P.id_producte
+                JOIN Usuari U ON C.id_usuari = U.id_usuari           
+                WHERE estat = 'finalitzada';
+            `;
+            
+            const [rows, fields] = await connection.execute(queryString);
+    
+            // Organizar los resultados por id_comanda
+            const comandesOrganizados = rows.reduce((result, row) => {
+                const { id_comanda, id_usuari, data_comanda, nombre_usuario, nombre_producto, quantitat } = row;
+    
+                if (!result[id_comanda]) {
+                    result[id_comanda] = {
+                        id_comanda,
+                        id_usuari,
+                        data_comanda,
+                        nombre_usuario,
+                        productos: [],
+                    };
+                }
+    
+                result[id_comanda].productos.push({
+                    nombre_producto,
+                    quantitat,
+                });
+    
+                return result;
+            }, {});
+    
+            // Convertir a JSON
+            const comandesJSON = JSON.stringify(Object.values(comandesOrganizados));
+            return comandesJSON;
+        } catch (error) {
+            console.error('Error al obtener las comandas aceptadas:', error.message);
+            throw error;
+        }
     }
-}
 
 
 
