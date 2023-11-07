@@ -78,6 +78,7 @@ export default {
       snackbarMessage: '', // Mensaje del Snackbar
     };
   },
+  
   methods: {
     veureDetalls(id) {
       this.mostrarDetalls = true;
