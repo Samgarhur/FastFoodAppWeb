@@ -391,7 +391,7 @@ async function comensarPython() {
     
     
 }
-app.get('/py', function(req, res){
+app.get('/getPython', function(req, res){
     console.log("entrant a python")
     //generar grafics
     comensarPython().then(()=>{

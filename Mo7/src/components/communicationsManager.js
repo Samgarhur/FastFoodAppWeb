@@ -115,4 +115,11 @@ export async function updateEstatProducte(id,estat) {
 
 }
 
+//Funcion para coger las estadisticas del servidor
+export async function getPython() {
+  const response = await fetch('http://pfcgrup7.dam.inspedralbes.cat:3044/getPython');
+  const grafics = await response.json();
+  return grafics
+}
+
 
