@@ -2,6 +2,7 @@
   <v-container>
     <v-card v-for="comanda in comandes" :key="comanda.id_comanda" class="mb-3">
       <v-card-title class="headline">Comanda {{ comanda.id_comanda }}</v-card-title>
+      <v-card-title class="headline">Persona a recollir la comanda: {{ comanda.nombre_usuario }}</v-card-title>
 
       <v-dialog v-model="dialog[comanda.id_comanda]" max-width="300">
         <template v-slot:activator="{ on }">
