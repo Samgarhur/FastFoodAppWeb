@@ -7,7 +7,7 @@ const fs = require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandesSenceres, getProductes, getUsuariInfo, getComandesProductes, getComandaAceptada,getComandaFinalizada, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda, updateEstatProducte,updateTempsComanda } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandesSenceres,registrarUsuari, getProductes, getUsuariInfo, getComandesProductes, getComandaAceptada,getComandaFinalizada, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda, updateEstatProducte,updateTempsComanda } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies/");
 const ubicacioGrafics = path.join(__dirname, "..", "Mo10/grafics");
@@ -103,7 +103,23 @@ app.post("/crearComanda", function (req, res) {
         })
         })
 })//crear la comanda a la bbdd
-
+app.post("/registrarUsuari", function(req, res){
+    nouUsuari={
+        "usuario":req.body.user,
+        "nom":req.body.nom,
+        "cognom":req.body.cognom,
+        "passwd":req.body.contra,
+        "nTargeta":req.body.tarjeta,
+        "cvv":req.body.cvv,
+        "dataCaducitat":req.body.data,
+        "correu":req.body.mail
+    }
+    autoritzacio = { "autoritzacio": false };
+    auto=registrarUsuari(connection, nouUsuari).then((auto)=>{
+        autoritzacio.autoritzacio=auto
+        res.json(autoritzacio)
+    })
+})
 //----------------cosses vue------------------------------------------------------------------------//
 app.post("/agregarProducte", function (req, res) {
     nouProducte = req.body
@@ -414,7 +430,7 @@ app.get('/py', function(req, res){
         res.json(arxius)})
     })
 })
-//setInterval(comensarPython, 24 * 60 * 60 * 1000);
+setInterval(comensarPython, 24 * 60 * 60 * 1000);
 
 //movil - node-> enviar usuari, demanar productes i enviar comanda
 //vue - node -> demanar i enviar productes i comandes

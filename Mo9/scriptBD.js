@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin, insertComanda, getProductes, getComandesSenceres, getComandaAceptada,getComandaFinalizada,getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatProducte,updateEstatComanda,updateTempsComanda};
+module.exports = {getUsuarisLogin,registrarUsuari, insertComanda, getProductes, getComandesSenceres, getComandaAceptada,getComandaFinalizada,getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatProducte,updateEstatComanda,updateTempsComanda};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -31,6 +31,28 @@ async function getUsuariInfo(connection, user) {
         throw error;
     }
 }
+
+async function registrarUsuari(connection, usuari){
+    try {
+        // INSERT
+        console.log(usuari)
+        const { usuario, nom, cognom, passwd, nTargeta, cvv, dataCaducitat, correu } = usuari;
+        const [result] = await connection.execute(
+            'INSERT INTO Usuari (usuario, nom, cognoms, passwd, nTargeta, CVV, DataCaducitat, correu) VALUES (?,?,?,?,?,?,?,?)',
+            [usuario, nom, cognom, passwd, nTargeta, cvv, dataCaducitat, correu]
+        );
+
+        // Casos Error
+        if (result.affectedRows === 1) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error('Error al insertar usuari:', error.message);
+        throw error;
+    }
+}
 /*-------------------Comandes------------------*/
 
 
@@ -44,7 +66,6 @@ async function getComandesSenceres(connection) {
         throw error;
     }
 }
-
 async function getComandesProductes(connection) {
     try {
         const queryString = `
@@ -98,7 +119,6 @@ async function getNumComanda(connection) {
         throw error;
     }
 }
-
 async function insertComanda(connection, comandaData) {
     try {
         // INSERT
