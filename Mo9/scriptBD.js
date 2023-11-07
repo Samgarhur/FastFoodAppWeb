@@ -170,7 +170,7 @@ async function getComandaFinalizada(connection) {
                 JOIN Comanda C ON CP.id_comanda = C.id_comanda
                 JOIN Producte P ON CP.id_producte = P.id_producte
                 JOIN Usuari U ON C.id_usuari = U.id_usuari           
-                WHERE estat = 'finalitzada';
+                WHERE C.estat = "finalitzada";
             `;
             
             const [rows, fields] = await connection.execute(queryString);
@@ -201,7 +201,7 @@ async function getComandaFinalizada(connection) {
             const comandesJSON = JSON.stringify(Object.values(comandesOrganizados));
             return comandesJSON;
         } catch (error) {
-            console.error('Error al obtener las comandas aceptadas:', error.message);
+            console.error('Error al obtener las comandas finalizadas:', error.message);
             throw error;
         }
     }
