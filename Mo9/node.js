@@ -391,11 +391,11 @@ async function comensarPython() {
             data[1]=comandas
             console.log("373")
             //generar grafics
-            console.log(arxiuPython)
+            //console.log(arxiuPython)
             data=JSON.stringify(data)
             console.log("377")
             //console.log(data)
-            py=spawn('python', [arxiuPython, data])
+            py=spawn('python3', [arxiuPython, data])
             py.stdout.on('data', (data) => {
                 console.log(`Resultado de Python: ${data}`);
             });
@@ -424,7 +424,7 @@ app.get('/getPython', function(req, res){
                 titol:nomArxius[0],
                 foto:base64_encode(ubicacioGrafics+"/"+grafics[i])
             }
-            console.log(arxiu)
+            //console.log(arxiu)
             arxius[i]=arxiu
         }
         //arxius=JSON.parse(arxius)
