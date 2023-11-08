@@ -288,11 +288,11 @@ io.on('connection', (socket) => {
     });
     socket.on('ComandasUsuari', async () => {
         console.log("Entro a comandas usuari")
-        var User = getUsuariInfo(connection, usuariLog)
+        var User = await getUsuariInfo(connection, usuariLog)
         var User = JSON.parse(User)
         var idUser = User[0].id_usuari
         console.log("Cojo el usuario con getusuari")
-        var comandas = getComandasUsuario(connection, idUser)
+        var comandas = await getComandasUsuario(connection, idUser)
         socket.emit('getComandasUsuari', JSON.parse(comandas));
 
     });
