@@ -258,7 +258,7 @@ export default {
   top: 1rem;
   left: 1rem;
   height: 55px;
-  background-color: #66B3FF;
+  background-color: #e74c3c;
   color: #fff;
   border: none;
   border-radius: 50px;
@@ -275,7 +275,7 @@ export default {
 }
 
 .my-button-class:hover {
-  background-color: #0056b3;
+  background-color: #c0392b;
 }
 
 .custom-button:last-child,

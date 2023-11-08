@@ -2,7 +2,6 @@
   <div class="page">
     <v-btn class="home-button" @click="redirectToHome">
       <img src="./home.png" alt="icono Pag Principal" width="40" height="45">
-      <span class="home-text">Inici</span>
     </v-btn>
 
     <v-container>
@@ -75,7 +74,7 @@ export default {
   top: 1rem;
   left: 1rem;
   height: 55px;
-  background-color: #66B3FF;
+  background-color: #e74c3c;
   color: #fff;
   border: none;
   border-radius: 50px;
@@ -87,7 +86,7 @@ export default {
 }
 
 .home-button:hover {
-  background-color: #0056b3;
+  background-color: #c0392b;
 }
 
 .home-text {
@@ -104,7 +103,7 @@ export default {
   margin-right: 1rem;
   padding: 1rem 2rem;
   font-size: 1.2rem;
-  background-color: #66B3FF;
+  background-color: #e74c3c;
   color: #fff;
   border: none;
   border-radius: 50px;
@@ -120,7 +119,7 @@ export default {
 }
 
 .custom-button:hover {
-  background-color: #0056b3;
+  background-color: #c0392b;
 }
 
 .comandas-container {
