@@ -229,25 +229,26 @@ async function getComandaFinalizada(connection) {
 async function getComandasUsuario(connection, id) {
         try {
             const queryString = `
-                SELECT C.id_comanda, C.id_usuari,C.data_comanda, U.usuario as nombre_usuario, P.nom AS nombre_producto, CP.quantitat
+                SELECT C.id_comanda, C.id_usuari,C.data_comanda, C.estat U.usuario as nombre_usuario, P.nom AS nombre_producto, CP.quantitat
                 FROM Comanda_Producte CP
                 JOIN Comanda C ON CP.id_comanda = C.id_comanda
                 JOIN Producte P ON CP.id_producte = P.id_producte
                 JOIN Usuari U ON C.id_usuari = U.id_usuari           
-                WHERE id_usuario = ?; ,` [id];
+                WHERE C.id_usuario = ?; ,` [id];
             ;
             
             const [rows, fields] = await connection.execute(queryString);
     
             // Organizar los resultados por id_comanda
             const comandesOrganizados = rows.reduce((result, row) => {
-                const { id_comanda, id_usuari, data_comanda, nombre_usuario, nombre_producto, quantitat } = row;
+                const { id_comanda, id_usuari, data_comanda, estat, nombre_usuario, nombre_producto, quantitat } = row;
     
                 if (!result[id_comanda]) {
                     result[id_comanda] = {
                         id_comanda,
                         id_usuari,
                         data_comanda,
+                        estat,
                         nombre_usuario,
                         productos: [],
                     };
