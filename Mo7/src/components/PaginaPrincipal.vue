@@ -4,7 +4,7 @@
     <div class="button-container">
       <v-btn class="custom-button" @click="$router.push('/GestioComandes')">Gestió de Comandes</v-btn>
       <v-btn class="custom-button" @click="$router.push('/gestioProductes')">Gestió de Productes</v-btn>
-      <v-btn class="custom-button" @click="$router.push('/gestioEstadistiques')">Estadistiques</v-btn>
+      <v-btn class="custom-button" @click="$router.push('/gestioEstadistiques')">Estadístiques</v-btn>
     </div>
   </div>
 </template>
@@ -33,9 +33,9 @@
 
 .custom-button {
   margin-bottom: 1.5rem;
-  padding: 1.5rem 3rem;
-  font-size: 1.5rem;
-  background-color: #66B3FF; 
+  padding: 1.3rem 2.6rem;
+  font-size: 1.3rem;
+  background-color: #e74c3c;
   color: #fff; 
   border: none;
   border-radius: 20px; 
@@ -48,6 +48,6 @@
 }
 
 .custom-button:hover {
-  background-color: #0056b3; 
+  background-color: #c0392b;
 }
 </style>
