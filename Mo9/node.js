@@ -84,12 +84,13 @@ app.get("/dadesUsuari", function (req, res) {
     })
 })//pasar dades del usuari a android
 app.post("/crearComanda", function (req, res) {
+    //console.log(req.body)
      comanda = 
      {
         id_usuari:"",
         productes:req.body[0].productos,
-        hora_recollida:req.body[0].hora,
-        dia_recollida:req.body[0].dia
+        hora_recollida:req.body[0].hora_recollida,
+        dia_recollida:req.body[0].dia_recollida
     }
         var infoUsuari = getUsuariInfo(connection, usuariLog).then((infoUsuari) => {
             console.log(infoUsuari)
