@@ -229,7 +229,7 @@ async function getComandaFinalizada(connection) {
 async function getComandasUsuario(connection, id) {
         try {
             const queryString = `
-                SELECT C.id_comanda, C.id_usuari,C.data_comanda, C.estat U.usuario as nombre_usuario, P.nom AS nombre_producto, CP.quantitat
+                SELECT C.id_comanda, C.id_usuari,C.data_comanda, C.estat, U.usuario as nombre_usuario, P.nom AS nombre_producto, CP.quantitat
                 FROM Comanda_Producte CP
                 JOIN Comanda C ON CP.id_comanda = C.id_comanda
                 JOIN Producte P ON CP.id_producte = P.id_producte
