@@ -287,10 +287,12 @@ io.on('connection', (socket) => {
 
     });
     socket.on('ComandasUsuari', async () => {
-        User = getUsuariInfo(connection, usuariLog)
-        User = JSON.parse(User)
-        idUser = User[0].id_usuari
-        comandas = getComandasUsuario(connection, idUser)
+        console.log("Entro a comandas usuari")
+        var User = getUsuariInfo(connection, usuariLog)
+        var User = JSON.parse(User)
+        var idUser = User[0].id_usuari
+        console.log("Cojo el usuario con getusuari")
+        var comandas = getComandasUsuario(connection, idUser)
         socket.emit('getComandasUsuari', JSON.parse(comandas));
 
     });
