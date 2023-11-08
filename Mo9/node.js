@@ -385,7 +385,8 @@ function base64_encode(file) {
 
 
 //-------------py-----------------//
-async function comensarPython() {
+async function comensarPython(generar) {
+    if(generar){
     console.log("dintre de la generacio de grafics")
     //passar dades
     data=[]
@@ -411,13 +412,13 @@ async function comensarPython() {
             });
         })
     })
-    
-    
+    }
 }
 app.get('/getPython', function(req, res){
+    generar=req.body
     console.log("entrant a python")
     //generar grafics
-    comensarPython().then(()=>{
+    comensarPython(generar).then(()=>{
     //passar grafics
     arxiu={"titol":"", "foto":""}
     arxius=[]
