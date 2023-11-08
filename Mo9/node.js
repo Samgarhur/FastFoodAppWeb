@@ -140,7 +140,8 @@ app.post("/agregarProducte", function (req, res) {
         let obj = id[0];
         let valor = obj['MAX(id_producte)'];
         let numProd = valor 
-        descargarImagen(novaFoto, ubicacioArxius +"00"+ numProd + ".jpeg")
+        numProd=numProd+1000
+        descargarImagen(novaFoto, ubicacioArxius + numProd + ".jpeg")
         })
     })
         .catch(console.error);
@@ -159,9 +160,10 @@ app.put("/modificarProducte/:id", function (req, res) {
     console.log(producteModificat)
     novaFoto = producteModificat.foto
     //separar la foto al seu director
+    producteId=producteId+1000
         if (producteModificat.modificarFoto) {
-            fs.unlinkSync(ubicacioArxius +"00"+ producteId + ".jpeg")
-            descargarImagen(novaFoto, ubicacioArxius +"00"+ producteId+  ".jpeg")
+            fs.unlinkSync(ubicacioArxius +producteId + ".jpeg")
+            descargarImagen(novaFoto, ubicacioArxius +producteId+  ".jpeg")
                 .then(() =>
                     //console.log('Imagen descargada con éxito')d
                     updateProducte(connection, producteId, producteModificat)
@@ -208,7 +210,6 @@ app.get("/getComandes", async function (req, res) {
         res.status(500).send('Error al obtener datos de comandas.');
     }
 });
-
 app.get("/getComandasFinalizadas", async function (req, res) {
     try {
         const comandes = await getComandaFinalizada(connection);
@@ -449,7 +450,8 @@ app.use(history({
   verbose: true
 }));
 app.use(staticFileMiddleware);
-//setInterval(comensarPython, 24 * 60 * 60 * 1000);
+
+setInterval(comensarPython, 24 * 60 * 60 * 1000);
 
 //movil - node-> enviar usuari, demanar productes i enviar comanda
 //vue - node -> demanar i enviar productes i comandes
