@@ -87,6 +87,7 @@ export async function updateProducte(id,dadesProductemodificar) {
   console.log(dadesProductemodificar)
   console.log(id)
   const response = await fetch(`http://pfcgrup7.dam.inspedralbes.cat:3044/modificarProducte/${id}`,
+  //const response = await fetch(`http://localhost:3044/modificarProducte/${id}`,
     {
       method: 'PUT', 
       headers: {

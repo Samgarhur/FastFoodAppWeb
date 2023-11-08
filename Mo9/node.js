@@ -20,7 +20,7 @@ var usuariLog //guardem el nom del usuari logejat aqui
 
 const { createServer } = require('http');
 const { Server } = require('socket.io');
-const { timeStamp } = require("console");
+const { timeStamp, Console } = require("console");
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
@@ -139,8 +139,10 @@ app.post("/agregarProducte", function (req, res) {
         //console.log(id[0].MAX(id_producte), "2")
         let obj = id[0];
         let valor = obj['MAX(id_producte)'];
-        let numProd = valor 
+        let numProd = valor
+        console.log(numProd) 
         numProd=numProd+1000
+        console.log(numProd)
         descargarImagen(novaFoto, ubicacioArxius + numProd + ".jpeg")
         })
     })
@@ -156,7 +158,7 @@ app.delete("/eliminarProducte/:id", function (req, res) {
 app.put("/modificarProducte/:id", function (req, res) {
     console.log("Entra en modificar producte");
     const producteModificat = req.body
-    const producteId = req.params.id
+    var producteId = req.params.id
     console.log(producteModificat)
     novaFoto = producteModificat.foto
     //separar la foto al seu director
