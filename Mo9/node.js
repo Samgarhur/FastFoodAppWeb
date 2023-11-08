@@ -288,13 +288,12 @@ io.on('connection', (socket) => {
 
 });
     socket.on('ComandasUsuari', async () => {
-        User=getUsuariInfo(connection, usuariLog).then((User)=>{
+        User=getUsuariInfo(connection, usuariLog)
             User=JSON.parse(User)
             idUser=User[0].id_usuari
-            comandas=getComandasUsuario(connection, idUser).then((comandas)=>{
+            comandas=getComandasUsuario(connection, idUser)
                 socket.emit('getComandasUsuari', JSON.parse(comandas));
-            })
-        })
+        
 });
     // Escuchar la solicitud de comanda aceptada
     socket.on('comandaAceptada', (id, estat) => {
