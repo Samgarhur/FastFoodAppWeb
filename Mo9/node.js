@@ -117,6 +117,11 @@ app.post("/registrarUsuari", function(req, res){
     autoritzacio = { "autoritzacio": false };
     auto=registrarUsuari(connection, nouUsuari).then((auto)=>{
         autoritzacio.autoritzacio=auto
+        if( autoritzacio.autoritzacio)
+        {
+            req.session.nombre = req.body.usuario;
+            usuariLog=req.session.nombre
+        }
         res.json(autoritzacio)
     })
 })
