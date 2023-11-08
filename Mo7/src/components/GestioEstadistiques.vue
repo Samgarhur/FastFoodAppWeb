@@ -3,12 +3,12 @@
         <img src="./home.png" alt="icono Pag Principal" width="40" height="45">
     </button>
     <v-container>
-        <v-btn class="ma-2" @click="dialogCrearProducte = true">Recargar estadistiques</v-btn>
+        <v-btn class="ma-2">Recargar estadistiques</v-btn>
     </v-container>
     <v-container>
         <v-card v-for="estadistica in estadistiques">
             <v-card-title>{{ estadistica.titol }}</v-card-title>
-            <v-img :src="decodeBase64Image(estadistica.foto)" height="150" width="150" cover></v-img>
+            <v-img :src="decodeBase64Image(estadistica.foto)" height="1000" width="1500" cover></v-img>
         </v-card>
     </v-container>
 </template>
@@ -34,7 +34,7 @@ export default {
                 bytes[i] = binaryString.charCodeAt(i);
             }
             const blob = new Blob([bytes], { type: "image/jpeg" }); // Ajusta el tipo MIME según tu imagen
-            this.producteEditat.foto = URL.createObjectURL(blob);
+            this.estadistiques.foto = URL.createObjectURL(blob);
             return URL.createObjectURL(blob);
         }
 

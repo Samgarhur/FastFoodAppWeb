@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="title">Administració de la Botiga</h1>
+    <img src="./PedralbesLogo.png" alt="Pedralbes Logo" height="400" width="400"/>    
     <div class="button-container">
       <v-btn class="custom-button" @click="$router.push('/GestioComandes')">Gestió de Comandes</v-btn>
       <v-btn class="custom-button" @click="$router.push('/gestioProductes')">Gestió de Productes</v-btn>
@@ -16,13 +16,13 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f4f4f4; /* Cambia el color de fondo a tu preferencia */
+  background-color: #f4f4f4; 
 }
 
 .title {
   font-size: 2.5rem;
   margin-bottom: 2rem;
-  color: #333; /* Cambia el color del título a tu preferencia */
+  color: #333; 
 }
 
 .button-container {
@@ -33,20 +33,21 @@
 
 .custom-button {
   margin-bottom: 1.5rem;
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
-  background-color: #66B3FF; /* Cambia el color de fondo del botón a tu preferencia */
-  color: #fff; /* Cambia el color del texto del botón a tu preferencia */
+  padding: 1.5rem 3rem;
+  font-size: 1.5rem;
+  background-color: #66B3FF; 
+  color: #fff; 
   border: none;
-  border-radius: 50px; /* Hace que los botones sean redondos */
+  border-radius: 20px; 
+  font-family: 'Roboto', sans-serif;
   cursor: pointer;
   display: flex;
-  align-items: center; /* Centra el texto verticalmente en el botón */
-  justify-content: center; /* Centra el texto horizontalmente en el botón */
-  transition: background-color 0.3s ease;
+  align-items: center; 
+  justify-content: center; 
+  transition: background-color 0.3s ease;  
 }
 
 .custom-button:hover {
-  background-color: #0056b3; /* Cambia el color de fondo al pasar el mouse por encima */
+  background-color: #0056b3; 
 }
 </style>

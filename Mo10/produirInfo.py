@@ -95,11 +95,11 @@ def ComandesXdia (info2): #pedidos por dia xDias, yPedidos json=comandes  refer
 
 def DinersPerDia(info2): #dinero por dia xDias, yDinero json=join productes, comandes, comandaProd    refer
     # Llegir les dades de les comandes i els productes
-    comandes_df = pd.read_json(info2, lines=True)
-    productes_df = pd.read_json(info2, lines=True)
+    comandes_df = pd.read_json(info2[1], lines=True)
+    productes_df = pd.read_json(info2[0], lines=True)
 
     # Unir les comandes amb els productes fent servir 'comandaProd' i 'idComanda'
-    dades_fusionades = pd.merge(comandes_df, productes_df, left_on='idComanda', right_on='idComanda')
+    dades_fusionades = pd.merge(comandes_df, productes_df, left_on='id_comanda', right_on='id_comanda')
 
     # Calcular els diners totals per dia
     diners_per_dia = dades_fusionades.groupby('dies')['preu'].sum()
@@ -119,13 +119,13 @@ def DinersPerDia(info2): #dinero por dia xDias, yDinero json=join productes, com
 
 def TempsFinalitzarComanda(info2): #tiempo finalizar xidComanda, yTIempo--Recta regresion json=comanda
     # Llegir les dades de les comandes
-    comandes_df = pd.DataFrame(info2['comandas'])
+    comandes_df = pd.DataFrame(info2['1'])
 
     # Filtrar les comandes amb 'idComanda' corresponent
     id_comanda = info2[1]
-    comanda_df = comandes_df[comandes_df['idComanda'] == id_comanda]
+    comanda_df = comandes_df[comandes_df['id_comanda'] == id_comanda]
 
-    x_values = comanda_df['idComanda']
+    x_values = comanda_df['id_comanda']
     y_values = comanda_df['TIempo']  # Suposem que aquesta és la columna que conté el temps
 
     # Realitzar una regressió lineal
