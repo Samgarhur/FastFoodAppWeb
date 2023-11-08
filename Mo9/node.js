@@ -7,7 +7,7 @@ const fs = require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandesSenceres,registrarUsuari, getProductes, getUsuariInfo, getComandesProductes, getComandaAceptada,getComandaFinalizada, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda, updateEstatProducte,updateTempsComanda } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandesSenceres, getComandasUsuario, registrarUsuari, getProductes, getUsuariInfo, getComandesProductes, getComandaAceptada,getComandaFinalizada, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda, updateEstatProducte,updateTempsComanda } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies/");
 const ubicacioGrafics = path.join(__dirname, "..", "Mo10/grafics");
@@ -284,7 +284,15 @@ io.on('connection', (socket) => {
 
 
 });
-
+    socket.on('ComandasUsuari', async () => {
+        User=getUsuariInfo(connection, usuariLog).then((User)=>{
+            User=JSON.parse(User)
+            idUser=User[0].id_usuari
+            comandas=getComandasUsuario(connection, idUser).then((comandas)=>{
+                socket.emit('getComandasUsuari', JSON.parse(comandas));
+            })
+        })
+});
     // Escuchar la solicitud de comanda aceptada
     socket.on('comandaAceptada', (id, estat) => {
         console.log('comanda aceptada numero : ' + id)

@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin,registrarUsuari, insertComanda, getProductes, getComandesSenceres, getComandaAceptada,getComandaFinalizada,getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatProducte,updateEstatComanda,updateTempsComanda};
+module.exports = {getUsuarisLogin, getComandasUsuario, registrarUsuari, insertComanda, getProductes, getComandesSenceres, getComandaAceptada,getComandaFinalizada,getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatProducte,updateEstatComanda,updateTempsComanda};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -226,7 +226,49 @@ async function getComandaFinalizada(connection) {
             throw error;
         }
     }
-
+async function getComandasUsuario(connection, id) {
+        try {
+            const queryString = `
+                SELECT C.id_comanda, C.id_usuari,C.data_comanda, U.usuario as nombre_usuario, P.nom AS nombre_producto, CP.quantitat
+                FROM Comanda_Producte CP
+                JOIN Comanda C ON CP.id_comanda = C.id_comanda
+                JOIN Producte P ON CP.id_producte = P.id_producte
+                JOIN Usuari U ON C.id_usuari = U.id_usuari           
+                WHERE id_usuario = ?; ,` [id];
+            ;
+            
+            const [rows, fields] = await connection.execute(queryString);
+    
+            // Organizar los resultados por id_comanda
+            const comandesOrganizados = rows.reduce((result, row) => {
+                const { id_comanda, id_usuari, data_comanda, nombre_usuario, nombre_producto, quantitat } = row;
+    
+                if (!result[id_comanda]) {
+                    result[id_comanda] = {
+                        id_comanda,
+                        id_usuari,
+                        data_comanda,
+                        nombre_usuario,
+                        productos: [],
+                    };
+                }
+    
+                result[id_comanda].productos.push({
+                    nombre_producto,
+                    quantitat,
+                });
+    
+                return result;
+            }, {});
+    
+            // Convertir a JSON
+            const comandesJSON = JSON.stringify(Object.values(comandesOrganizados));
+            return comandesJSON;
+        } catch (error) {
+            console.error('Error al obtener las comandas finalizadas:', error.message);
+            throw error;
+        }
+    }
 
 
 async function getComandaAceptada(connection) {
