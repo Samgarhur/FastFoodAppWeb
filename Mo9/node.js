@@ -162,16 +162,19 @@ app.put("/modificarProducte/:id", function (req, res) {
     console.log(producteModificat)
     novaFoto = producteModificat.foto
     //separar la foto al seu director
-    producteId=producteId+1000
+    var idmodificada= parseInt(producteId, 10)+1000
+    console.log(idmodificada)
         if (producteModificat.modificarFoto) {
-            fs.unlinkSync(ubicacioArxius +producteId + ".jpeg")
-            descargarImagen(novaFoto, ubicacioArxius +producteId+  ".jpeg")
+            fs.unlinkSync(ubicacioArxius +idmodificada + ".jpeg")
+            descargarImagen(novaFoto, ubicacioArxius +idmodificada+  ".jpeg")
                 .then(() =>
                     //console.log('Imagen descargada con éxito')d
+                    
                     updateProducte(connection, producteId, producteModificat)
                 )
         }
         else
+            
             updateProducte(connection, producteId, producteModificat)
     
         .catch(console.error);
