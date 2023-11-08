@@ -109,7 +109,7 @@ app.post("/registrarUsuari", function(req, res){
         "nom":req.body.nom,
         "cognom":req.body.cognoms,
         "passwd":req.body.passwd,
-        "nTargeta":req.body.nTarjeta,
+        "nTargeta":req.body.nTargeta,
         "cvv":req.body.CVV,
         "dataCaducitat":req.body.DataCaducitat,
         "correu":req.body.correu

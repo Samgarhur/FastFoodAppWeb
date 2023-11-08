@@ -123,10 +123,10 @@ async function insertComanda(connection, comandaData) {
     try {
         // INSERT
         console.log(comandaData)
-        const { id_usuari, productes } = comandaData;
+        const { id_usuari, productes, hora_recollida, dia_recollida  } = comandaData;
         const [result] = await connection.execute(
-            'INSERT INTO Comanda (id_usuari) VALUES (?)',
-            [id_usuari]
+            'INSERT INTO Comanda (id_usuari, hora_recollida,dia_recollida ) VALUES (?,?,?)',
+            [id_usuari,hora_recollida,dia_recollida]
         );
 
         //Obtenir id comanda de la comanda inserida
