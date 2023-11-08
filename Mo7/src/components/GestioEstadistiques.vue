@@ -3,7 +3,7 @@
         <img src="./home.png" alt="icono Pag Principal" width="40" height="45">
     </button>
     <v-container>
-        <v-btn class="ma-2">Recargar estadistiques</v-btn>
+        <v-btn class="ma-2" @click="recargaEstadistiques()">Recargar estadistiques</v-btn>
     </v-container>
     <v-container>
         <v-card v-for="estadistica in estadistiques">
@@ -22,8 +22,9 @@ export default {
     data() {
         return {
             estadistiques: [],
-
+            recarga:false
         };
+        
     },
     methods: {
         //Funcion para codificar las imagenes del servidor de base64 a una url
@@ -36,11 +37,20 @@ export default {
             const blob = new Blob([bytes], { type: "image/jpeg" }); // Ajusta el tipo MIME según tu imagen
             this.estadistiques.foto = URL.createObjectURL(blob);
             return URL.createObjectURL(blob);
+        },
+        //Funcion para recargar los graficos de las estadisticas al pulsar el boton
+        recargaEstadistiques(){
+            this.recarga=true;
+            getPython(this.recarga).then(response => {
+            this.estadistiques = response            
+        });
+
         }
 
     },
     created() {
-        getPython().then(response => {
+        this.recarga=false;
+        getPython(this.recarga).then(response => {
             this.estadistiques = response            
         });
 
