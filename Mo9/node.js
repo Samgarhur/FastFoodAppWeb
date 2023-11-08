@@ -7,7 +7,7 @@ const fs = require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandesSenceres, getComandasUsuario, registrarUsuari, getProductes, getUsuariInfo, getComandesProductes, getComandaAceptada,getComandaFinalizada, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda, updateEstatProducte,updateTempsComanda } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandesSenceres, getComandasUsuario, registrarUsuari, getProductes, getUsuariInfo, getComandesProductes, getComandaAceptada, getComandaFinalizada, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda, updateEstatProducte, updateTempsComanda } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies/");
 const ubicacioGrafics = path.join(__dirname, "..", "Mo10/grafics");
@@ -61,12 +61,12 @@ app.post("/usuaris", function (req, res) {
         usuaris = JSON.parse(usuaris)
         for (var i = 0; i < usuaris.length && usuariTrobat == false; i++) {
 
-            if (usuaris[i].usuario == user.usuario  ) {
-                contra=(user.passwd)
-                if (usuaris[i].passwd == contra){
+            if (usuaris[i].usuario == user.usuario) {
+                contra = (user.passwd)
+                if (usuaris[i].passwd == contra) {
                     usuariTrobat = true;
                     req.session.nombre = user.usuario;
-                    usuariLog=req.session.nombre
+                    usuariLog = req.session.nombre
                 }
             }
         }
@@ -85,43 +85,42 @@ app.get("/dadesUsuari", function (req, res) {
 })//pasar dades del usuari a android
 app.post("/crearComanda", function (req, res) {
     //console.log(req.body)
-     comanda = 
-     {
-        id_usuari:"",
-        productes:req.body[0].productos,
-        hora_recollida:req.body[0].hora_recollida,
-        dia_recollida:req.body[0].dia_recollida
+    comanda =
+    {
+        id_usuari: "",
+        productes: req.body[0].productos,
+        hora_recollida: req.body[0].hora_recollida,
+        dia_recollida: req.body[0].dia_recollida
     }
-        var infoUsuari = getUsuariInfo(connection, usuariLog).then((infoUsuari) => {
-            console.log(infoUsuari)
-            infoUsuari=JSON.parse(infoUsuari)
-            console.log(infoUsuari)
-            comanda.id_usuari=infoUsuari[0].id_usuari
+    var infoUsuari = getUsuariInfo(connection, usuariLog).then((infoUsuari) => {
+        console.log(infoUsuari)
+        infoUsuari = JSON.parse(infoUsuari)
+        console.log(infoUsuari)
+        comanda.id_usuari = infoUsuari[0].id_usuari
 
         var resultat = insertComanda(connection, comanda).then((resultat) => {
             resultat = { "autoritzacio": resultat }
             res.send(resultat)
         })
-        })
+    })
 })//crear la comanda a la bbdd
-app.post("/registrarUsuari", function(req, res){
-    nouUsuari={
-        "usuario":req.body.usuario,
-        "nom":req.body.nom,
-        "cognom":req.body.cognoms,
-        "passwd":req.body.passwd,
-        "nTargeta":req.body.nTargeta,
-        "cvv":req.body.CVV,
-        "dataCaducitat":req.body.DataCaducitat,
-        "correu":req.body.correu
+app.post("/registrarUsuari", function (req, res) {
+    nouUsuari = {
+        "usuario": req.body.usuario,
+        "nom": req.body.nom,
+        "cognom": req.body.cognoms,
+        "passwd": req.body.passwd,
+        "nTargeta": req.body.nTargeta,
+        "cvv": req.body.CVV,
+        "dataCaducitat": req.body.DataCaducitat,
+        "correu": req.body.correu
     }
     autoritzacio = { "autoritzacio": false };
-    auto=registrarUsuari(connection, nouUsuari).then((auto)=>{
-        autoritzacio.autoritzacio=auto
-        if( autoritzacio.autoritzacio)
-        {
+    auto = registrarUsuari(connection, nouUsuari).then((auto) => {
+        autoritzacio.autoritzacio = auto
+        if (autoritzacio.autoritzacio) {
             req.session.nombre = req.body.usuario;
-            usuariLog=req.session.nombre
+            usuariLog = req.session.nombre
         }
         res.json(autoritzacio)
     })
@@ -134,16 +133,16 @@ app.post("/agregarProducte", function (req, res) {
     //separar la foto al seu directori
     insertProducte(connection, nouProducte).then(() => {
         id = getNumProductes(connection).then((id) => {
-        console.log(id, "1")
-        id = JSON.parse(id)
-        //console.log(id[0].MAX(id_producte), "2")
-        let obj = id[0];
-        let valor = obj['MAX(id_producte)'];
-        let numProd = valor
-        console.log(numProd) 
-        numProd=numProd+1000
-        console.log(numProd)
-        descargarImagen(novaFoto, ubicacioArxius + numProd + ".jpeg")
+            console.log(id, "1")
+            id = JSON.parse(id)
+            //console.log(id[0].MAX(id_producte), "2")
+            let obj = id[0];
+            let valor = obj['MAX(id_producte)'];
+            let numProd = valor
+            console.log(numProd)
+            numProd = numProd + 1000
+            console.log(numProd)
+            descargarImagen(novaFoto, ubicacioArxius + numProd + ".jpeg")
         })
     })
         .catch(console.error);
@@ -153,7 +152,7 @@ app.post("/agregarProducte", function (req, res) {
 app.delete("/eliminarProducte/:id", function (req, res) {
     const prod = req.params.id
     deleteProducte(connection, prod)
-    fs.unlinkSync(ubicacioArxius + "/" +"00"+ prod + ".jpeg")
+    fs.unlinkSync(ubicacioArxius + "/" + "00" + prod + ".jpeg")
 })//Eliminar productes a la bbdd 
 app.put("/modificarProducte/:id", function (req, res) {
     console.log("Entra en modificar producte");
@@ -162,22 +161,22 @@ app.put("/modificarProducte/:id", function (req, res) {
     console.log(producteModificat)
     novaFoto = producteModificat.foto
     //separar la foto al seu director
-    var idmodificada= parseInt(producteId, 10)+1000
+    var idmodificada = parseInt(producteId, 10) + 1000
     console.log(idmodificada)
-        if (producteModificat.modificarFoto) {
-            fs.unlinkSync(ubicacioArxius +idmodificada + ".jpeg")
-            descargarImagen(novaFoto, ubicacioArxius +idmodificada+  ".jpeg")
-                .then(() =>
-                    //console.log('Imagen descargada con éxito')d
-                    
-                    updateProducte(connection, producteId, producteModificat)
-                )
-        }
-        else
-            
-            updateProducte(connection, producteId, producteModificat)
-    
-        .catch(console.error);
+    if (producteModificat.modificarFoto) {
+        fs.unlinkSync(ubicacioArxius + idmodificada + ".jpeg")
+        descargarImagen(novaFoto, ubicacioArxius + idmodificada + ".jpeg")
+            .then(() =>
+                //console.log('Imagen descargada con éxito')d
+
+                updateProducte(connection, producteId, producteModificat)
+            )
+    }
+    else
+
+        updateProducte(connection, producteId, producteModificat)
+
+            .catch(console.error);
 })//modificar un producte de la bbdd
 app.put("/updateEstatProducte/:id", function (req, res) {
     //console.log("Entra en update estat del producte");
@@ -189,7 +188,7 @@ app.put("/updateEstatProducte/:id", function (req, res) {
 
 
 //----------------General-----------------------------------------------------------------//
-app.get("/getProductos",function (req, res) {
+app.get("/getProductos", function (req, res) {
     result = getProductes(connection).then((result) => {
         result = JSON.parse(result)
         fitxers = comprobarExistencia(ubicacioArxius).then((fitxers) => {
@@ -242,7 +241,7 @@ io.on('connection', (socket) => {
 
 
     });
-    
+
 
     //Para solicitar todas las comandas aceptadas por socket
     socket.on('solicitarComandasAceptadasIniciales', async () => {
@@ -265,7 +264,7 @@ io.on('connection', (socket) => {
 
 
     });
-   
+
 
     //Para solicitar todas los productos por socket
     socket.on('solicitarProductosIniciales', async () => {
@@ -281,20 +280,20 @@ io.on('connection', (socket) => {
         socket.emit('getProductes', JSON.stringify(productesJson));
     });
 
- //Para updatear el estado de los productos por socket
- socket.on('updateEstatProductes', async (id,estat) => {
-    updateEstatProducte(connection, id, estat);      
+    //Para updatear el estado de los productos por socket
+    socket.on('updateEstatProductes', async (id, estat) => {
+        updateEstatProducte(connection, id, estat);
 
 
-});
+    });
     socket.on('ComandasUsuari', async () => {
-        User=getUsuariInfo(connection, usuariLog)
-            User=JSON.parse(User)
-            idUser=User[0].id_usuari
-            comandas=getComandasUsuario(connection, idUser)
-                socket.emit('getComandasUsuari', JSON.parse(comandas));
-        
-});
+        User = getUsuariInfo(connection, usuariLog)
+        User = JSON.parse(User)
+        idUser = User[0].id_usuari
+        comandas = getComandasUsuario(connection, idUser)
+        socket.emit('getComandasUsuari', JSON.parse(comandas));
+
+    });
     // Escuchar la solicitud de comanda aceptada
     socket.on('comandaAceptada', (id, estat) => {
         console.log('comanda aceptada numero : ' + id)
@@ -303,7 +302,7 @@ io.on('connection', (socket) => {
         // Por ejemplo, guardar el estado de la comanda en tu fuente de datos
         // y luego enviar una respuesta al cliente
         updateEstatComanda(connection, id, estat); // Llama a la funcion para cambiar el estado en la BD a aceptada       
-       
+
     });
 
     // Escuchar la solicitud de comanda rebutjada
@@ -318,7 +317,7 @@ io.on('connection', (socket) => {
     });
 
     // Escuchar la solicitud de comanda finalitzada
-    socket.on('comandaFinalitzada', (id, estat,temps) => {
+    socket.on('comandaFinalitzada', (id, estat, temps) => {
         console.log('comanda finalitzada numero : ' + id)
         console.log('estado : ' + estat)
         // Aquí puedes procesar la información (id y estat) como desees
@@ -338,8 +337,8 @@ io.on('connection', (socket) => {
         updateEstatComanda(connection, id, estat); // Llama a la funcion para cambiar el estado en la BD a aceptada        
 
     });
-    
-    
+
+
 
     // Resto de la lógica de tu aplicación...
 })// Manejar la conexión de sockets
@@ -399,67 +398,68 @@ function base64_encode(file) {
 
 //-------------py-----------------//
 async function comensarPython(generar) {
-    if(generar){
-    console.log("dintre de la generacio de grafics")
-    //passar dades
-    data=[]
-    productos=getProductes(connection).then((productos) => {
-        productos=JSON.parse(productos)
-        data[0]=productos
-        console.log("369")
-        comandas=getComandesSenceres(connection).then((comandas) => {
-            comandas=JSON.parse(comandas)
-            data[1]=comandas
-            console.log("373")
-            //generar grafics
-            //console.log(arxiuPython)
-            data=JSON.stringify(data)
-            console.log("377")
-            //console.log(data)
-            py=spawn('python3', [arxiuPython, data])
-            py.stdout.on('data', (data) => {
-                console.log(`Resultado de Python: ${data}`);
-            });
-            py.stderr.on('data', (data) => {
-                console.error(`Error: ${data}`);
-            });
+    if (generar) {
+        console.log("dintre de la generacio de grafics")
+        //passar dades
+        data = []
+        productos = getProductes(connection).then((productos) => {
+            productos = JSON.parse(productos)
+            data[0] = productos
+            console.log("369")
+            comandas = getComandesSenceres(connection).then((comandas) => {
+                comandas = JSON.parse(comandas)
+                data[1] = comandas
+                console.log("373")
+                //generar grafics
+                //console.log(arxiuPython)
+                data = JSON.stringify(data)
+                console.log("377")
+                //console.log(data)
+                py = spawn('python3', [arxiuPython, data])
+                py.stdout.on('data', (data) => {
+                    console.log(`Resultado de Python: ${data}`);
+                });
+                py.stderr.on('data', (data) => {
+                    console.error(`Error: ${data}`);
+                });
+            })
         })
-    })
     }
 }
-app.get('/getPython', function(req, res){
-    generar=req.body
+app.get('/getPython', function (req, res) {
+    generar = req.body
     console.log("entrant a python")
     //generar grafics
-    comensarPython(generar).then(()=>{
-    //passar grafics
-    arxiu={"titol":"", "foto":""}
-    arxius=[]
-    comprobarExistencia(ubicacioGrafics).then((grafics)=>{
-        for(var i=0; i<grafics.length; i++){
-            console.log(i)
-           // console.log(ubicacioGrafics+"/"+grafics[i])
-           nomArxius=grafics[i].split(".")
-            arxiu=
-            {
-                titol:nomArxius[0],
-                foto:base64_encode(ubicacioGrafics+"/"+grafics[i])
+    comensarPython(generar).then(() => {
+        //passar grafics
+        arxiu = { "titol": "", "foto": "" }
+        arxius = []
+        comprobarExistencia(ubicacioGrafics).then((grafics) => {
+            for (var i = 0; i < grafics.length; i++) {
+                console.log(i)
+                // console.log(ubicacioGrafics+"/"+grafics[i])
+                nomArxius = grafics[i].split(".")
+                arxiu =
+                {
+                    titol: nomArxius[0],
+                    foto: base64_encode(ubicacioGrafics + "/" + grafics[i])
+                }
+                //console.log(arxiu)
+                arxius[i] = arxiu
             }
-            //console.log(arxiu)
-            arxius[i]=arxiu
-        }
-        //arxius=JSON.parse(arxius)
-        res.json(arxius)})
+            //arxius=JSON.parse(arxius)
+            res.json(arxius)
+        })
     })
 })
 
 /*** LES SEGUENTS LINIES SON IMPORTANTS PER PODER TENIR RUTES DE CLIENT */
-var history =require ('connect-history-api-fallback')
+var history = require('connect-history-api-fallback')
 const staticFileMiddleware = express.static('../dist');
 app.use(staticFileMiddleware);
 app.use(history({
-  disableDotRule: true,
-  verbose: true
+    disableDotRule: true,
+    verbose: true
 }));
 app.use(staticFileMiddleware);
 
