@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <img src="./PedralbesLogo.png" alt="Pedralbes Logo" height="250" width="250"/>    
+    <img src="./PedralbesLogo.png" alt="Pedralbes Logo" height="400" width="400"/>    
     <div class="button-container">
       <v-btn class="custom-button" @click="$router.push('/GestioComandes')">Gestió de Comandes</v-btn>
       <v-btn class="custom-button" @click="$router.push('/gestioProductes')">Gestió de Productes</v-btn>
@@ -33,18 +33,18 @@
 
 .custom-button {
   margin-bottom: 1.5rem;
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
+  padding: 1.5rem 3rem;
+  font-size: 1.5rem;
   background-color: #66B3FF; 
   color: #fff; 
   border: none;
-  border-radius: 50px; 
+  border-radius: 20px; 
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
   display: flex;
   align-items: center; 
   justify-content: center; 
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;  
 }
 
 .custom-button:hover {

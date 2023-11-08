@@ -8,7 +8,7 @@
     <v-container>
         <v-card v-for="estadistica in estadistiques">
             <v-card-title>{{ estadistica.titol }}</v-card-title>
-            <v-img :src="decodeBase64Image(estadistica.foto)" height="2000" width="2500" cover></v-img>
+            <v-img :src="decodeBase64Image(estadistica.foto)" height="1000" width="1500" cover></v-img>
         </v-card>
     </v-container>
 </template>

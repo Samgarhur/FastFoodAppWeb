@@ -230,6 +230,7 @@ io.on('connection', (socket) => {
 
 
     });
+    
 
     //Para solicitar todas las comandas aceptadas por socket
     socket.on('solicitarComandasAceptadasIniciales', async () => {
