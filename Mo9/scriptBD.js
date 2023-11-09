@@ -245,6 +245,8 @@ async function getComandaFinalizada(connection) {
             throw error;
         }
     }
+
+//Funcion para coger las comandas de un usuario para andorid
 async function getComandasUsuario(connection, id) {
         try {
             const queryString = `
@@ -253,8 +255,9 @@ async function getComandasUsuario(connection, id) {
                 JOIN Comanda C ON CP.id_comanda = C.id_comanda
                 JOIN Producte P ON CP.id_producte = P.id_producte
                 JOIN Usuari U ON C.id_usuari = U.id_usuari           
-                WHERE C.id_usuario = ?; ,` [id];
+                WHERE C.id_usuario =? ${id};`
             ;
+            
             
             const [rows, fields] = await connection.execute(queryString);
     

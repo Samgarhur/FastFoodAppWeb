@@ -302,7 +302,7 @@ io.on('connection', (socket) => {
 
     });
 
-    //Funcion para updatear el estado de los productos por socket
+    //Funcion para coger las comandas para andorid
     socket.on('ComandasUsuari', async () => {
         //console.log("Entro a comandas usuari")
         var User = await getUsuariInfo(connection, usuariLog)
