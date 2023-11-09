@@ -69,8 +69,7 @@
                   ¿Estás segur de que vols eliminar el producte?
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn class="custom-button" @click="eliminarProducte(producte.id_product
-                  e)">Sí</v-btn>
+                  <v-btn class="custom-button" @click="eliminarProducte(producte.id_producte)">Sí</v-btn>
                   <v-btn class="custom-button" @click="dialogEliminarProducte = false">No</v-btn>
                 </v-card-actions>
               </v-card>

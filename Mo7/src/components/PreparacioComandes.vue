@@ -9,9 +9,9 @@
 
           <v-card-actions>
             <v-btn @click="veureDetalls(comanda.id_comanda)">Veure Detalls</v-btn>
-            <v-dialog v-model="dialog" max-width="300">
+            <v-dialog v-model="dialog[comanda.id_comanda]" max-width="300">
               <template v-slot:activator="{ on }">
-                <v-btn class="ma-2" @click="dialog = true">Finalitzar comanda</v-btn>
+                <v-btn class="ma-2" @click="dialog[comanda.id_comanda] = true">Finalitzar comanda</v-btn>
               </template>
               <v-card>
                 <v-card-title>Confirmación</v-card-title>
@@ -72,7 +72,7 @@ export default {
       comandaSeleccionada: null,
       finalitzada: "",
       comandes: [],
-      dialog: false, // Controla la visibilidad del diálogo de aceptación
+      dialog: {}, // Controla la visibilidad del diálogo de aceptación
       rechazarDialog: false, // Controla la visibilidad del diálogo de rechazo
       snackbar: false, // Controla la visibilidad del Snackbar
       snackbarMessage: '', // Mensaje del Snackbar
@@ -92,7 +92,7 @@ export default {
       socket.emit("comandaFinalitzada", id, this.finalitzada,temps);
 
       //comandaFinalitzada(id, this.finalitzada);
-      this.dialog = false; // Cierra el diálogo después de la confirmación
+      this.dialog[id] = false; // Cierra el diálogo después de la confirmación
       this.snackbarMessage = 'Comanda finalitzada';
       this.snackbar = true;
       socket.emit('solicitarComandasAceptadasIniciales');

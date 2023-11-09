@@ -27,7 +27,7 @@ def VentaProductes (info2): #comparacio venta productes json=productes
     ax.set_xlabel('Producte') 
     ax.set_ylabel('Quantitat venuda') 
     nom=('VentaProductes'+str(date.today()))
-    plt.subplots_adjust(wspace=2, bottom=0.5)
+    plt.subplots_adjust(wspace=0, bottom=0.5)
     plt.savefig('../Mo10/grafics/'+nom+'.jpeg')
     plt.close('all')
 
@@ -148,11 +148,13 @@ def ProductesPreu(info2): #productos/precio xnumCompras yPrecio json=productes
     df = pd.DataFrame(info2[0])
     x_values = df['num_comprat']
     y_values = df['preu']
-    plt.scatter(x_values, y_values)
+    plt.bar(x_values, y_values)
     plt.title('Productes/Preu')
     plt.xlabel('Nombre de Compres')
     plt.ylabel('Preu')
-    plt.savefig('../Mo10/grafics/ProductesPreu.jpeg')
+    nom=('TipusProducte'+str(date.today()))
+    plt.subplots_adjust(wspace=2, bottom=0.5)
+    plt.savefig('../Mo10/grafics/'+nom+'.jpeg')
     plt.close('all')
 
 def cridarFuncions(info2):
@@ -160,6 +162,7 @@ def cridarFuncions(info2):
     VentaPreu(info2)
     TipusProducte(info2)
     EstatCommandas(info2)
+    ProductesPreu(info2)
     #ComandesXdia(info2)
 
 
