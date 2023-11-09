@@ -7,7 +7,7 @@ const fs = require("fs");
 const bodyParser = require('body-parser')
 const path = require("path");
 const { spawn } = require('child_process');
-const { getUsuarisLogin, getComandesSenceres, getComandasUsuario, registrarUsuari, getProductes, getUsuariInfo, getComandesProductes, getComandaAceptada, getComandaFinalizada, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda, updateEstatProducte, updateTempsComanda } = require("./scriptBD.js");
+const { getUsuarisLogin, getComandesSenceres, getComandasUsuario, registrarUsuari, updateUsuario, getProductes, getUsuariInfo, getComandesProductes, getComandaAceptada, getComandaFinalizada, insertProducte, deleteProducte, getNumProductes, updateProducte, updateEstatComanda, updateEstatProducte, updateTempsComanda } = require("./scriptBD.js");
 const { insertComanda } = require("./scriptBD.js");
 const ubicacioArxius = path.join(__dirname, "..", "fotografies/");
 const ubicacioGrafics = path.join(__dirname, "..", "Mo10/grafics");
@@ -83,6 +83,21 @@ app.get("/dadesUsuari", function (req, res) {
         res.json(result)
     })
 })//pasar dades del usuari a android
+
+app.post("/actualizarUsuario", function (req, res) {
+    console.log("NODE");
+    console.log(req.body);
+
+    const usuari = req.body;
+    try{
+        usuari.id_usuari=8
+        updateUsuario(connection,usuari);
+        res.status(200).send("Usuario actualizado correctamente");
+    }catch(error){
+        res.status(500).send("NODE: Error al actualizar el usuario");
+    }
+
+});//actualizr usuario
 app.post("/crearComanda", function (req, res) {
     //console.log(req.body)
     comanda =

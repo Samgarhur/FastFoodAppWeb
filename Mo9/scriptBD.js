@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-module.exports = {getUsuarisLogin, getComandasUsuario, registrarUsuari, insertComanda, getProductes, getComandesSenceres, getComandaAceptada,getComandaFinalizada,getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatProducte,updateEstatComanda,updateTempsComanda};
+module.exports = {getUsuarisLogin, getComandasUsuario, registrarUsuari,updateUsuario, insertComanda, getProductes, getComandesSenceres, getComandaAceptada,getComandaFinalizada,getComandesProductes, getUsuariInfo, insertProducte, getNumComanda, deleteProducte, getNumProductes,updateProducte,updateEstatProducte,updateEstatComanda,updateTempsComanda};
 // Connexio a la base de dades
 const connection = mysql.createPool({
     host: "dam.inspedralbes.cat",
@@ -51,6 +51,25 @@ async function registrarUsuari(connection, usuari){
     } catch (error) {
         console.error('Error al insertar usuari:', error.message);
         throw error;
+    }
+}
+
+async function updateUsuario (connection,usuari){
+    try{
+        console.log("BASE");
+        console.log(usuari);
+        const {usuario, nom, cognoms, passwd, nTargeta, CVV, DataCaducitat, correu,id_usuari } = usuari;
+        const params = [usuario,nom, cognoms, passwd, nTargeta, CVV, DataCaducitat, correu];
+        const updatedParams = params.map(param => (param !== undefined ? param : null));
+
+
+        const [result] = await connection.execute(
+            `UPDATE Usuari SET usuario = ?, nom = ?, cognoms=?, passwd = ?, nTargeta = ?, CVV=?, DataCaducitat=?,correu=? WHERE id_usuari = ?`,
+            [...updatedParams,id_usuari]
+        );
+        console.log("Número de filas actualizadas:", result.affectedRows);
+    }catch(error){
+        console.log("Error al actualizar: ",error.message);
     }
 }
 /*-------------------Comandes------------------*/
