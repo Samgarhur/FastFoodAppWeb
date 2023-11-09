@@ -255,7 +255,7 @@ async function getComandasUsuario(connection, id) {
                 JOIN Comanda C ON CP.id_comanda = C.id_comanda
                 JOIN Producte P ON CP.id_producte = P.id_producte
                 JOIN Usuari U ON C.id_usuari = U.id_usuari           
-                WHERE C.id_usuario =? ${id};`
+                WHERE C.id_usuari = ${id};`
             ;
             
             
