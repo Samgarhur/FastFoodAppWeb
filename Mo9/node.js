@@ -286,12 +286,14 @@ io.on('connection', (socket) => {
 
 
     });
+
+    //Funcion para updatear el estado de los productos por socket
     socket.on('ComandasUsuari', async () => {
-        console.log("Entro a comandas usuari")
+        //console.log("Entro a comandas usuari")
         var User = await getUsuariInfo(connection, usuariLog)
         var User = JSON.parse(User)
         var idUser = User[0].id_usuari
-        console.log("Cojo el usuario con getusuari")
+        console.log("Cojo el usuario con getusuari "+idUser)
         var comandas = await getComandasUsuario(connection, idUser)
         socket.emit('getComandasUsuari', JSON.parse(comandas));
 
