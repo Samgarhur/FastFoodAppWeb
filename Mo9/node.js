@@ -84,13 +84,16 @@ app.get("/dadesUsuari", function (req, res) {
     })
 })//pasar dades del usuari a android
 
-app.post("/actualizarUsuario", function (req, res) {
+app.post("/actualizarUsuario", async function (req, res) {
     console.log("NODE");
     console.log(req.body);
 
     const usuari = req.body;
     try{
-        usuari.id_usuari=8
+        var User = await getUsuariInfo(connection, usuariLog)
+        var User = JSON.parse(User)
+        var idUser = User[0].id_usuari   
+        usuari.id_usuari=idUser     
         updateUsuario(connection,usuari);
         res.status(200).send("Usuario actualizado correctamente");
     }catch(error){
